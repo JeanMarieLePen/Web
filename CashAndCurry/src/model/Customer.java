@@ -9,4 +9,5 @@ public class Customer extends GenericUser{
 	private int numberOfPoints;
 	private TypeOfCustomer typeOfCustomer;
 	
+	
 }
