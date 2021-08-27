@@ -1,5 +1,7 @@
 package model;
 
+import java.time.LocalDate;
+
 import sun.util.calendar.BaseCalendar.Date;
 
 public class Administrator extends GenericUser {
@@ -10,7 +12,7 @@ public class Administrator extends GenericUser {
 	}
 
 	public Administrator(String username, String password, String name, String lastname, String gender,
-			Date dateOfBirth) {
+			LocalDate dateOfBirth) {
 		super(username, password, name, lastname, gender, dateOfBirth);
 		// TODO Auto-generated constructor stub
 	}

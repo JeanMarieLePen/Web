@@ -1,5 +1,7 @@
 package model;
 
+import java.time.LocalDate;
+
 import sun.util.calendar.BaseCalendar.Date;
 
 public class GenericUser {
@@ -10,13 +12,13 @@ public class GenericUser {
 	private String name;
 	private String lastname;
 	private String gender;
-	private Date dateOfBirth;
+	private LocalDate dateOfBirth;
 	
 	public GenericUser() {
 		
 	}
 	public GenericUser(String username, String password, String name, String lastname, String gender,
-			Date dateOfBirth) {
+			LocalDate dateOfBirth) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -56,10 +58,10 @@ public class GenericUser {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	public Date getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
-	public void setDateOfBirth(Date dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 	
