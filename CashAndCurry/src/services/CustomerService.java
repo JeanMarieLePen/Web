@@ -36,6 +36,14 @@ public class CustomerService {
 		}
 	}
 	
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("{name}")
+	public String getGreeting(@PathParam("name") String name) {
+		String greeting = "Hello " + name;
+		return greeting;
+	}
+	
 	@POST
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)

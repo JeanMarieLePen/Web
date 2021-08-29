@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const API_URL = "http://localhost:8080";
+const API_URL = "http://localhost:8080/rest";
 
 if (JSON.parse(localStorage.getItem('token')) != null){
     const token = JSON.parse(localStorage.getItem('token'));
@@ -12,7 +12,8 @@ class DataService{
 
     //Customer
     getAllCustomers(){
-        return axios.get(`${API_URL}/customers`)
+        console.log("AAAAA")
+        return axios.get(`${API_URL}/customers/`)
     }
     getCustomer(username){
         return axios.get(`${API_URL}/customers/${username}`);
