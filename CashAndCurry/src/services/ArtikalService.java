@@ -31,22 +31,22 @@ public class ArtikalService {
 	@POST
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Artikal addArtikal(Artikal a) {
+	public Artikal addArtikal(String nazivRestorana, Artikal a) {
 		ArtikalDAO dao = (ArtikalDAO)ctx.getAttribute("artikalDAO");
-		return dao.save(a);
+		return dao.addArtikal(nazivRestorana, a);
 	}
 	
 	@GET
-	@Path("/")
+	@Path("/{nazivRestorana}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Artikal> getArtikle(){
+	public Collection<Artikal> getArtikle(@PathParam("nazivRestorana") String nazivRestorana){
 		ArtikalDAO dao = (ArtikalDAO)ctx.getAttribute("artikalDAO");
-		return dao.findAllArtikli();
+		return dao.findAllArtikli(nazivRestorana);
 	}
 	@GET
 	@Path("/{nazivArtikla}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Artikal getArtikal(@PathParam("nazivArtikla") String naziv) {
+	public Collection<Artikal> getArtikal(@PathParam("nazivArtikla") String naziv) {
 		ArtikalDAO dao = (ArtikalDAO)ctx.getAttribute("artikalDAO");
 		return dao.findArtikal(naziv);
 	}

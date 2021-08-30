@@ -23,6 +23,9 @@ public class Artikal {
 		this.opis = opis;
 		this.slika = slika;
 	}
+	public Artikal() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getNaziv() {
 		return naziv;
 	}

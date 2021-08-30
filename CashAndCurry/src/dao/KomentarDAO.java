@@ -2,9 +2,11 @@ package dao;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 
 import model.Customer;
 import model.Komentar;
+import model.Restoran;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,52 +23,57 @@ import java.io.IOException;
 public class KomentarDAO {
 
 	private Map<String, Komentar> comments = new HashMap<>();
+	private Map<String, Restoran> restorani = new HashMap<>();
+	
 	public KomentarDAO() {
 		
 	}
-	public KomentarDAO(String contextPath) {
-		loadComments(contextPath);
+	public KomentarDAO(String contextPath, String name) {
+		loadComments(contextPath, name);
 	}
-	public void loadComments(String contextPath) {
-		BufferedReader in = null;
+	public void loadComments(String contextPath, String name) {
+		ArrayList<Restoran> restaurants = new ArrayList<Restoran>();
 		try {
+			JsonReader reader = new JsonReader(new FileReader("restorani.json"));
 			Gson gson = new Gson();
-			File file = new File(contextPath + "komentari.json");
-			in = new BufferedReader(new FileReader(file));
-			ArrayList<Komentar> listOfComments = new ArrayList<Komentar>();
-			String line;
-			while((line = in.readLine()) != null) {
-				Komentar k = gson.fromJson(line, Komentar.class);
-				listOfComments.add(k);
-				//dodajem i u mapu za svaki slucaj ako mapa bude zgodnija
-				comments.put(k.getKupacKomentator(), k);
+			Restoran[] tempRestorani = gson.fromJson(reader, Restoran[].class);
+			for(Restoran r : tempRestorani) {
+				restaurants.add(r);
+				restorani.put(r.getName(), r);
 			}
-			
-		}catch(Exception ex) {
-			ex.printStackTrace();
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
-		finally {
-			if(in!= null) {
-				try {
-					in.close();
-				}catch(Exception e) {
-					
+			
+	}
+	//metoda koja vraca listu svih komentara o jednom restoranu
+	public Collection<Komentar> findAllKomentare(String nazivRestorana){
+		if(restorani.containsKey(nazivRestorana)) {
+			return restorani.get(nazivRestorana).getComments();
+		}
+		return null;
+	}
+	//metoda koja vraca komentare koje je ostavio jedan korisnik o nekom restoranu
+	public Collection<Komentar> findKomentar(String username, String nazivRestorana) {
+		Collection<Komentar> komentariKorisnika = new ArrayList<Komentar>();
+		if(restorani.containsKey(nazivRestorana)) {
+			ArrayList<Komentar> tempLista = restorani.get(nazivRestorana).getComments();
+			
+			for(Komentar k : tempLista) {
+				if(k.getKupacKomentator().equals(username)) {
+					komentariKorisnika.add(k);
 				}
 			}
 		}
+		return komentariKorisnika;
 	}
 	
-	public Collection<Komentar> findAllComments(){
-		return comments.values();
-	}
-	public Komentar findKomentar(String username) {
-		return comments.containsKey(username) ? comments.get(username) : null;	
-	}
-	public Komentar save(Komentar comment) {
-		comments.put(comment.getKupacKomentator(), comment);
+	
+	public Komentar save(String nazivRestorana, Komentar comment) {
+		restorani.get(nazivRestorana).getComments().add(comment);
 		Gson gson = new Gson();
-		String temp = gson.toJson(comment);
-		try(BufferedWriter bw = new BufferedWriter(new FileWriter("comments.json", true))){
+		String temp = gson.toJson(restorani);
+		try(BufferedWriter bw = new BufferedWriter(new FileWriter("restorani.json", false))){
 			bw.append(temp);
 			bw.append("\n");
 			bw.close();
@@ -75,5 +82,28 @@ public class KomentarDAO {
 		}
 		return comment;
 	}
+	//ne nudimo mogucnost naknadne izmene komentara(za sada)
+//	/*
+//	public Komentar update() {
+//		
+//	}*/
 	
+	//brisanje odredjenog komentara(potrebno u model klasi Komentar dodati atribut idKomentara
+	//koji bi sluzio za laku identifikaciju komentara koji zelimo da obrisemo
+	
+	
+	
+//	public boolean removeKomentar(String nazivRestorana, String idKomentara) {
+//		
+//		if(restorani.get(nazivRestorana).getComments() != null) {
+//			ArrayList<Komentar> tempComments = restorani.get(nazivRestorana).getComments();
+//			for(Komentar k : tempComments) {
+//				if(k.getId().equals(idKomentara)) {
+//					tempComments.remove(k);
+//					return true;
+//				}
+//			}
+//		}
+//		return false;
+//	}
 }

@@ -50,7 +50,7 @@ public class CustomerService {
 	public Customer addCustomer(Customer customer) {
 		CustomerDAO dao = (CustomerDAO)ctx.getAttribute("customerDAO");
 		System.out.println("POGODAK SA FRONTA");
-		return dao.save(customer);
+		return dao.addNewCustomer(customer);
 	}
 	
 	@GET

@@ -12,12 +12,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 
+import model.Customer;
 import model.Order;
 
 public class OrderDAO {
 	
 	private Map<String, Order> orders = new HashMap<>();
+	private Map<String, Customer> customers = new HashMap<>();
 	public OrderDAO() {
 		
 	}
@@ -27,57 +30,74 @@ public class OrderDAO {
 	}
 	
 	public void loadOrders(String contextPath) {
-		BufferedReader in = null;
+		//ucitavamo sve Customere u mapu(svaki customer ima polje listaNarudzbina)
 		try {
+			JsonReader reader = new JsonReader(new FileReader("customers.json"));
 			Gson gson = new Gson();
-			File file = new File(contextPath + "orders.json");
-			in = new BufferedReader(new FileReader(file));
-			ArrayList<Order> listOfOrders = new ArrayList<Order>();
-			String line;
-			while((line = in.readLine()) != null) {
-				Order o = gson.fromJson(line, Order.class);
-				listOfOrders.add(o);
-				orders.put(o.getIdPorudzbine(), o);
+			Customer[] tempCustomers = gson.fromJson(reader, Customer[].class);
+			for(Customer c : tempCustomers) {
+				customers.put(c.getUsername(), c);
 			}
-			
-
 		}catch(Exception ex) {
 			ex.printStackTrace();
 		}
-		finally {
-			if(in != null) {
-				try {
-					in.close();
-				}
-				catch(Exception e) {
-					
+	}
+	
+	//metoda koja pronalazi sve narudzbine jednog korisnika
+	public Collection<Order> findAllOrders(String username){
+		if(customers.containsKey(username)) {
+			return (Collection<Order>)customers.get(username).getListOfAllOrders();
+		}
+		return null;
+	}
+	//metoda koja pronalazi konkretnu narudzbinu nekog korisnika
+	public Order findOrder(String username, String idPorudzbine) {
+		if(customers.containsKey(username)) {
+			ArrayList<Order> tempLista = customers.get(username).getListOfAllOrders();
+			for(Order o : tempLista) {
+				if(o.getIdPorudzbine() == idPorudzbine) {
+					return o;
 				}
 			}
 		}
+		return null;
 	}
 	
-	public Collection<Order> findAllOrders(){
-		return orders.values();
-	}
-	
-	public Order findOrder(String idPorudzbine) {
-		return orders.containsKey(idPorudzbine) ? orders.get(idPorudzbine) : null;
-	}
-	
-	public Order save(Order order) {
-		orders.put(order.getIdPorudzbine(), order);
-		Gson gson = new Gson();
-		String temp = gson.toJson(order);
-		try(BufferedWriter bw = new BufferedWriter(new FileWriter("orders.json", true))){
-			System.out.println("Upis nove porudzbine u bazu.");
-			bw.append(temp);
-			bw.append("\n");
-			bw.close();
-		}catch(IOException e) {
-			e.printStackTrace();
+	//metoda koja cuva porudzbinu u bazu
+	public Order addNewOrder(Order order) {
+		if(customers.containsKey(order.getKupac().getUsername())){
+			//dodajemo novu porudzbinu
+			customers.get(order.getKupac().getUsername()).getListOfAllOrders().add(order);
+			Gson gson = new Gson();
+			String temp = gson.toJson(customers);
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter("customers.json", true))){
+				bw.append(temp);
+				bw.append("\n");
+				bw.close();
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+			return order;
 		}
-		return order;
+		return null;
 	}
-	
+	//metoda koja brise porudzbinu
+	public Order removeOrder(Order order) {
+		if(customers.containsKey(order.getKupac().getUsername())){
+			//brisemo zeljenu porudzbinu
+			customers.get(order.getKupac().getUsername()).getListOfAllOrders().remove(order);
+			Gson gson = new Gson();
+			String temp = gson.toJson(customers);
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter("customers.json", true))){
+				bw.append(temp);
+				bw.append("\n");
+				bw.close();
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+			return order;
+		}
+		return null;
+	}
 
 }

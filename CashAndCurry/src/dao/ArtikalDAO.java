@@ -11,10 +11,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.HashMap;
 import model.Artikal;
+import model.Restoran;
+
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 
 public class ArtikalDAO {
-	private Map<String, Artikal> artikli = new HashMap<>();
+	private Map<String, Restoran> restorani = new HashMap<>();
 	public ArtikalDAO() {
 		
 	}
@@ -22,50 +25,108 @@ public class ArtikalDAO {
 		loadArtikle(contextPath);
 	}
 	public void loadArtikle(String contextPath) {
-		BufferedReader in = null;
 		try {
+			JsonReader reader = new JsonReader(new FileReader("restaurants.json"));
 			Gson gson = new Gson();
-			File file = new File(contextPath + "artikli.json");
-			in = new BufferedReader(new FileReader(file));
-			ArrayList<Artikal> listOfArtikli = new ArrayList<Artikal>();
-			String line;
-			while((line = in.readLine()) != null) {
-				Artikal a = gson.fromJson(line,  Artikal.class);
-				listOfArtikli.add(a);
-				artikli.put(a.getNaziv(), a);
+			Restoran[] tempRestorani = gson.fromJson(reader, Restoran[].class);
+			for(Restoran r: tempRestorani) {
+				restorani.put(r.getName(), r);
 			}
 		}catch(Exception ex) {
 			ex.printStackTrace();
 		}
-		finally {
-			if(in != null) {
-				try {
-					in.close();
-				}
-				catch(Exception e) {
-					
+	}
+	//metoda koja pronalazi sve artikle koje nudi jedan restoran
+	public Collection<Artikal> findAllArtikli(String nazivRestorana){
+		if(restorani.containsKey(nazivRestorana)) {
+			return (Collection<Artikal>)restorani.get(nazivRestorana).getMenuItems();
+		}
+		return null;
+	}
+	//metoda koja pretrazuje sve restorane u cijoj ponudi se nalazi trazeni artikal
+	//i kao povratnu vrednost vraca detalje o tom artiklu, za svaki restoran posebno
+	public Collection<Artikal> findArtikal(String nazivArtikla) {
+		Collection<Artikal> tempArtikli = new ArrayList<Artikal>();
+		for(Restoran r : restorani.values()) {
+			for(Artikal a : r.getMenuItems()) {
+				if(a.getNaziv().equals(nazivArtikla)) {
+					tempArtikli.add(a);
 				}
 			}
 		}
+		return tempArtikli;
 	}
-	public Collection<Artikal> findAllArtikli(){
-		return artikli.values();
-	}
-	public Artikal findArtikal(String nazivArtikla) {
-		return artikli.containsKey(nazivArtikla) ? artikli.get(nazivArtikla) : null;
-	}
-	public Artikal save(Artikal artikal) {
-		artikli.put(artikal.getNaziv(), artikal);
-		Gson gson = new Gson();
-		String temp = gson.toJson(artikal);
-		try(BufferedWriter bw = new BufferedWriter(new FileWriter("artikli.json", true))){
-			bw.append(temp);
-			bw.append("\n");
-			bw.close();
-		}catch(IOException e) {
-			e.printStackTrace();
+	//metoda koja dodaje novi artikal u ponudu restorana i smesta ga u bazu
+	public Artikal addArtikal(String nazivRestorana, Artikal artikal) {
+		if(restorani.containsKey(nazivRestorana)) {
+			Map<String, Artikal> mapaArtikala = new HashMap<String, Artikal>();
+			for(Artikal art : restorani.get(nazivRestorana).getMenuItems()) {
+				mapaArtikala.put(art.getNaziv(), art);
+			}
+			if(!mapaArtikala.containsKey(artikal.getNaziv())) {
+				restorani.get(nazivRestorana).getMenuItems().add(artikal);
+			}
+			Gson gson = new Gson();
+			String temp = gson.toJson(restorani);
+			//false kao parametar jer zelimo ponovni upis celog fajla
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter("restaurants.json", false))){
+				bw.append(temp);
+				bw.append("\n");
+				bw.close();
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+			return artikal;
 		}
-		return artikal;
+		return null;
+	}
+	//metoda koja apdejtuje postojeci artikal i upisuje ga u bazu
+	public Artikal updateArtikal(String nazivRestorana, Artikal artikal) {
+		if(restorani.containsKey(nazivRestorana)) {
+			int i = 0;
+			for(Artikal a : restorani.get(nazivRestorana).getMenuItems()) {
+				if(a.getNaziv().equals(artikal.getNaziv())) {
+					restorani.get(nazivRestorana).getMenuItems().set(i, artikal);
+					i++;
+				}
+			}
+			Gson gson = new Gson();
+			String temp = gson.toJson(restorani);
+			//false kao parametar jer zelimo ponovni upis celog fajla
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter("restaurants.json", false))){
+				bw.append(temp);
+				bw.append("\n");
+				bw.close();
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+			return artikal;
+		}
+		return null;
+	}
+	//metoda koja uklanja zeljeni artikal iz ponude restorana i izmene unosi u bazu
+	public Artikal removeArtikal(String nazivRestorana, String nazivArtikla) {
+		if(restorani.containsKey(nazivRestorana)) {
+			Artikal art = new Artikal();
+			for(Artikal a : restorani.get(nazivRestorana).getMenuItems()) {
+				if(a.getNaziv().equals(nazivArtikla)) {
+					art = a;
+					restorani.get(nazivRestorana).getMenuItems().remove(a);
+				}
+			}
+			Gson gson = new Gson();
+			String temp = gson.toJson(restorani);
+			//false kao parametar jer zelimo ponovni upis celog fajla
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter("restaurants.json", false))){
+				bw.append(temp);
+				bw.append("\n");
+				bw.close();
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+			return art;
+		}
+		return null;
 	}
 }
 
