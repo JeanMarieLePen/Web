@@ -5,14 +5,14 @@ import java.util.List;
 
 public class Customer extends GenericUser{
 	private ArrayList<Order> listOfAllOrders = new ArrayList<Order>();
-	private ArrayList<String> cart;
+	private ArrayList<Artikal> cart;
 	private int numberOfPoints;
 	private TypeOfCustomer typeOfCustomer;
 	
 	public Customer() {
 		
 	}
-	public Customer(ArrayList<Order> listOfAllOrders, ArrayList<String> cart, int numberOfPoints,
+	public Customer(ArrayList<Order> listOfAllOrders, ArrayList<Artikal> cart, int numberOfPoints,
 			TypeOfCustomer typeOfCustomer) {
 		super();
 		this.listOfAllOrders = listOfAllOrders;
@@ -26,10 +26,10 @@ public class Customer extends GenericUser{
 	public void setListOfAllOrders(ArrayList<Order> listOfAllOrders) {
 		this.listOfAllOrders = listOfAllOrders;
 	}
-	public ArrayList<String> getCart() {
+	public ArrayList<Artikal> getCart() {
 		return cart;
 	}
-	public void setCart(ArrayList<String> cart) {
+	public void setCart(ArrayList<Artikal> cart) {
 		this.cart = cart;
 	}
 	public int getNumberOfPoints() {
