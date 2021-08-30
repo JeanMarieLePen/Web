@@ -12,7 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 
+import model.Customer;
 import model.Manager;
 
 
@@ -30,7 +32,7 @@ public class ManagerDAO {
 	public void loadManagers(String contextPath) {
 		BufferedReader in = null;
 		try {
-			Gson gson = new Gson();
+		/*	Gson gson = new Gson();
 			File file = new File(contextPath + "managers.json");
 			in = new BufferedReader(new FileReader(file));
 			ArrayList<Manager> listOfManagers = new ArrayList<Manager>();
@@ -38,23 +40,20 @@ public class ManagerDAO {
 			while((line = in.readLine()) != null) {
 				Manager m = gson.fromJson(line, Manager.class);
 				listOfManagers.add(m);
-				managers.put(m.getUsername(), m);
+				managers.put(m.getUsername(), m);  */
+			
+			JsonReader reader = new JsonReader(new FileReader("managers.json"));
+			Gson gson = new Gson();
+			Manager[] tempManagers = gson.fromJson(reader, Manager[].class);
+			for(Manager c : tempManagers) {
+				managers.put(c.getUsername(), c);
 			}
 			
 
 		}catch(Exception ex) {
 			ex.printStackTrace();
 		}
-		finally {
-			if(in != null) {
-				try {
-					in.close();
-				}
-				catch(Exception e) {
-					
-				}
-			}
-		}
+		
 	}
 	public Collection<Manager> findAllManagers(){
 		return managers.values();
@@ -62,19 +61,60 @@ public class ManagerDAO {
 	public Manager findManager(String username) {
 		return managers.containsKey(username) ? managers.get(username) : null;
 	}
-	public Manager save(Manager manager) {
-		managers.put(manager.getUsername(), manager);
-		Gson gson = new Gson();
-		String temp = gson.toJson(manager);
-		try(BufferedWriter bw = new BufferedWriter(new FileWriter("managers.json", true))){
-			System.out.println("Upis novog menadzera u bazu.");
-			bw.append(temp);
-			bw.append("\n");
-			bw.close();
-		}catch(IOException e) {
-			e.printStackTrace();
+	
+	//dodavanje novog Customera i njegovo cuvanje u bazu
+		public Manager addNewManager(Manager manager) {
+			if(!managers.containsKey(manager.getUsername())) {
+				managers.put(manager.getUsername(), manager);
+				Gson gson = new Gson();
+				String temp = gson.toJson(managers);
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter("managers.json", true))){
+					System.out.println("Upis novog menadzera u bazu.");
+					bw.append(temp);
+					bw.append("\n");
+					bw.close();
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+				return manager;
+			}	
+			return null;
 		}
-		return manager;
-	}
+		
+		//izmena postojeceg korisnika i njegovo cuvanje u bazu
+		public Manager updateManager(Manager manager) {
+			if(managers.containsKey(manager.getUsername())) {
+				managers.replace(manager.getUsername(), manager);
+				Gson gson = new Gson();
+				String temp = gson.toJson(managers);
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter("managers.json", true))){
+					bw.append(temp);
+					bw.append("\n");
+					bw.close();
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+				return manager;
+			}
+			return null;
+		}
+		
+		//brisanje korisnika iz baze
+		public Manager removeManager(Manager manager) {
+			if(managers.containsKey(manager.getUsername())) {
+				managers.remove(manager.getUsername());
+				Gson gson = new Gson();
+				String temp = gson.toJson(managers);
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter("managers.json", true))){
+					bw.append(temp);
+					bw.append("\n");
+					bw.close();
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+				return manager;
+			}
+			return null;
+		}
 
 }

@@ -12,7 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 
+import model.Customer;
 import model.Restoran;
 
 public class RestoranDAO {
@@ -33,7 +35,7 @@ public class RestoranDAO {
 			BufferedReader in = null;
 			try
 			{
-				Gson gson = new Gson();
+				/*Gson gson = new Gson();
 				File file = new File(contextPath + "restorani.json");
 				in = new BufferedReader(new FileReader(file));
 				ArrayList<Restoran> listOfRestorani = new ArrayList<Restoran>();
@@ -42,20 +44,17 @@ public class RestoranDAO {
 				{
 					Restoran r = gson.fromJson(line, Restoran.class);
 					listOfRestorani.add(r);
-					restorani.put(r.getName(), r);
+					restorani.put(r.getName(), r);*/
+				
+					JsonReader reader = new JsonReader(new FileReader("restorani.json"));
+					Gson gson = new Gson();
+					Restoran[] tempRestorani = gson.fromJson(reader, Restoran[].class);
+					for(Restoran c : tempRestorani) {
+						restorani.put(c.getName(), c);
 				}
 				
 			}catch(Exception ex) {
 				ex.printStackTrace();
-			}finally {
-				if(in != null) {
-					try {
-						in.close();
-					}
-					catch(Exception e) {
-						
-					}
-				}
 			}
 		}
 		public Collection<Restoran> findAllRestorani()
@@ -67,19 +66,58 @@ public class RestoranDAO {
 			return restorani.containsKey(name) ? restorani.get(name) : null;
 		}
 		
-		public Restoran save(Restoran restoran)
-		{
-			restorani.put(restoran.getName(), restoran); // put ili post?
-			Gson gson = new Gson();
-			String temp = gson.toJson(restoran);
-			try(BufferedWriter bw = new BufferedWriter(new FileWriter("restorani.json",true))) {
-				System.out.println("Upis novog restorana u bazu.");
-				bw.append(temp);
-				bw.append("\n");
-				bw.close();
-			}catch(IOException e) {
-				e.printStackTrace();				
+		//dodavanje novog Customera i njegovo cuvanje u bazu
+		public Restoran addNewRestoran(Restoran restoran) {
+			if(!restorani.containsKey(restoran.getName())) {
+				restorani.put(restoran.getName(), restoran);
+				Gson gson = new Gson();
+				String temp = gson.toJson(restorani);
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter("restorani.json", true))){
+					System.out.println("Upis novog korisnika u bazu.");
+					bw.append(temp);
+					bw.append("\n");
+					bw.close();
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+				return restoran;
+			}	
+			return null;
+		}
+		
+		//izmena postojeceg korisnika i njegovo cuvanje u bazu
+		public Restoran updateRestoran(Restoran restoran) {
+			if(restorani.containsKey(restoran.getName())) {
+				restorani.replace(restoran.getName(), restoran);
+				Gson gson = new Gson();
+				String temp = gson.toJson(restorani);
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter("restorani.json", true))){
+					bw.append(temp);
+					bw.append("\n");
+					bw.close();
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+				return restoran;
 			}
-			return restoran;
+			return null;
+		}
+		
+		//brisanje korisnika iz baze
+		public Restoran removeRestoran(Restoran restoran) {
+			if(restorani.containsKey(restoran.getName())) {
+				restorani.remove(restoran.getName());
+				Gson gson = new Gson();
+				String temp = gson.toJson(restorani);
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter("restorani.json", true))){
+					bw.append(temp);
+					bw.append("\n");
+					bw.close();
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+				return restoran;
+			}
+			return null;
 		}
 }
