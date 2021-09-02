@@ -35,7 +35,7 @@ public class CustomerDAO {
 	
 	public void loadCustomers(String contextPath) {
 		try {
-			JsonReader reader = new JsonReader(new FileReader("customers.json"));
+			JsonReader reader = new JsonReader(new FileReader(contextPath + "/customers.json"));
 			Gson gson = new Gson();
 			Customer[] tempCustomers = gson.fromJson(reader, Customer[].class);
 			for(Customer c : tempCustomers) {

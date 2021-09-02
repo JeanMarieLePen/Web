@@ -3,6 +3,7 @@ package model;
 import java.time.LocalDate;
 
 import sun.util.calendar.BaseCalendar.Date;
+import sun.util.calendar.BaseCalendar;
 
 public class GenericUser {
 
