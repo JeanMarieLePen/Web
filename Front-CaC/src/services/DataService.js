@@ -23,7 +23,38 @@ class DataService{
         return axios.post(`${API_URL}/customers/`, customer);
     }
 
+    //Manager
+    addManager(manager){
+        console.log("DataService:addManager");
+        return axios.post(`${API_URL}/managers/`, manager);
+    }
+    getFreeManagers(){
+        return axios.get(`${API_URL}/managers/free`);
+    }
+    getAllManagers(){
+        return axios.get(`${API_URL}/managers/`);
+    }
 
+
+    //DeliveryMan
+    addDeliveryMan(deliveryMan){
+        console.log("DataService:addDeliveryMan");
+        return axios.post(`${API_URL}/deliverymen/`, deliveryMan);
+    }
+
+    //Restaurants
+    getAllRestaurants(){
+        return axios.get(`${API_URL}/restaurants/`)
+    }
+    getAllRestaurantsWithNoManager(){
+        return axios.get(`${API_URL}/restaurants/noManager`);
+    }
+    addRestaurant(restaurant){
+        return axios.post(`${API_URL}/restaurants/`, restaurant)
+    }
+    searchRestaurant(restaurant){
+        return axios.get(`${API_URL}/restaurants`, restaurant)
+    }
 }
 
 export default new DataService();
