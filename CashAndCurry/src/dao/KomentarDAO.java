@@ -28,10 +28,10 @@ public class KomentarDAO {
 	public KomentarDAO() {
 		
 	}
-	public KomentarDAO(String contextPath, String name) {
-		loadComments(contextPath, name);
+	public KomentarDAO(String contextPath) {
+		loadComments(contextPath);
 	}
-	public void loadComments(String contextPath, String name) {
+	public void loadComments(String contextPath) {
 		ArrayList<Restoran> restaurants = new ArrayList<Restoran>();
 		try {
 			JsonReader reader = new JsonReader(new FileReader("restorani.json"));
