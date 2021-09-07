@@ -5,6 +5,7 @@ import NewDeliveryMan from './components/CreateDeliveryMan'
 import SearchRestaurants from './components/SearchRestaurants'
 import Login from './components/Login'
 import Homepage from './components/Homepage'
+import NewRestaurant from './components/CreateRestaurant'
 
 export default[
     {
@@ -41,6 +42,11 @@ export default[
         path:'/about',
         name:'Homepage',
         component:Homepage
+    },
+    {
+        path:'/newRestaurant',
+        name:'NewRestaurant',
+        component:NewRestaurant
     }
     
 

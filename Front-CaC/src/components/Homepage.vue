@@ -21,10 +21,61 @@
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/profile" class="nav-link" exact>
+                        <img src="../assets/dadada.png" class="card-img-top" alt="...">
+                        <div class="card-body text-center">
+                            <h5 class="card-title mb-0">Moj Profil</h5>
+                        </div>
+                    </router-link>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-0 shadow">
+                    <router-link style='text-decoration: none;color:#35424a;' to="/newManager" class="nav-link"
+                        exact>
                         <img src="../assets/logo.png" class="card-img-top" alt="...">
                         <div class="card-body text-center">
-                            <h5 class="card-title mb-0">Profil</h5>
-                            <div class="card-text text-black-50">Pogledajte i izmenite vaše lične podatke na profilu...</div>
+                            <h5 class="card-title mb-0">Kreiranje novog menadžera</h5>
+                            
+                        </div>
+                    </router-link>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-0 shadow">
+                    <router-link style='text-decoration: none;color:#35424a;' to="/newRestaurant" class="nav-link"
+                        exact>
+                        <img src="../assets/logo.png" class="card-img-top" alt="...">
+                        <div class="card-body text-center">
+                            <h5 class="card-title mb-0">Dodaj novi restoran</h5>
+                            
+                        </div>
+                    </router-link>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-0 shadow">
+                    <router-link style='text-decoration: none;color:#35424a;' to="/newDeliveryMan" class="nav-link"
+                        exact>
+                        <img src="../assets/logo.png" class="card-img-top" alt="...">
+                        <div class="card-body text-center">
+                            <h5 class="card-title mb-0">Dodaj novog dostavljača</h5>
+                           
+                        </div>
+                    </router-link>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-0 shadow">
+                    <router-link style='text-decoration: none;color:#35424a;' to="/searchRestaurants" class="nav-link"
+                        exact>
+                        <img src="../assets/logo.png" class="card-img-top" alt="...">
+                        <div class="card-body text-center">
+                            <h5 class="card-title mb-0">Pretraga restorana</h5>
+                           
                         </div>
                     </router-link>
                 </div>
