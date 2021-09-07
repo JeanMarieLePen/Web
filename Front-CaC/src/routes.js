@@ -6,6 +6,7 @@ import SearchRestaurants from './components/SearchRestaurants'
 import NewRestaurant from './components/CreateRestaurant'
 import Login from './components/Login'
 import Homepage from './components/Homepage'
+import NewRestaurant from './components/CreateRestaurant'
 
 export default[
     {
