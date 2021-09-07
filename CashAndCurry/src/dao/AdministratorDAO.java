@@ -20,9 +20,11 @@ import model.Customer;
 public class AdministratorDAO {
 
 	private Map<String, Administrator> administrators = new HashMap<>();
+	private String contextPath;
 	public AdministratorDAO() {
 	}
 	public AdministratorDAO(String contextPath) {
+		this.contextPath = contextPath;
 		loadAdministrators(contextPath);
 	}
 	public void loadAdministrators(String contextPath) {
@@ -39,7 +41,7 @@ public class AdministratorDAO {
 				//dodajem i u mapu za svaki slucaj ako mapa bude zgodnija
 				administrators.put(a.getUsername(), a);*/
 			
-			JsonReader reader = new JsonReader(new FileReader("administrators.json"));
+			JsonReader reader = new JsonReader(new FileReader(contextPath + "administrators.json"));
 			Gson gson = new Gson();
 			Administrator[] tempAdministrators = gson.fromJson(reader, Administrator[].class);
 			for(Administrator c : tempAdministrators) {
@@ -62,7 +64,7 @@ public class AdministratorDAO {
 			administrators.put(administrator.getUsername(), administrator);
 			Gson gson = new Gson();
 			String temp = gson.toJson(administrators);
-			try(BufferedWriter bw = new BufferedWriter(new FileWriter("administrators.json", true))){
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "administrators.json", true))){
 				System.out.println("Upis novog administratora u bazu.");
 				bw.append(temp);
 				bw.append("\n");
@@ -81,7 +83,7 @@ public class AdministratorDAO {
 				administrators.replace(administrator.getUsername(), administrator);
 				Gson gson = new Gson();
 				String temp = gson.toJson(administrators);
-				try(BufferedWriter bw = new BufferedWriter(new FileWriter("administrators.json", true))){
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "administrators.json", true))){
 					bw.append(temp);
 					bw.append("\n");
 					bw.close();
@@ -99,7 +101,7 @@ public class AdministratorDAO {
 				administrators.remove(administrator.getUsername());
 				Gson gson = new Gson();
 				String temp = gson.toJson(administrators);
-				try(BufferedWriter bw = new BufferedWriter(new FileWriter("administrators.json", true))){
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "administrators.json", true))){
 					bw.append(temp);
 					bw.append("\n");
 					bw.close();

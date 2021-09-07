@@ -13,13 +13,13 @@ public class GenericUser {
 	private String name;
 	private String lastname;
 	private String gender;
-	private LocalDate dateOfBirth;
+	private String dateOfBirth;
 	
 	public GenericUser() {
 		
 	}
 	public GenericUser(String username, String password, String name, String lastname, String gender,
-			LocalDate dateOfBirth) {
+			String dateOfBirth) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -59,10 +59,10 @@ public class GenericUser {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	public LocalDate getDateOfBirth() {
+	public String getDateOfBirth() {
 		return dateOfBirth;
 	}
-	public void setDateOfBirth(LocalDate dateOfBirth) {
+	public void setDateOfBirth(String dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 	

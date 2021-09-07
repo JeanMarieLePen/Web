@@ -21,18 +21,20 @@ public class OrderDAO {
 	
 	private Map<String, Order> orders = new HashMap<>();
 	private Map<String, Customer> customers = new HashMap<>();
+	private String contextPath;
 	public OrderDAO() {
 		
 	}
 	
 	public OrderDAO(String contextPath) {
+		this.contextPath = contextPath;
 		loadOrders(contextPath);
 	}
 	
 	public void loadOrders(String contextPath) {
 		//ucitavamo sve Customere u mapu(svaki customer ima polje listaNarudzbina)
 		try {
-			JsonReader reader = new JsonReader(new FileReader("customers.json"));
+			JsonReader reader = new JsonReader(new FileReader(contextPath + "customers.json"));
 			Gson gson = new Gson();
 			Customer[] tempCustomers = gson.fromJson(reader, Customer[].class);
 			for(Customer c : tempCustomers) {
@@ -70,7 +72,7 @@ public class OrderDAO {
 			customers.get(order.getKupac().getUsername()).getListOfAllOrders().add(order);
 			Gson gson = new Gson();
 			String temp = gson.toJson(customers);
-			try(BufferedWriter bw = new BufferedWriter(new FileWriter("customers.json", true))){
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "customers.json", true))){
 				bw.append(temp);
 				bw.append("\n");
 				bw.close();
@@ -88,7 +90,7 @@ public class OrderDAO {
 			customers.get(order.getKupac().getUsername()).getListOfAllOrders().remove(order);
 			Gson gson = new Gson();
 			String temp = gson.toJson(customers);
-			try(BufferedWriter bw = new BufferedWriter(new FileWriter("customers.json", true))){
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "customers.json", true))){
 				bw.append(temp);
 				bw.append("\n");
 				bw.close();

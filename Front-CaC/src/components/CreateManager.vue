@@ -65,9 +65,21 @@ export default{
         }
         
     },
+    watch:{
+        'newManager.dateOfBirth' : function(val, oldVal){
+            console.log(this.newManager.dateOfBirth);
+            this.newManager.dateOfBirth = this.newManager.dateOfBirth.toString().substring(0, 10);
+        }
+    },
     methods:{
+        formatDate(){
+            Console.log("USAO U FORMATDATE")
+            this.newManager.dateOfBirth = this.newManager.dateOfBirth.substring(0,10);
+        },
         createManager:function(){
-            console.log("Kreiranje menadzera: " + this.newManager.username);
+            console.log(JSON.stringify(this.newManager));
+            console.log("AAAA")
+            console.log(this.newManager);
             dataService.addManager(this.newManager).then(response => {
                 console.log("Stigao odgovor sa beka: " + response);
             }).catch(error => {

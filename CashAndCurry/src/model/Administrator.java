@@ -12,7 +12,7 @@ public class Administrator extends GenericUser {
 	}
 
 	public Administrator(String username, String password, String name, String lastname, String gender,
-			LocalDate dateOfBirth) {
+			String dateOfBirth) {
 		super(username, password, name, lastname, gender, dateOfBirth);
 		// TODO Auto-generated constructor stub
 	}

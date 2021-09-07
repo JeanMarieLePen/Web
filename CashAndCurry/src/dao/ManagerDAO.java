@@ -21,11 +21,14 @@ import model.Manager;
 public class ManagerDAO {
 	
 	private Map<String, Manager> managers = new HashMap<>();
+	private String contextPath;
+	
 	public ManagerDAO() {
 		
 	}
 	
 	public ManagerDAO(String contextPath) {
+		this.contextPath = contextPath;
 		loadManagers(contextPath);
 	}
 	
@@ -42,12 +45,15 @@ public class ManagerDAO {
 				listOfManagers.add(m);
 				managers.put(m.getUsername(), m);  */
 			
-			JsonReader reader = new JsonReader(new FileReader("managers.json"));
+			JsonReader reader = new JsonReader(new FileReader(contextPath + "managers.json"));
 			Gson gson = new Gson();
 			Manager[] tempManagers = gson.fromJson(reader, Manager[].class);
-			for(Manager c : tempManagers) {
-				managers.put(c.getUsername(), c);
+			if(tempManagers != null) {
+				for(Manager c : tempManagers) {
+					managers.put(c.getUsername(), c);
+				}
 			}
+			
 			
 
 		}catch(Exception ex) {
@@ -68,7 +74,7 @@ public class ManagerDAO {
 				managers.put(manager.getUsername(), manager);
 				Gson gson = new Gson();
 				String temp = gson.toJson(managers);
-				try(BufferedWriter bw = new BufferedWriter(new FileWriter("managers.json", true))){
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "managers.json", false))){
 					System.out.println("Upis novog menadzera u bazu.");
 					bw.append(temp);
 					bw.append("\n");
@@ -87,7 +93,7 @@ public class ManagerDAO {
 				managers.replace(manager.getUsername(), manager);
 				Gson gson = new Gson();
 				String temp = gson.toJson(managers);
-				try(BufferedWriter bw = new BufferedWriter(new FileWriter("managers.json", true))){
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "managers.json", true))){
 					bw.append(temp);
 					bw.append("\n");
 					bw.close();
@@ -105,7 +111,7 @@ public class ManagerDAO {
 				managers.remove(manager.getUsername());
 				Gson gson = new Gson();
 				String temp = gson.toJson(managers);
-				try(BufferedWriter bw = new BufferedWriter(new FileWriter("managers.json", true))){
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "managers.json", true))){
 					bw.append(temp);
 					bw.append("\n");
 					bw.close();

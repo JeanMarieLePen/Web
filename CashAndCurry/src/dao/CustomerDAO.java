@@ -25,11 +25,13 @@ import sun.util.calendar.BaseCalendar.Date;
 public class CustomerDAO {
 	
 	private Map<String, Customer> customers = new HashMap<>();
+	private String contextPath;
 	public CustomerDAO() {
 		
 	}
 	
 	public CustomerDAO(String contextPath) {
+		this.contextPath = contextPath;
 		loadCustomers(contextPath);
 	}
 	
@@ -60,7 +62,7 @@ public class CustomerDAO {
 			customers.put(customer.getUsername(), customer);
 			Gson gson = new Gson();
 			String temp = gson.toJson(customers);
-			try(BufferedWriter bw = new BufferedWriter(new FileWriter("customers.json", true))){
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "customers.json", true))){
 				System.out.println("Upis novog korisnika u bazu.");
 				bw.append(temp);
 				bw.append("\n");
@@ -79,7 +81,7 @@ public class CustomerDAO {
 			customers.replace(customer.getUsername(), customer);
 			Gson gson = new Gson();
 			String temp = gson.toJson(customers);
-			try(BufferedWriter bw = new BufferedWriter(new FileWriter("customers.json", true))){
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "customers.json", true))){
 				bw.append(temp);
 				bw.append("\n");
 				bw.close();
@@ -97,7 +99,7 @@ public class CustomerDAO {
 			customers.remove(customer.getUsername());
 			Gson gson = new Gson();
 			String temp = gson.toJson(customers);
-			try(BufferedWriter bw = new BufferedWriter(new FileWriter("customers.json", true))){
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "customers.json", true))){
 				bw.append(temp);
 				bw.append("\n");
 				bw.close();

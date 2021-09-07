@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const API_URL = "http://localhost:8081/WebProjekat2021/rest";
+const API_URL = "http://localhost:8080/WebProjekat2021/rest";
 
 if (JSON.parse(localStorage.getItem('token')) != null){
     const token = JSON.parse(localStorage.getItem('token'));

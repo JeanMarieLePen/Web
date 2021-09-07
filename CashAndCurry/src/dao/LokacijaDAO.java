@@ -26,15 +26,17 @@ public class LokacijaDAO {
 
 	private Map<String, Lokacija> locations = new HashMap<>();
 	private Map<String, Restoran> restorani = new HashMap<>();
+	private String contextPath;
 	public LokacijaDAO() {
 		
 	}
 	public LokacijaDAO(String contextPath, String name) {
+		this.contextPath = contextPath;
 		loadLokacije(contextPath, name);
 	}
 	public void loadLokacije(String contextPath, String name) {
 		try {
-			JsonReader reader = new JsonReader(new FileReader("restaurants.json"));
+			JsonReader reader = new JsonReader(new FileReader(contextPath + "restaurants.json"));
 			Gson gson = new Gson();
 			Restoran[] tempRestorani = gson.fromJson(reader, Restoran[].class);
 			for(Restoran r: tempRestorani) {
@@ -71,7 +73,7 @@ public class LokacijaDAO {
 		Gson gson = new Gson();
 		String temp = gson.toJson(restorani);
 		//false kao parametar jer zelimo ponovni upis celog fajla
-		try(BufferedWriter bw = new BufferedWriter(new FileWriter("restaurants.json", false))){
+		try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "restaurants.json", false))){
 			bw.append(temp);
 			bw.append("\n");
 			bw.close();

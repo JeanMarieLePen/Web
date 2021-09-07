@@ -6,7 +6,11 @@ public class Manager extends GenericUser {
 	public String getRestaurant() {
 		return restaurant;
 	}
-
+	
+	public Manager() {
+		
+	}
+	
 	public void setRestaurant(String restaurant) {
 		this.restaurant = restaurant;
 	}

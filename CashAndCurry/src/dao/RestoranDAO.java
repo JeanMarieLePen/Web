@@ -19,6 +19,7 @@ import model.Restoran;
 
 public class RestoranDAO {
 		private Map<String, Restoran> restorani = new HashMap<>();
+		private String contextPath;
 		
 		public RestoranDAO()
 		{
@@ -27,6 +28,7 @@ public class RestoranDAO {
 		
 		public RestoranDAO(String contextPath)
 		{
+			this.contextPath = contextPath;
 			loadRestorani(contextPath);
 		}
 		
@@ -46,7 +48,7 @@ public class RestoranDAO {
 					listOfRestorani.add(r);
 					restorani.put(r.getName(), r);*/
 				
-					JsonReader reader = new JsonReader(new FileReader("restorani.json"));
+					JsonReader reader = new JsonReader(new FileReader(contextPath + "restorani.json"));
 					Gson gson = new Gson();
 					Restoran[] tempRestorani = gson.fromJson(reader, Restoran[].class);
 					for(Restoran c : tempRestorani) {
@@ -72,7 +74,7 @@ public class RestoranDAO {
 				restorani.put(restoran.getName(), restoran);
 				Gson gson = new Gson();
 				String temp = gson.toJson(restorani);
-				try(BufferedWriter bw = new BufferedWriter(new FileWriter("restorani.json", true))){
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "restorani.json", true))){
 					System.out.println("Upis novog korisnika u bazu.");
 					bw.append(temp);
 					bw.append("\n");
@@ -91,7 +93,7 @@ public class RestoranDAO {
 				restorani.replace(restoran.getName(), restoran);
 				Gson gson = new Gson();
 				String temp = gson.toJson(restorani);
-				try(BufferedWriter bw = new BufferedWriter(new FileWriter("restorani.json", true))){
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "restorani.json", true))){
 					bw.append(temp);
 					bw.append("\n");
 					bw.close();
@@ -109,7 +111,7 @@ public class RestoranDAO {
 				restorani.remove(restoran.getName());
 				Gson gson = new Gson();
 				String temp = gson.toJson(restorani);
-				try(BufferedWriter bw = new BufferedWriter(new FileWriter("restorani.json", true))){
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "restorani.json", true))){
 					bw.append(temp);
 					bw.append("\n");
 					bw.close();

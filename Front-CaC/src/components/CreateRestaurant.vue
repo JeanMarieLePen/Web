@@ -6,7 +6,7 @@
             <label class='label'>Tip restorana:</label>
             <select style="padding:5px;" v-model="tipoviRestorana">
                 <option disabled value="">Tip restorana</option>
-                <option v-on:click="addChoosenType(tipRestorana)" v-bind:key="tipRestorana"  v-for="tipRestorana in tipoviRestorana"></option> 
+                <option v-on:click="addChoosenType(tipRestorana)" v-bind:key="tipRestorana.naziv"  v-for="tipRestorana in tipoviRestorana"></option> 
             </select>
              <label class='label'>Lokacija restorana:</label>
             <!-- <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Odaberite tip ime menadzera..."  v-model="newRestaurant.tip"> -->
@@ -25,7 +25,7 @@
             <!-- <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unesite pol menadzera..."  v-model="newRestaurant.logo"> -->
             
             <label class='label'>Menadzer:</label>
-            <select style="padding:5px;" v-model="this.slobodniMenadzeri">
+            <select style="padding:5px;" v-model="this.freeManagers">
                 <option disabled value="">Odabir slobodnih menadzera</option>
                 <option v-on:click="addChoosenManager(freeManager)" v-bind:key="freeManager" v-for="freeManager in this.freeManagers">{{freeManager.username}}</option>
             </select>
@@ -69,6 +69,10 @@ export default {
             ],
             freeManagers:[],
             allManagers:[],
+            messages:{
+                successResponse:'',
+                errorResponse:'',
+            }
             
         }
             

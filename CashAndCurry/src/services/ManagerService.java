@@ -39,6 +39,7 @@ public class ManagerService {
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Manager addNewManager(Manager nazivManagera) {
+		System.out.println("UNOS MENADZERA U FAJL");
 		ManagerDAO dao = (ManagerDAO)ctx.getAttribute("managerDAO");
 		return dao.addNewManager(nazivManagera);
 	}

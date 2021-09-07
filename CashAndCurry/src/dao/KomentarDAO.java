@@ -24,17 +24,18 @@ public class KomentarDAO {
 
 	private Map<String, Komentar> comments = new HashMap<>();
 	private Map<String, Restoran> restorani = new HashMap<>();
-	
+	private String contextPath;
 	public KomentarDAO() {
 		
 	}
 	public KomentarDAO(String contextPath) {
+		this.contextPath = contextPath;
 		loadComments(contextPath);
 	}
 	public void loadComments(String contextPath) {
 		ArrayList<Restoran> restaurants = new ArrayList<Restoran>();
 		try {
-			JsonReader reader = new JsonReader(new FileReader("restorani.json"));
+			JsonReader reader = new JsonReader(new FileReader(contextPath + "restorani.json"));
 			Gson gson = new Gson();
 			Restoran[] tempRestorani = gson.fromJson(reader, Restoran[].class);
 			for(Restoran r : tempRestorani) {
@@ -73,7 +74,7 @@ public class KomentarDAO {
 		restorani.get(nazivRestorana).getComments().add(comment);
 		Gson gson = new Gson();
 		String temp = gson.toJson(restorani);
-		try(BufferedWriter bw = new BufferedWriter(new FileWriter("restorani.json", false))){
+		try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "restorani.json", false))){
 			bw.append(temp);
 			bw.append("\n");
 			bw.close();
