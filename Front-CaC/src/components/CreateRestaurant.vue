@@ -4,13 +4,13 @@
             <label class='label'>Naziv restorana:</label>
             <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unesite naziv restorana..."  v-model="newRestaurant.name">
             <label class='label'>Tip restorana:</label>
-            <select style="padding:5px;" v-model="tipoviRestorana">
+            <select style="padding:5px;" v-model="newRestaurant.type">
                 <option disabled value="">Tip restorana</option>
-                <option v-on:click="addChoosenType(tipRestorana)" v-bind:key="tipRestorana.naziv"  v-for="tipRestorana in tipoviRestorana"></option> 
-            </select>
-             <label class='label'>Lokacija restorana:</label>
+                <option  v-bind:key="tipRestorana.naziv"  v-for="tipRestorana in tipoviRestorana">{{tipRestorana.naziv}}</option> 
+            </select><br>
+             <!-- <label class='label'>Lokacija restorana:</label> -->
             <!-- <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Odaberite tip ime menadzera..."  v-model="newRestaurant.tip"> -->
-            <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unesite  prezime menadzera..."  v-model="newRestaurant.lokacija">
+            <!-- <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unesite  lokaciju restorana..."  v-model="newRestaurant.lokacija"> -->
             <label class='label'>Logo:</label>
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0">
@@ -25,9 +25,9 @@
             <!-- <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unesite pol menadzera..."  v-model="newRestaurant.logo"> -->
             
             <label class='label'>Menadzer:</label>
-            <select style="padding:5px;" v-model="this.freeManagers">
+            <select  @change="addChoosenManager()" style="padding:5px;" v-model="newRestaurant.manager">
                 <option disabled value="">Odabir slobodnih menadzera</option>
-                <option v-on:click="addChoosenManager(freeManager)" v-bind:key="freeManager" v-for="freeManager in this.freeManagers">{{freeManager.username}}</option>
+                <option v-bind:key="freeManager.username" v-for="freeManager in freeManagers">{{freeManager.username}}</option>
             </select>
             <!-- <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Odaberite slobodnog menadzera..."  v-model="newRestaurant.manager"> -->
             <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
@@ -47,12 +47,19 @@ export default {
         return {
             newRestaurant:{
                 name:'',
-                tip:'',
-                lokacija:'',
-                logo:'',
-                manager:'',
-                ocena:'',
+                type:''
             },
+            // newRestaurant:{
+            //     name:'',
+            //     type:'',
+            //     menuItems:null,
+            //     opened:true,
+            //     lokacija:null,
+            //     images:null,
+            //     comments:null,
+            //     manager:null,
+            //     ocena:0
+            // },
             tipoviRestorana:[
                 {
                     naziv:'porodicni'
@@ -79,14 +86,22 @@ export default {
     },
     methods:{
         addChoosenType:function(tipRestorana){
-            this.newRestaurant.tipRestorana = tipRestorana;
+            this.newRestaurant.type = tipRestorana;
         },
-        addChoosenManager:function(freeManager){
-            this.newRestaurant.manager = freeManager;
+        addChoosenManager:function(){
+            for(let i = 0; i < this.freeManagers.length; i++){
+                if(this.newRestaurant.manager == this.freeManagers[i].username){
+                    this.newRestaurant.manager = this.freeManagers[i];
+                    break;
+                }
+            }
+            console.log("Za menadzera je postavljen: " + this.newRestaurant.manager.username);
         },
         getManagers:function(){
+            console.log("GET FREE MANAGERS")
             dataService.getFreeManagers().then(response => {
                 this.freeManagers = response.data;
+                console.log("STIGLO SA BEKA:" + this.freeManagers[1].lastname);
             })
         },
         getUsernames:function(){
@@ -95,8 +110,8 @@ export default {
             })
         },
         createRestaurant:function(){
+            console.log("NA BEK SE SALJE OBJEKAT newRestaurant: " + JSON.stringify(this.newRestaurant));
             dataService.addRestaurant(this.newRestaurant).then(response =>{
-
             });
         },
         uploadImage:function(e){
@@ -105,7 +120,7 @@ export default {
             console.log(image);
             reader.readAsDataURL(image);
             reader.onload = () => {
-                this.newRestaurant.logo.push(reader.result);
+                this.newRestaurant.images.push(reader.result);
             }
 
         }

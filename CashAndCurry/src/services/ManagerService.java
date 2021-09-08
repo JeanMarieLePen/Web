@@ -38,10 +38,10 @@ public class ManagerService {
 	@POST
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Manager addNewManager(Manager nazivManagera) {
+	public Manager addNewManager(Manager manager) {
 		System.out.println("UNOS MENADZERA U FAJL");
 		ManagerDAO dao = (ManagerDAO)ctx.getAttribute("managerDAO");
-		return dao.addNewManager(nazivManagera);
+		return dao.addNewManager(manager);
 	}
 	
 	@GET
@@ -60,7 +60,11 @@ public class ManagerService {
 		ManagerDAO dao = (ManagerDAO)ctx.getAttribute("managerDAO");
 		return dao.findAllManagers();
 	}
-
-	
-
+	@GET
+	@Path("/free/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Manager> getFreeManagers(){
+		ManagerDAO dao = (ManagerDAO)ctx.getAttribute("managerDAO");
+		return dao.findFreeManagers();
+	}
 }

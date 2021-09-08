@@ -6,7 +6,6 @@ import SearchRestaurants from './components/SearchRestaurants'
 import NewRestaurant from './components/CreateRestaurant'
 import Login from './components/Login'
 import Homepage from './components/Homepage'
-import NewRestaurant from './components/CreateRestaurant'
 
 export default[
     {
@@ -37,7 +36,7 @@ export default[
     {
         path:'/login',
         name:'Login',
-        component:NewCustomer
+        component:Login
     },
     {
         path:'/about',
@@ -48,6 +47,11 @@ export default[
         path:'/newRestaurant',
         name:'NewRestaurant',
         component:NewRestaurant
+    },
+    {
+        path:'/home',
+        name:'HomePage',
+        component:Homepage
     }
     
 

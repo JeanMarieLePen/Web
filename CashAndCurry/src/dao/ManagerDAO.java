@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import model.Customer;
@@ -35,15 +36,6 @@ public class ManagerDAO {
 	public void loadManagers(String contextPath) {
 		BufferedReader in = null;
 		try {
-		/*	Gson gson = new Gson();
-			File file = new File(contextPath + "managers.json");
-			in = new BufferedReader(new FileReader(file));
-			ArrayList<Manager> listOfManagers = new ArrayList<Manager>();
-			String line;
-			while((line = in.readLine()) != null) {
-				Manager m = gson.fromJson(line, Manager.class);
-				listOfManagers.add(m);
-				managers.put(m.getUsername(), m);  */
 			
 			JsonReader reader = new JsonReader(new FileReader(contextPath + "managers.json"));
 			Gson gson = new Gson();
@@ -53,8 +45,6 @@ public class ManagerDAO {
 					managers.put(c.getUsername(), c);
 				}
 			}
-			
-			
 
 		}catch(Exception ex) {
 			ex.printStackTrace();
@@ -68,17 +58,43 @@ public class ManagerDAO {
 		return managers.containsKey(username) ? managers.get(username) : null;
 	}
 	
+	public Collection<Manager> findFreeManagers() {
+		Collection<Manager> tempLista =new ArrayList<Manager>();
+		for(Manager m : managers.values()) {
+			if(m.getRestaurant().equals("")) {
+				tempLista.add(m);
+			}
+		}
+		
+		
+		return tempLista;
+		
+	}
+	
 	//dodavanje novog Customera i njegovo cuvanje u bazu
 		public Manager addNewManager(Manager manager) {
 			if(!managers.containsKey(manager.getUsername())) {
 				managers.put(manager.getUsername(), manager);
 				Gson gson = new Gson();
 				String temp = gson.toJson(managers);
+				
+				Collection<Manager> tmp = this.managers.values();
+				String fileInput = gson.toJson(tmp);
+				
+				
+				
+				System.out.println("Lokacija upisivanja u fajl: " + contextPath);
 				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "managers.json", false))){
 					System.out.println("Upis novog menadzera u bazu.");
-					bw.append(temp);
+					bw.append(fileInput);
 					bw.append("\n");
 					bw.close();
+//				try{
+//					FileWriter fileWriter = new FileWriter(contextPath + "managers.json", true);
+//					Collection<Manager> tmp = this.managers.values();
+//					String fileInput = gson.toJson(tmp);
+//					System.out.println("ONO STO CE SE UPISATI U FAJL: " + fileInput);
+//					gson.toJson(tmp, fileWriter);
 				}catch(IOException e) {
 					e.printStackTrace();
 				}

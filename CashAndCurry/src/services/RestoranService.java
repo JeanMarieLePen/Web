@@ -17,7 +17,7 @@ import dao.RestoranDAO;
 import model.Customer;
 import model.Restoran;
 
-@Path("/restorani")
+@Path("/restaurants")
 public class RestoranService {
 	
 	@Context
@@ -39,6 +39,7 @@ public class RestoranService {
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Restoran addRestoran(Restoran restoran) {
+		System.out.println("uslo se u POST RESTORAN");
 		RestoranDAO dao = (RestoranDAO)ctx.getAttribute("restoranDAO");
 		return dao.addNewRestoran(restoran);
 	}

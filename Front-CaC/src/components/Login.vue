@@ -63,26 +63,27 @@ export default {
       submition: function () {
         console.log(this.username);
         console.log(this.password);
-        axios.post(`http://localhost:8080/auth/login`, {
-          username:this.username,
+        axios.post(`http://localhost:8080/WebProjekat2021/rest/login/${this.username}`, {
           password:this.password,
          }).then(response => {
-            if(response.status === 200 ){
-              console.log("Status 200");
-              this.token = response.data;
-              axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.accessToken;
-              localStorage.setItem('token', JSON.stringify(this.token))
-              this.$router.push('/home');           
+            if(response.status === 200){
+              console.log("Sa beka stiglo: " + response.data);
+              if(response.data !== ''){
+                  console.log("Status 200");
+                  this.token = response.data;
+                  axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data;
+                  localStorage.setItem('token', JSON.stringify(this.token))
+                  bus.$emit('loggedIn',true);
+                  this.$router.push('/home');  
+              }
+                       
             }           
           }).catch(error => {
-            localStorage.setItem('token', "Korisnik")
-            console.log("AAAAAAA")
-            this.$router.push('/home');
-            // if(error.response.status === 500  && error.response.data.message==='Bad credentials'){
-            //   this.errorMessage = `<h4>Username ili password su pogresno uneti!</h4>`;
-              
-            //   setTimeout(()=>this.errorMessage='',3000);
-            // }
+            if(error.response.status === 401  && error.response.data ==='Bad credentials!'){
+            this.errorMessage = `<h4>Username ili password su pogresno uneti!</h4>`;
+            
+            setTimeout(()=>this.errorMessage='',3000);
+          }
           });
         },
     },

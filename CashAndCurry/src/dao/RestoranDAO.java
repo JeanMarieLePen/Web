@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
 import model.Customer;
+import model.Manager;
 import model.Restoran;
 
 public class RestoranDAO {
@@ -32,33 +33,42 @@ public class RestoranDAO {
 			loadRestorani(contextPath);
 		}
 		
-		public void loadRestorani(String contextPath)
-		{
+		public void loadRestorani(String contextPath) {
 			BufferedReader in = null;
-			try
-			{
-				/*Gson gson = new Gson();
-				File file = new File(contextPath + "restorani.json");
-				in = new BufferedReader(new FileReader(file));
-				ArrayList<Restoran> listOfRestorani = new ArrayList<Restoran>();
-				String line;
-				while((line = in.readLine()) != null)
-				{
-					Restoran r = gson.fromJson(line, Restoran.class);
-					listOfRestorani.add(r);
-					restorani.put(r.getName(), r);*/
+			try {
 				
-					JsonReader reader = new JsonReader(new FileReader(contextPath + "restorani.json"));
-					Gson gson = new Gson();
-					Restoran[] tempRestorani = gson.fromJson(reader, Restoran[].class);
+				JsonReader reader = new JsonReader(new FileReader(contextPath + "restorani.json"));
+				Gson gson = new Gson();
+				Restoran[] tempRestorani = gson.fromJson(reader, Restoran[].class);
+				if(tempRestorani != null) {
 					for(Restoran c : tempRestorani) {
 						restorani.put(c.getName(), c);
+					}
 				}
-				
+
 			}catch(Exception ex) {
 				ex.printStackTrace();
 			}
+			
 		}
+		
+		
+//		public void loadRestorani(String contextPath)
+//		{
+//			BufferedReader in = null;
+//			try
+//			{	
+//					JsonReader reader = new JsonReader(new FileReader(contextPath + "restorani.json"));
+//					Gson gson = new Gson();
+//					Restoran[] tempRestorani = gson.fromJson(reader, Restoran[].class);
+//					for(Restoran c : tempRestorani) {
+//						restorani.put(c.getName(), c);
+//				}
+//				
+//			}catch(Exception ex) {
+//				ex.printStackTrace();
+//			}
+//		}
 		public Collection<Restoran> findAllRestorani()
 		{
 			return restorani.values();
@@ -70,13 +80,18 @@ public class RestoranDAO {
 		
 		//dodavanje novog Customera i njegovo cuvanje u bazu
 		public Restoran addNewRestoran(Restoran restoran) {
+			System.out.println("USLO U ADDNEWRESTORAN");
 			if(!restorani.containsKey(restoran.getName())) {
 				restorani.put(restoran.getName(), restoran);
 				Gson gson = new Gson();
 				String temp = gson.toJson(restorani);
-				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "restorani.json", true))){
-					System.out.println("Upis novog korisnika u bazu.");
-					bw.append(temp);
+				
+				Collection<Restoran> tmp = this.restorani.values();
+				String fileInput = gson.toJson(tmp);
+				
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "restorani.json", false))){
+					System.out.println("Upis novog restorana u bazu.");
+					bw.append(fileInput);
 					bw.append("\n");
 					bw.close();
 				}catch(IOException e) {
