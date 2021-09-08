@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import dao.CustomerDAO;
 import dao.RestoranDAO;
 import model.Customer;
+import model.Manager;
 import model.Restoran;
 
 @Path("/restaurants")
@@ -38,10 +39,10 @@ public class RestoranService {
 	@POST
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Restoran addRestoran(Restoran restoran) {
+	public Restoran addRestoran(Restoran r) {
 		System.out.println("uslo se u POST RESTORAN");
 		RestoranDAO dao = (RestoranDAO)ctx.getAttribute("restoranDAO");
-		return dao.addNewRestoran(restoran);
+		return dao.addNewRestoran(r);
 	}
 	
 	@GET
@@ -58,6 +59,11 @@ public class RestoranService {
 		RestoranDAO dao = (RestoranDAO)ctx.getAttribute("restoranDAO");
 		return dao.findRestoran(name);
 	}
-	
-
+	@GET
+	@Path("/noManager")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Restoran> getRestaurantsWithNoManagers(){
+		RestoranDAO dao = (RestoranDAO)ctx.getAttribute("restoranDAO");
+		return dao.findAllRestaurantsWithNoManagers();
+	}
 }

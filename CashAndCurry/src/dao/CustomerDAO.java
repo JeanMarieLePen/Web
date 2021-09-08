@@ -62,9 +62,13 @@ public class CustomerDAO {
 			customers.put(customer.getUsername(), customer);
 			Gson gson = new Gson();
 			String temp = gson.toJson(customers);
-			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "customers.json", true))){
+			
+			Collection<Customer> tmp = this.customers.values();
+			String fileInput = gson.toJson(tmp);
+			
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "customers.json", false))){
 				System.out.println("Upis novog korisnika u bazu.");
-				bw.append(temp);
+				bw.append(fileInput);
 				bw.append("\n");
 				bw.close();
 			}catch(IOException e) {
@@ -81,7 +85,7 @@ public class CustomerDAO {
 			customers.replace(customer.getUsername(), customer);
 			Gson gson = new Gson();
 			String temp = gson.toJson(customers);
-			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "customers.json", true))){
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "customers.json", false))){
 				bw.append(temp);
 				bw.append("\n");
 				bw.close();
@@ -99,7 +103,7 @@ public class CustomerDAO {
 			customers.remove(customer.getUsername());
 			Gson gson = new Gson();
 			String temp = gson.toJson(customers);
-			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "customers.json", true))){
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "customers.json", false))){
 				bw.append(temp);
 				bw.append("\n");
 				bw.close();

@@ -25,8 +25,8 @@
             </vuejsDatepicker>
             
             <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
-            <div v-if='messages.errorResponse' class="alert alert-success" v-html="messages.errorResponse"></div>
-            <button class="btn btn-success" v-on:click='getCustomerTest()'>Potvrdi</button>
+            <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
+            <button class="btn btn-success" v-on:click='createCustomer()'>Potvrdi</button>
         </div>
     </div>
 </template>
@@ -45,7 +45,6 @@ export default {
                 password:'',
                 gender:'',
                 dateOfBirth:''
-
             },
             messages:{
                 successResponse:'',
@@ -60,20 +59,29 @@ export default {
     watch:{
         'newCustomer.dateOfBirth' : function(val, oldVal){
             console.log(this.newCustomer.dateOfBirth);
-            this.newCustomer.dateOfBirth = this.newCustomer.dateOfBirth.toString().substring(0, 10);
+            this.newCustomer.dateOfBirth = this.newCustomer.dateOfBirth.toString().substring(4, 15);
         }
     },
     methods:{
         formatDate(){
             Console.log("USAO U FORMATDATE")
-            this.newCustomer.dateOfBirth = this.newCustomer.dateOfBirth.substring(0,10);
+            this.newCustomer.dateOfBirth = this.newCustomer.dateOfBirth.substring(4,15);
         },
         createCustomer:function(){
             console.log(JSON.stringify(this.newCustomer));
             console.log("AAAA")
             console.log(this.newCustomer);
             dataService.addCustomer(this.newCustomer).then(response => {
-                console.log("Stigao odgovor sa beka: " + response);
+                console.log("Stigao odgovor sa beka: " + response.data);
+                console.log("Stigao odgovor sa beka: " + response.data.stringify);
+                if(!response.data){
+                    this.messages.errorResponse= `<h4>Korisnik sa tim korisnickim imenom vec postoji. Izaberite drugo korisnicko ime.</h4>`;
+                    setTimeout(()=>this.messages.errorResponse='',3000);
+                }else{
+                    this.messages.successResponse=`<h4>Uspesno ste se registrovali. Bicete prebaceni na login stranicu. </h4>`
+                    setTimeout(()=>this.messages.successResponse='',3000);
+                    setTimeout(()=>this.$router.push('/login'), 3000);
+                }
             }).catch(error => {
                 if(error.response.status === 500 || error.response.status === 404){
                         this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
@@ -84,6 +92,14 @@ export default {
         addChoosenGender:function(pickedGender){
             this.newCustomer.gender = pickedGender.naziv;
         },
+        // addCustomer(){
+        //     dataService.addCustomer(this.newCustomer).then(response =>{
+        //         console.log("Kreiran je korisnik: " + response.data.username);
+        //         if(!response.data){
+        //             errorResponse
+        //         }
+        //     })
+        // }
         
         
         

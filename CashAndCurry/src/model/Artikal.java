@@ -12,6 +12,7 @@ public class Artikal {
 	private int kolicina;
 	private String opis;
 	private String slika;
+	
 	public Artikal(String naziv, int cena, String tip, String restoranKomPripada, int kolicina, String opis,
 			String slika) {
 		super();

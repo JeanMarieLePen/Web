@@ -47,19 +47,15 @@ export default {
         return {
             newRestaurant:{
                 name:'',
-                type:''
+                type:'',
+                menuItems:null,
+                opened:'',
+                lokacija:null,
+                images:null,
+                comments:null,
+                manager:'',
+                ocena:''
             },
-            // newRestaurant:{
-            //     name:'',
-            //     type:'',
-            //     menuItems:null,
-            //     opened:true,
-            //     lokacija:null,
-            //     images:null,
-            //     comments:null,
-            //     manager:null,
-            //     ocena:0
-            // },
             tipoviRestorana:[
                 {
                     naziv:'porodicni'

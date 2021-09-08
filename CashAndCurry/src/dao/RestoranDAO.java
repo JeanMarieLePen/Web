@@ -137,4 +137,14 @@ public class RestoranDAO {
 			}
 			return null;
 		}
+		
+		public Collection<Restoran> findAllRestaurantsWithNoManagers(){
+			Collection<Restoran> tmp = new ArrayList<Restoran>();
+			for(Restoran r : restorani.values()) {
+				if(r.getManager().getUsername().equals("")) {
+					tmp.add(r);
+				}
+			}
+			return tmp;
+		}
 }

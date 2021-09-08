@@ -109,7 +109,7 @@ public class ManagerDAO {
 				managers.replace(manager.getUsername(), manager);
 				Gson gson = new Gson();
 				String temp = gson.toJson(managers);
-				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "managers.json", true))){
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "managers.json", false))){
 					bw.append(temp);
 					bw.append("\n");
 					bw.close();
@@ -127,7 +127,7 @@ public class ManagerDAO {
 				managers.remove(manager.getUsername());
 				Gson gson = new Gson();
 				String temp = gson.toJson(managers);
-				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "managers.json", true))){
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "managers.json", false))){
 					bw.append(temp);
 					bw.append("\n");
 					bw.close();

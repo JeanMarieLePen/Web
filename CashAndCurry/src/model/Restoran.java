@@ -1,6 +1,8 @@
 package model;
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public class Restoran {
 	
 	private String name;
@@ -66,6 +68,11 @@ public class Restoran {
 	public void setOcena(int ocena) {
 		this.ocena = ocena;
 	}
+	
+	public Restoran() {
+		
+	}
+	
 	public Restoran(String name, String type, ArrayList<Artikal> menuItems, boolean opened, Lokacija lokacija,
 			ArrayList<String> images, ArrayList<Komentar> comments, Manager manager, int ocena) {
 		super();
