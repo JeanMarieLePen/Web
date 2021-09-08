@@ -6,6 +6,9 @@ import SearchRestaurants from './components/SearchRestaurants'
 import NewRestaurant from './components/CreateRestaurant'
 import Login from './components/Login'
 import Homepage from './components/Homepage'
+import UserProfile from './components/UserProfile'
+import UserProfileUpdate from './components/UserProfileUpdate'
+
 
 export default[
     {
@@ -52,6 +55,17 @@ export default[
         path:'/home',
         name:'HomePage',
         component:Homepage
+    }
+    ,
+    {
+        path:'/profile',
+        name:'UserProfile',
+        component:UserProfile
+    },
+    {
+        path:'/profile/:id/update',
+        name:'UserProfileUpdate',
+        component:UserProfileUpdate
     }
     
 
