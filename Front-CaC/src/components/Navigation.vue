@@ -26,9 +26,9 @@
           
           <router-link to='/login' class="nav-link" exact> <button v-show="loggedIn==false" class="btn" id='btnLogin'>Log In</button> </router-link>
           <button  class="btn" v-show="loggedIn==true" id='btnLogout' v-on:click='logOut()'>Log Out</button> 
-          <router-link to='/searchRestaurants' class="nav-link" exact>
+          <!-- <router-link to='/searchRestaurants' class="nav-link" exact>
             <button class="btn" id="btnLogin">Kreiraj korisnika</button>
-          </router-link>
+          </router-link> -->
         </div>
       </div>
     </nav> 

@@ -1,5 +1,5 @@
 import Home from './components/Home'
-import NewCustomer from './components/NewCustomer'
+import Registration from './components/Registration'
 import NewManager from './components/CreateManager'
 import NewDeliveryMan from './components/CreateDeliveryMan'
 import SearchRestaurants from './components/SearchRestaurants'
@@ -17,9 +17,9 @@ export default[
         component:Home
     },
     {
-        path:'/newCustomer',
-        name:'NewCustomer',
-        component:NewCustomer
+        path:'/registration',
+        name:'Registration',
+        component:Registration
     },
     {
         path:'/newManager',
