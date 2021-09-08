@@ -4,11 +4,11 @@
             <label class='label'>Korisnicko ime:</label>
             <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unestite korisnicko ime..."  v-model="newCustomer.username">
             <label class='label'>Ime:</label>
-            <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unestite korisnicko ime..."  v-model="newCustomer.name">
+            <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unestite vase ime..."  v-model="newCustomer.name">
             <label class='label'>Prezime:</label>
-            <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unestite korisnicko ime..."  v-model="newCustomer.lastname">
+            <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unestite vase prezime..."  v-model="newCustomer.lastname">
             <label class='label'>Lozinka:</label>
-            <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unestite korisnicko ime..."  v-model="newCustomer.password">
+            <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unestite lozinku..."  v-model="newCustomer.password">
             <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
             <div v-if='messages.errorResponse' class="alert alert-success" v-html="messages.errorResponse"></div>
             <button class="btn btn-success" v-on:click='getCustomerTest()'>Potvrdi</button>
