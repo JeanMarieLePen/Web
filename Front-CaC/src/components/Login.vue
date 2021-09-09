@@ -71,7 +71,8 @@ export default {
               if(response.data !== ''){
                   console.log("Status 200");
                   this.token = response.data;
-                  axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data;
+                  axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.username;
+                  console.log("Token koji se smesta u localstorage: " + JSON.stringify(this.token))
                   localStorage.setItem('token', JSON.stringify(this.token))
                   bus.$emit('loggedIn',true);
                   this.$router.push('/home');  

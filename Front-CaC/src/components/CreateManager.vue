@@ -78,10 +78,17 @@ export default{
         },
         createManager:function(){
             console.log(JSON.stringify(this.newManager));
-            console.log("AAAA")
             console.log(this.newManager);
             dataService.addManager(this.newManager).then(response => {
-                console.log("Stigao odgovor sa beka: " + response);
+                if(response.data !== ''){
+                    this.messages.successResponse= "<h4>Uspesno ste kreirali menadzera.</h4>"
+                    setTimeout(() => this.messages.successResponse='', 3000);
+                }else{
+                    this.messages.errorResponse= "<h4>Vec postoji menadzer sa tim korisnickim imenom.</h4>"
+                    setTimeout(() => this.messages.errorResponse='', 3000);
+                }
+                
+                
             }).catch(error => {
                 if(error.response.status === 500 || error.response.status === 404){
                         this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;

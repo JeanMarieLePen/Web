@@ -22,6 +22,9 @@ class DataService{
         console.log("AAAAA")
         return axios.post(`${API_URL}/customers/`, customer);
     }
+    updateCustomer(customer){
+        return axios.put.apply(`${API_URL}/customers/`, customer);
+    }
 
     //Manager
     addManager(manager){
@@ -34,7 +37,12 @@ class DataService{
     getAllManagers(){
         return axios.get(`${API_URL}/managers/`);
     }
-
+    getManager(id){
+        return axios.get(`${API_URL}/managers/${id}`);
+    }
+    updateManager(manager){
+        return axios.put(`${API_URL}/managers/`, manager);
+    }
 
     //DeliveryMan
     addDeliveryMan(deliveryMan){
@@ -50,11 +58,21 @@ class DataService{
         return axios.get(`${API_URL}/restaurants/noManager`);
     }
     addRestaurant(restaurant){
-        return axios.post(`${API_URL}/restaurants/`, restaurant)
+        return axios.post(`${API_URL}/restaurants/`, restaurant);
     }
     searchRestaurant(restaurant){
-        return axios.get(`${API_URL}/restaurants`, restaurant)
+        return axios.get(`${API_URL}/restaurants`, restaurant);
     }
+
+
+    //admin
+    getAdmin(id){
+        return axios.get(`${API_URL}/administrators/${id}`);
+    }
+    updateAdmin(admin){
+        return axios.put(`${API_URL}/administrators`, admin);
+    }
+
 }
 
 export default new DataService();

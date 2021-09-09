@@ -43,8 +43,17 @@ public class LoginService {
 	@POST
 	@Path("/{username}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String login(@PathParam("username") String username,  String password){
+	public LoginUser login(@PathParam("username") String username,  String password){
 		String tempRole = "";
+		String[] tokens = password.split(":");
+		String pw = "";
+		if(tokens.length == 2) {
+			pw = tokens[1].trim().substring(1, tokens[1].length() - 2);
+		}
+		System.out.println("SIFRA KOJA JE DOSLA SA FRONTA: " + pw);
+		
+		
+		LoginUser tempLog = new LoginUser();
 		Map<String, Administrator> administrators = new HashMap<>();
 		Map<String, Customer> customers = new HashMap<>();
 		Map<String, Manager> managers = new HashMap<>();
@@ -85,18 +94,34 @@ public class LoginService {
 			}
 			
 			if(administrators.containsKey(username)) {
-				tempRole = "admin";
-				return tempRole;
+				System.out.println("SIFRA PROCITANA IZ BAZE: " + administrators.get(username).getPassword());
+				if(administrators.get(username).getPassword().equals(pw)) {
+					tempRole = "admin";
+					tempLog.setRole("admin");
+					tempLog.setUsername(username);
+				}
+				
+				return tempLog;
 			}
 			if(customers.containsKey(username)) {
-				tempRole = "customer";
-				return tempRole;
+				if(customers.get(username).getPassword().equals(pw)) {
+					tempRole = "customer";
+					tempLog.setRole("customer");
+					tempLog.setUsername(username);
+				}
+				
+				return tempLog;
 			}
 			if(managers.containsKey(username)) {
-				tempRole = "manager";
-				return tempRole;
+				if(managers.get(username).getPassword().equals(pw)) {
+					tempRole = "manager";
+					tempLog.setRole("manager");
+					tempLog.setUsername(username);
+				}
+				
+				return tempLog;
 			}
-			return tempRole;
+			return tempLog;
 			
 	}
 	

@@ -8,6 +8,7 @@ import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -83,6 +84,13 @@ public class CustomerService {
 		System.out.println("POGODAK SA FRONTA");
 		CustomerDAO dao = (CustomerDAO)ctx.getAttribute("customerDAO");
 		return dao.findCustomer(username);
+	}
+	@PUT
+	@Path("/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Customer updateCustomer(Customer customer) {
+		CustomerDAO dao = (CustomerDAO)ctx.getAttribute("customerDAO");
+		return dao.updateCustomer(customer);
 	}
 	
 }

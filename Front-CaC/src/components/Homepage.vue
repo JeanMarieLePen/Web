@@ -116,8 +116,9 @@ export default {
     },
     created(){
         let parsToken = this.parseJwt(localStorage.getItem('token'));
+        console.log("ISPIS TOKENA:" + JSON.stringify(parsToken))
         localStorage.setItem('parsToken', JSON.stringify(parsToken));
-        this.user.username = parsToken.username;
+        this.user.username = parsToken;
     },
 }
 </script>

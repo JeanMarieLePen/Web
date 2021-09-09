@@ -11,31 +11,43 @@
                 <!-- Osoba -->
                     <li class="list-group-item" >
                         <h5 class="header5">Korisnicko ime</h5>
-                        <h4>{{profile.username}}</h4>
+                        <h4 v-show="isManager">{{profileManager.username}}</h4>
+                        <h4 v-show="isAdmin">{{profileAdmin.username}}</h4>
+                        <h4 v-show="isCustomer">{{profileCustomer.username}}</h4>
                     </li>
                     <li class="list-group-item" >
                         <h5 class="header5">Ime</h5>
-                        <h4>{{profile.name}}</h4>
+                        <h4 v-show="isManager">{{profileManager.name}}</h4>
+                        <h4 v-show="isAdmin">{{profileAdmin.name}}</h4>
+                        <h4 v-show="isCustomer">{{profileCustomer.name}}</h4>
                     </li>
 
                     <li class="list-group-item" >
                         <h5 class="header5">Prezime</h5>
-                        <h4>{{profile.lastname}}</h4>
+                        <h4 v-show="isManager">{{profileManager.lastname}}</h4>
+                        <h4 v-show="isAdmin">{{profileAdmin.lastname}}</h4>
+                        <h4 v-show="isCustomer">{{profileCustomer.lastname}}</h4>
                     </li>
 
                     <li class="list-group-item" >
                         <h5 class="header5">Pol</h5>
-                        <h4>{{profile.gender}}</h4>
+                        <h4 v-show="isManager">{{profileManager.gender}}</h4>
+                        <h4 v-show="isAdmin">{{profileAdmin.gender}}</h4>
+                        <h4 v-show="isCustomer">{{profileCustomer.gender}}</h4>
                     </li>
 
                     <li class="list-group-item" >
                         <h5 class="header5">Datum rodjenja</h5>
-                        <h4>{{profile.dateOfBirth}}</h4>
+                        <h4 v-show="isManager">{{profileManager.dateOfBirth}}</h4>
+                        <h4 v-show="isAdmin">{{profileAdmin.dateOfBirth}}</h4>
+                        <h4 v-show="isCustomer">{{profileCustomer.dateOfBirth}}</h4>
                     </li>
                 </ul>
 
                     <div id='buttonUpdate'>
-                    <button type='button' class="btn btn-lg btn-success marg" v-on:click='updateUser(profile.id)'> Update</button> 
+                    <button v-show="isAdmin" type='button' class="btn btn-lg btn-success marg" v-on:click='updateUser(profileAdmin.username)'> Update</button> 
+                    <button v-show="isManager" type='button' class="btn btn-lg btn-success marg" v-on:click='updateUser(profileManager.username)'> Update</button> 
+                    <button v-show="isCustomer" type='button' class="btn btn-lg btn-success marg" v-on:click='updateUser(profileCustomer.username)'> Update</button> 
                 </div>
             </form>
         </div>
@@ -44,11 +56,34 @@
 </template>
 <script>
 
-import UserDataService from '../services/DataService'
+import dataService from '../services/DataService'
 export default {
     data(){
         return{
-         profile: {
+            profileManager: {
+                id:'',
+                username:'',
+                name:'',
+                lastname:'',
+                password:'',
+                gender:'',
+                dateOfBirth:'',
+                restaurant:''
+            },
+            profileCustomer:{
+                id:'',
+                username:'',
+                name:'',
+                lastname:'',
+                password:'',
+                gender:'',
+                dateOfBirth:'',
+                listOfAllOrders:null,
+                cart:null,
+                numberOfPoints:0,
+                typeOfCustomer:''
+            },
+            profileAdmin:{
                 id:'',
                 username:'',
                 name:'',
@@ -56,14 +91,30 @@ export default {
                 password:'',
                 gender:'',
                 dateOfBirth:''
-            }
+            },
+            isAdmin:false,
+            isManager:false,
+            isCustomer:false
         }
     },
     methods:{
         getUserProfileData(id){
-            UserDataService.getUser(id).then(response => {
-                this.profile = response.data;
-            })
+            let parsToken = JSON.parse(localStorage.getItem('token'));
+            if(parsToken.role === "admin"){
+                dataService.getAdmin(id).then(response => {
+                    this.profileAdmin = response.data;
+                })
+            }
+            if(parsToken.role === "manager"){
+                dataService.getManager(id).then(response => {
+                    this.profileManager = response.data;
+                })
+            }
+            if(parsToken.role === "customer"){
+                dataService.getCustomer(id).then(respone => {
+                    this.profileCustomer = response.data;
+                })
+            }
         },
         updateUser(id){ 
             this.$router.push(`/profile/${id}/update`);
@@ -77,8 +128,19 @@ export default {
     },
 
     created(){
-        let parsToken = JSON.parse(localStorage.getItem('parsToken'));
-        this.getUserProfileData(parsToken.id);
+        let parsToken = JSON.parse(localStorage.getItem('token'));
+        console.log("TOKEN PROCITAN IZ LOCALSTORAGE-a: " + localStorage.getItem('token'));
+        if(parsToken.role === "admin"){
+            this.isAdmin = true;
+        }
+        if(parsToken.role === "manager"){
+            this.isManager = true;
+        }
+        if(parsToken.role === "customer"){
+            this.isCustomer = true;
+        }
+
+        this.getUserProfileData(parsToken.username);
     },
 
 }
