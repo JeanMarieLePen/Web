@@ -29,6 +29,8 @@
                 </div>
             </div>
 
+
+            <div v-show="isAdmin">
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/newManager" class="nav-link"
@@ -41,7 +43,9 @@
                     </router-link>
                 </div>
             </div>
+            </div>
 
+            <div v-show="isAdmin">
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/newRestaurant" class="nav-link"
@@ -54,7 +58,9 @@
                     </router-link>
                 </div>
             </div>
+            </div>
 
+            <div v-show="isAdmin">
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/newDeliveryMan" class="nav-link"
@@ -67,7 +73,9 @@
                     </router-link>
                 </div>
             </div>
+            </div>
 
+            <div v-show="isCustomer">
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/searchRestaurants" class="nav-link"
@@ -79,6 +87,7 @@
                         </div>
                     </router-link>
                 </div>
+            </div>
             </div>
         </div><!-- /.row -->
     </div>
@@ -100,7 +109,12 @@ export default {
             user:{
                 username:''
             },
-            mode: false
+            mode: false,
+            isAdmin: false,
+            isCustomer: false,
+            isDeliveryMan: false,
+            isManager: false,
+            role: ''
         }
     },
     methods:{
@@ -115,10 +129,37 @@ export default {
         }
     },
     created(){
+
         let parsToken = this.parseJwt(localStorage.getItem('token'));
         console.log("ISPIS TOKENA:" + JSON.stringify(parsToken))
         localStorage.setItem('parsToken', JSON.stringify(parsToken));
-        this.user.username = parsToken;
+        this.user.username = parsToken.username;
+        
+        
+        if(this.user.username==='admin')
+        {
+            this.isAdmin=true;
+            this.role=Admin;
+        }
+        if(this.user.username==='Manager')
+        {
+            this.isManager=true;
+            this.role=Manager;
+        }
+        if(this.user.username==='Customer')
+        {
+            this.isCustomer=true;
+            this.role=Manager;
+        }
+        if(this.user.username==='DeliveryMan')
+        {
+            this.isDeliveryMan=true;
+            this.role=DeliveryMan;
+        }
+
+        
+        
+        
     },
 }
 </script>

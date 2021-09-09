@@ -8,6 +8,8 @@ import Login from './components/Login'
 import Homepage from './components/Homepage'
 import UserProfile from './components/UserProfile'
 import UserProfileUpdate from './components/UserProfileUpdate'
+import About from './components/About'
+import CreateProduct from './components/CreateProduct'
 
 
 export default[
@@ -41,11 +43,11 @@ export default[
         name:'Login',
         component:Login
     },
-    {
-        path:'/about',
-        name:'Homepage',
-        component:Homepage
-    },
+    // {
+    //     path:'/about',
+    //     name:'About',
+    //     component:About
+    // },
     {
         path:'/newRestaurant',
         name:'NewRestaurant',
@@ -53,7 +55,7 @@ export default[
     },
     {
         path:'/home',
-        name:'HomePage',
+        name:'Homepage',
         component:Homepage
     }
     ,
@@ -66,6 +68,11 @@ export default[
         path:'/profile/:id/update',
         name:'UserProfileUpdate',
         component:UserProfileUpdate
+    },
+    {
+        path:'/about',
+        name:'CreateProduct',
+        component:CreateProduct
     }
     
 
