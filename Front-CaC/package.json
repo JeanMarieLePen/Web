@@ -16,6 +16,7 @@
     "cors": "^2.8.5",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",
+    "stars-rating": "^1.1.0",
     "vue": "^2.5.11",
     "vue-router": "^3.5.2",
     "vue-star-rating": "^1.7.0",

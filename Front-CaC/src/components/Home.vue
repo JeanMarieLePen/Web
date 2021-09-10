@@ -2,8 +2,8 @@
     <div id='home'>
         <section id="showcase"> 
             <div class="container">
-               <h1>Najbolje softversko rešenje na polju oglašavanja automobila</h1>
-                <h5>Ako tražite brz i jednostavan način za iznajmljivanje svojih vozila, pregled statistike o iznajmljivanju, kao i jednostavnu komunikaciju sa korisnicima <span id="AppBold">RentaAgentApp</span> je aplikacija za Vas!</h5>
+                <br/>
+               <img src="../assets/dddaaa.jpg" width="700" height="400" > <br/><br/>
                 </div>
         </section>
 
@@ -20,18 +20,15 @@
             <div class="container">
                 <div class="box" id='box1'>                        
                     <!-- <img src='src/assets/searchIconMain.png'> -->
-                    <h3>Pretraga i filtracija</h3>
-                    <p>Velika ponuda opcija za kreiranje i pretragu vozila, oglasa i cenovnika. Lako i brzo dodajte novo vozilo i napravite oglas, koje odgovara vasim potrebama, kroz svega nekoliko klikova!</p>
+                    <img src="../assets/italiaaa.jpg" width="800" height="200" >
                 </div>
                 <div class="box" id='box2'>
                     <!-- <img src='src/assets/addCarIcon2.1.png'>  -->
-                    <h3>Oglasi</h3>
-                    <p>Jednostavan i brz nacin oglašavanja, uz mogućnost detaljnog opisa vozila u ponudi. Jasan i jednostavan uvid u trenutnu dostupnost oglašavanih vozila. </p>
+                    <img src="../assets/kinaa.jpg" width="800" height="200" >
                 </div>
                 <div class="box" id='box3'>
                     <!-- <img src='src/assets/comment3.1.jpg'>  -->
-                    <h3>Povratne informacije</h3>
-                    <p>Brz i jednostavana način komunikacije sa drugim korisnicima, kao i pregled ocena i komentara ostavljenih na Vaša vozila</p>
+                    <img src="../assets/rostiljss.png" width="800" height="200" >
                 </div>
             </div>
         </section>
@@ -198,7 +195,7 @@ ul{
 }
 
 #boxes .box img{
-    width:100px;
+    width:200px;
 }
 
 #boxes #box2 img{
