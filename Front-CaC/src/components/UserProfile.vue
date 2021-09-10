@@ -128,19 +128,23 @@ export default {
     },
 
     created(){
-        let parsToken = JSON.parse(localStorage.getItem('token'));
-        console.log("TOKEN PROCITAN IZ LOCALSTORAGE-a: " + localStorage.getItem('token'));
-        if(parsToken.role === "admin"){
-            this.isAdmin = true;
-        }
-        if(parsToken.role === "manager"){
-            this.isManager = true;
-        }
-        if(parsToken.role === "customer"){
-            this.isCustomer = true;
-        }
+        if(JSON.parse(localStorage.getItem('token')) == null){
+            this.$router.push(`/login`);
+        }else{
+            let parsToken = JSON.parse(localStorage.getItem('token'));
+            console.log("TOKEN PROCITAN IZ LOCALSTORAGE-a: " + localStorage.getItem('token'));
+            if(parsToken.role === "admin"){
+                this.isAdmin = true;
+            }
+            if(parsToken.role === "manager"){
+                this.isManager = true;
+            }
+            if(parsToken.role === "customer"){
+                this.isCustomer = true;
+            }
 
-        this.getUserProfileData(parsToken.username);
+            this.getUserProfileData(parsToken.username);
+        }
     },
 
 }

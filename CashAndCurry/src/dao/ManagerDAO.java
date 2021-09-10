@@ -59,7 +59,7 @@ public class ManagerDAO {
 	}
 	
 	public Collection<Manager> findFreeManagers() {
-		Collection<Manager> tempLista =new ArrayList<Manager>();
+		Collection<Manager> tempLista = new ArrayList<Manager>();
 		for(Manager m : managers.values()) {
 			if(m.getRestaurant().equals("")) {
 				tempLista.add(m);

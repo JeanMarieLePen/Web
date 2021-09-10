@@ -10,6 +10,7 @@ import UserProfile from './components/UserProfile'
 import UserProfileUpdate from './components/UserProfileUpdate'
 import About from './components/About'
 import CreateProduct from './components/CreateProduct'
+import RestaurantDetails from './components/RestaurantDetails'
 
 
 export default[
@@ -73,6 +74,11 @@ export default[
         path:'/about',
         name:'CreateProduct',
         component:CreateProduct
+    },
+    {
+        path:'/restaurants/:id/details',
+        name:'RestaurantDetails',
+        component:RestaurantDetails
     }
     
 

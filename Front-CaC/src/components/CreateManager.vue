@@ -52,7 +52,7 @@ export default{
                 username:'',
                 name:'',
                 lastname:'',
-                password:'',
+                password:'1234',
                 gender:'',
                 dateOfBirth:'',
                 restaurant:''
@@ -117,8 +117,12 @@ export default{
         vuejsDatepicker:Datepicker,
     },
     created(){      
-        this.getUsernames();
-        this.getRestaurantsWithNoManagers();
+        if(JSON.parse(localStorage.getItem('token')) == null){
+            this.$router.push(`/login`);
+        }else{
+            this.getUsernames();
+            this.getRestaurantsWithNoManagers();
+        }
     }
 }
 </script>

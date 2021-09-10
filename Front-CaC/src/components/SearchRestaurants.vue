@@ -17,14 +17,11 @@
                                 </span> 
                                 <span class="col-xl-3 col-md-6 mb-1">
                                     <span class="span_search">Naziv restorana</span>
-                                    <select style="padding:5px;" v-model="searchedRestoran.nazivRestorana">
-                                        <option disabled value=""></option>
-                                        <option  v-bind:key="rst.naziv" v-for="rst in displayedRestaurants">{{rst.naziv}}</option> 
-                                    </select>
+                                    <input class="form-control mr-sm-2" type="text" placeholder="Naziv restorana" aria-label="Search" v-model="searchedRestoran.name">
                                 </span>
                                 <span class="col-xl-3 col-md-6 mb-3"> 
                                     <span class="span_search">Tip restorana</span>
-                                    <select style="padding:5px;" v-model="searchedRestoran.tip">
+                                    <select style="padding:5px;" v-model="searchedRestoran.type">
                                         <option disabled value="">Tip restorana </option>
                                         <option v-bind:key="tempTip.naziv"  v-for="tempTip in typesOfRestaurants">{{tempTip.naziv}}</option>
                                     </select>
@@ -66,31 +63,27 @@
                             <img v-if='currentSortDir == "desc" && currentSort== "ocenaRestorana" ' src='../assets/down-arrow1.1.png'>
                         </th>
                         <th>Menadzer</th>
-                        <th>Logo</th>
+                        <!-- <th>Logo</th> -->
                         <th>Otvoren</th>
+                        <th>Detaljno</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-bind:key='rst.naziv' v-for="rst in sortRestaurants">
+                    <tr v-bind:key='rst.name' v-for="rst in sortRestaurants">
                         <td>{{rst.name}}</td>
-                        <td>{{rst.tip}}</td>
+                        <td>{{rst.type}}</td>
                         <td>{{rst.lokacija}}</td>
                         <td>{{rst.ocena}}</td>
-                        <td>{{rst.manager}}</td>
-                        <td>{{rst.logo}}</td>
+                        <td>{{rst.manager.username}}</td>
+                        <!-- <td>{{rst.images}}</td> -->
                         <td v-show='rst.opened'>{{"otvoren"}}</td>
                         <td v-show='!rst.opened'>{{"zatvoren"}}</td>
+                        <td>
+                            <button @click="showDetails(rst.name)" class=' btn btn-sm classButton shadow'>Detaljni prikaz</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
-            <div id='options'>
-                <router-link to="/cars/new"> <button class=' btn btn-lg classButton shadow'>+ Dodaj vozilo</button>
-                </router-link>
-                <router-link to="/cars/comments"> <button class='btn classButton shadow'>Komentari</button>
-                </router-link>
-                <router-link to="/reservations"> <button class='btn classButton shadow'>Rezervacije</button>
-                </router-link>
-            </div>
         </div>
 
     </div>
@@ -105,76 +98,22 @@ export default {
             filterInput:'',
             currentSort: 'ocenaRestorana',
             currentSortDir: 'asc',
-            // sortedRestaurants:[],
-            searchedRestoran:{
-                naziv:null,
-                tip:null,
-                lokacija:null,
-                prosecnaOcena:null,
-                logo:null,
-                manager:null,
-                opened:null
-            },
-            sortedRestaurants:[
-                 {
-                    name:'Pecenjara UNA',
-                    tip:'porodicni',
-                    lokacija:'Novi Sad, Temerinski put 22',
-                    logo:null,
-                    manager:'Djoko Prica',
-                    ocena:'4',
-                    opened:true
-                },
-                {
-                   name:'Restoran bellissimo',
-                    tip:'porodicni',
-                    lokacija:'Novi Sad, Bulevar Oslobodjenja 19a',
-                    logo:null,
-                    manager:'Matea Sprajc',
-                    ocena:'1',
-                    opened:true
-                },
-                {
-                   name:'Restoran Tri sesira',
-                    tip:'kafana',
-                    lokacija:'Beograd, Skadarlija',
-                    logo:null,
-                    manager:'Bozidar Djelic',
-                    ocena:'5',
-                    opened:false
-                }
-            ],
-            // displayedRestaurants:[],
-            displayedRestaurants:[
-                 {
-                    name:'Pecenjara UNA',
-                    tip:'porodicni',
-                    lokacija:'Novi Sad, Temerinski put 22',
-                    logo:null,
-                    manager:'Djoko Prica',
-                    ocena:'4',
-                    opened:true
-                },
-                {
-                   name:'Restoran bellissimo',
-                    tip:'porodicni',
-                    lokacija:'Novi Sad, Bulevar Oslobodjenja 19a',
-                    logo:null,
-                    manager:'Matea Sprajc',
-                    ocena:'1',
-                    opened:true
-                },
-                {
-                   name:'Restoran Tri sesira',
-                    tip:'kafana',
-                    lokacija:'Beograd, Skadarlija',
-                    logo:null,
-                    manager:'Bozidar Djelic',
-                    ocena:'5',
-                    opened:false
-                }
-            ],
 
+
+
+            searchedRestoran:{
+                name:'',
+                type:'',
+                menuItems:null,
+                opened:'',
+                lokacija:'',
+                images:null,
+                comments:null,
+                manager:'',
+                ocena:''
+            },
+            displayedRestaurants:[],
+        
             typesOfRestaurants:[
                 {
                     naziv:'porodicni'
@@ -226,22 +165,6 @@ export default {
     },
     computed:{
         sortRestaurants:function(){
-            // if(this.currentSort == 'nazivRestorana'){
-            //     if(this.currentSortDir == 'asc'){
-            //         return this.displayedRestaurants.sort((a, b) => (a.name > b.name) ? 1 : -1)
-            //     }
-            //     else{
-            //         return this.displayedRestaurants.sort((a, b) => (a.name < b.name) ? 1 : -1)
-            //     }
-            // }
-            // if(this.currentSort == 'ocenaRestorana'){
-            //     if(this.currentSortDir == 'asc'){
-            //         return this.displayedRestaurants.sort((a, b) => (a.ocena > b.ocena) ? 1 : -1)
-            //     }
-            //     else{
-            //         return this.displayedRestaurants.sort((a, b) => (a.ocena < b.ocena) ? 1 : -1)
-            //     }
-            // }
             return this.displayedRestaurants.filter(this.filterByName).filter(this.filterByOpened).sort(this.sortiraj);
         }
     },
@@ -274,14 +197,44 @@ export default {
             }
         },
         searchRestaurant(){
-            dataService.searchRestaurant(this.searchedRestoran).then(response =>{
+            console.log("na bek ide restoran: " + JSON.stringify(this.searchedRestoran));
+            let zahtev = 'name:';
+            if(this.searchedRestoran.name != ""){
+                zahtev += this.searchedRestoran.name;
+            }
+            else{
+                zahtev += "_";
+            }
+            zahtev += "&lokacija:"
+            if(this.searchedRestoran.lokacija != ""){
+                zahtev += this.searchedRestoran.lokacija;
+            }
+            else{
+                zahtev += "_";
+            }
+            zahtev += "&type:";
+            if(this.searchedRestoran.type != ""){
+                zahtev += this.searchedRestoran.type;
+            }
+            else{
+                zahtev += "_";
+            }
+            zahtev += "&ocena:";
+            if(this.searchedRestoran.ocena != ""){
+                zahtev += this.searchedRestoran.ocena;
+            }
+            else{
+                zahtev += "_";
+            }
+            console.log("ZAHTEV: " + zahtev);
+            dataService.searchRestaurant(zahtev).then(response =>{
                 console.log("Stigli rezultati pretrage");
                 this.displayedRestaurants = response.data;
             })
         },
         filterReset(){
-            this.searchedRestoran.naziv = null;
-            this.searchedRestoran.tip = null;
+            this.searchedRestoran.name = null;
+            this.searchedRestoran.type = null;
             this.searchedRestoran.lokacija = null;
             this.searchedRestoran.prosecnaOcena = null;
             this.searchedRestoran.logo = null;
@@ -307,10 +260,18 @@ export default {
         },
         filterChange(){
             console.log("ispis filtera: " + this.filterOpenedOnly)
+        },
+        showDetails:function(id){
+            this.$router.push(`/restaurants/${id}/details`);
         }
     },
     created(){
-        this.getAllRestaurants();
+        if(JSON.parse(localStorage.getItem('token')) == null){
+            this.$router.push(`/login`);
+        }else{
+            this.getAllRestaurants();
+        }
+        
     }
 }
 </script>
@@ -356,7 +317,7 @@ export default {
   margin-left: 5px;
   color:#fff;
   background-color:#35424a;
-  padding:10px;
+  padding:5px;
 }
 
 .classButton:hover{

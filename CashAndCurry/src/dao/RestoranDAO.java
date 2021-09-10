@@ -10,10 +10,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
+import jersey.repackaged.com.google.common.base.Predicates;
+import jersey.repackaged.com.google.common.collect.Collections2;
 import model.Customer;
 import model.Manager;
 import model.Restoran;
@@ -75,7 +80,8 @@ public class RestoranDAO {
 		}
 		public Restoran findRestoran(String name)
 		{
-			return restorani.containsKey(name) ? restorani.get(name) : null;
+			Restoran r = restorani.containsKey(name) ? restorani.get(name) : null;
+			return r;
 		}
 		
 		//dodavanje novog Customera i njegovo cuvanje u bazu
@@ -138,6 +144,36 @@ public class RestoranDAO {
 			return null;
 		}
 		
+		public Collection<Restoran> findFilteredResults(Restoran restoran){
+			Collection<Restoran> tmp = new ArrayList<Restoran>();
+			
+//			Predicate<Restoran> nameFilter = e -> e.getName().equals(restoran.getName()) && e.getType().equals(restoran.getType());
+			Predicate<Restoran> nameFilter = e -> e.getName().equals(restoran.getName());
+			Predicate<Restoran> lokacijaFilter = e -> e.getLokacija().getAddress().equals(restoran.getLokacija().getAddress()); 
+			Predicate<Restoran> tipFilter = e -> e.getType().equals(restoran.getType());
+			Predicate<Restoran> ocenaFilter = e -> e.getOcena() >= restoran.getOcena();
+//			if(restoran.getName()!= "" && restoran.getLokacija() != null && restoran.getOcena() > 0 && restoran.getType() != "") {
+//				tmp = (Collection<Restoran>) restorani.values().stream().filter(nameFilter.and(lokacijaFilter.and(tipFilter).and(ocenaFilter)));
+//			}
+//			else if(restoran.getName()!= "" && restoran.getLokacija() != null && restoran.getOcena() > 0) {
+//				tmp = (Collection<Restoran>) restorani.values().stream().filter(nameFilter.and(lokacijaFilter.and(ocenaFilter)));
+//			}
+//			else if(restoran.getName()!= "" && restoran.getLokacija() != null) {
+//				tmp = (Collection<Restoran>) restorani.values().stream().filter(nameFilter.and(lokacijaFilter));
+//			}else if(restoran.getName()!= "") {
+//				tmp = (Collection<Restoran>) restorani.values().stream().filter(nameFilter);
+//			}
+					
+//			tmp = this.restorani.values().stream().filter(nameFilter.and(lokacijaFilter.and(tipFilter).and(ocenaFilter))).collect(Collectors.toList());
+//			tmp = restorani.values().stream().filter(nameFilter).collect(Collectors.toList());
+//			System.out.println("Pronadjeno je: " + tmp.size() + " restorana koji zadovoljavaju kriterijume.");
+//			tmp = tmp.stream().filter(nameFilter.and(tipFilter)).collect(Collectors.toList());
+			tmp = restorani.values().stream().filter(nameFilter).collect(Collectors.toList());
+			System.out.println("Pronadjeno je: " + tmp.size() + " restorana koji zadovoljavaju kriterijume.");
+			return tmp;
+			
+		}
+		
 		public Collection<Restoran> findAllRestaurantsWithNoManagers(){
 			Collection<Restoran> tmp = new ArrayList<Restoran>();
 			for(Restoran r : restorani.values()) {
@@ -145,6 +181,18 @@ public class RestoranDAO {
 					tmp.add(r);
 				}
 			}
+			System.out.println("Broj svih menadzera: " + tmp.size());
+			return tmp;
+		}
+		
+		public Collection<Restoran> findAllRestaurantsWithManagers(){
+			Collection<Restoran> tmp = new ArrayList<Restoran>();
+			for(Restoran r : restorani.values()) {
+				if(!r.getManager().getUsername().equals("")) {
+					tmp.add(r);
+				}
+			}
+			System.out.println("Broj restorana koji imaju menadzere: " + tmp.size());
 			return tmp;
 		}
 }

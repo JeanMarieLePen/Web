@@ -73,9 +73,13 @@ export default {
                   this.token = response.data;
                   axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.username;
                   console.log("Token koji se smesta u localstorage: " + JSON.stringify(this.token))
-                  localStorage.setItem('token', JSON.stringify(this.token))
-                  bus.$emit('loggedIn',true);
-                  this.$router.push('/home');  
+                  console.log(this.token.role)
+                  if(this.token.role !== null){
+                      localStorage.setItem('token', JSON.stringify(this.token))
+                      bus.$emit('loggedIn',true);
+                      this.$router.push('/home'); 
+                  }
+                   
               }
                        
             }           
@@ -92,7 +96,11 @@ export default {
         
     },
     created(){
-     
+      if(JSON.parse(localStorage.getItem('token')) != null){
+            this.$router.push(`/`);
+      }else{
+
+      }
     }
   }
 </script>

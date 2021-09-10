@@ -473,7 +473,11 @@ export default {
         }
     },
     created(){
-        this.getUserProfileData(this.id);
+        if(JSON.parse(localStorage.getItem('token')) == null){
+            this.$router.push(`/login`);
+        }else{
+            this.getUserProfileData(this.id);
+        }
     },
     components:{
         vuejsDatepicker:Datepicker,

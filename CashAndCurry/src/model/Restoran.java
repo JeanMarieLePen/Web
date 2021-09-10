@@ -13,7 +13,7 @@ public class Restoran {
 	private ArrayList<String> images = new ArrayList<String>();
 	private ArrayList<Komentar> comments = new ArrayList<Komentar>();
 	private Manager manager;
-	private int ocena;
+	private int ocena = 0;
 	public String getName() {
 		return name;
 	}

@@ -29,9 +29,7 @@
                 </div>
             </div>
 
-
-            <div v-show="isAdmin">
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div v-show='isAdmin' class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/newManager" class="nav-link"
                         exact>
@@ -43,10 +41,7 @@
                     </router-link>
                 </div>
             </div>
-            </div>
-
-            <div v-show="isAdmin">
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div v-show='isAdmin' class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/newRestaurant" class="nav-link"
                         exact>
@@ -58,10 +53,7 @@
                     </router-link>
                 </div>
             </div>
-            </div>
-
-            <div v-show="isAdmin">
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div v-show='isAdmin' class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/newDeliveryMan" class="nav-link"
                         exact>
@@ -73,10 +65,7 @@
                     </router-link>
                 </div>
             </div>
-            </div>
-
-            <div v-show="isCustomer">
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div v-show='isCustomer' class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/searchRestaurants" class="nav-link"
                         exact>
@@ -87,7 +76,6 @@
                         </div>
                     </router-link>
                 </div>
-            </div>
             </div>
         </div><!-- /.row -->
     </div>
@@ -130,36 +118,30 @@ export default {
     },
     created(){
 
-        let parsToken = this.parseJwt(localStorage.getItem('token'));
-        console.log("ISPIS TOKENA:" + JSON.stringify(parsToken))
-        localStorage.setItem('parsToken', JSON.stringify(parsToken));
-        this.user.username = parsToken.username;
-        
-        
-        if(this.user.username==='admin')
+       // let parsToken = this.parseJwt(localStorage.getItem('token'));
+        //console.log("ISPIS TOKENA:" + JSON.stringify(parsToken))
+        //localStorage.setItem('parsToken', JSON.stringify(parsToken));
+        let temp = JSON.parse(localStorage.getItem('token'));
+        if(temp.role ==='admin')
         {
             this.isAdmin=true;
-            this.role=Admin;
+            this.role='admin';
         }
-        if(this.user.username==='Manager')
+        if(temp.role==='manager')
         {
             this.isManager=true;
-            this.role=Manager;
+            this.role='manager';
         }
-        if(this.user.username==='Customer')
+        if(temp.role==='customer')
         {
             this.isCustomer=true;
-            this.role=Manager;
+            this.role='customer';
         }
-        if(this.user.username==='DeliveryMan')
+        if(temp.role==='deliveryman')
         {
             this.isDeliveryMan=true;
-            this.role=DeliveryMan;
-        }
-
-        
-        
-        
+            this.role='deliveryman';
+        }       
     },
 }
 </script>

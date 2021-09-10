@@ -60,8 +60,14 @@ class DataService{
     addRestaurant(restaurant){
         return axios.post(`${API_URL}/restaurants/`, restaurant);
     }
-    searchRestaurant(restaurant){
-        return axios.get(`${API_URL}/restaurants`, restaurant);
+    searchRestaurant(zahtev){
+        return axios.get(`${API_URL}/restaurants/filtered/${zahtev}`);
+    }
+    getRestaurantsWithManager(){
+        return axios.get(`${API_URL}/restaurants/hasManager`);
+    }
+    getRestaurant(id){
+        return axios.get(`${API_URL}/restaurants/${id}`);
     }
 
 
