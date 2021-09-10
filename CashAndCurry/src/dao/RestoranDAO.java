@@ -19,6 +19,7 @@ import com.google.gson.stream.JsonReader;
 
 import jersey.repackaged.com.google.common.base.Predicates;
 import jersey.repackaged.com.google.common.collect.Collections2;
+import model.Artikal;
 import model.Customer;
 import model.Manager;
 import model.Restoran;
@@ -84,6 +85,19 @@ public class RestoranDAO {
 			return r;
 		}
 		
+		
+		public Restoran getRestoranByManager(String username) {
+			Collection<Restoran> temp = restorani.values();
+			Restoran r = new Restoran();
+			//u for petlji dobijarmo restoran r u kojem radi prosledjeni menadzer
+			for(Restoran tempRestoran : restorani.values()) {
+				if(tempRestoran.getManager().getUsername().equals(username)) {
+					r = tempRestoran;
+					break;
+				}
+			}
+			return r;
+		}
 		//dodavanje novog Customera i njegovo cuvanje u bazu
 		public Restoran addNewRestoran(Restoran restoran) {
 			System.out.println("USLO U ADDNEWRESTORAN");
@@ -114,7 +128,7 @@ public class RestoranDAO {
 				restorani.replace(restoran.getName(), restoran);
 				Gson gson = new Gson();
 				String temp = gson.toJson(restorani);
-				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "restorani.json", true))){
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "restorani.json", false))){
 					bw.append(temp);
 					bw.append("\n");
 					bw.close();
@@ -132,7 +146,7 @@ public class RestoranDAO {
 				restorani.remove(restoran.getName());
 				Gson gson = new Gson();
 				String temp = gson.toJson(restorani);
-				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "restorani.json", true))){
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "restorani.json", false))){
 					bw.append(temp);
 					bw.append("\n");
 					bw.close();
@@ -195,4 +209,55 @@ public class RestoranDAO {
 			System.out.println("Broj restorana koji imaju menadzere: " + tmp.size());
 			return tmp;
 		}
+		
+		public Collection<Artikal> getProducts(String username){
+			Collection<Restoran> temp = restorani.values();
+			Restoran r = new Restoran();
+			//u for petlji dobijarmo restoran r u kojem radi prosledjeni menadzer
+			for(Restoran tempRestoran : restorani.values()) {
+				if(tempRestoran.getManager().getUsername().equals(username)) {
+					r = tempRestoran;
+					break;
+				}
+			}
+			
+			return r.getMenuItems();
+		}
+		
+		public Artikal addArtikal(String username, Artikal a) {
+			Collection<Restoran> temp = restorani.values();
+			Restoran r = new Restoran();
+			//u for petlji dobijarmo restoran r u kojem radi prosledjeni menadzer
+			for(Restoran tempRestoran : restorani.values()) {
+				if(tempRestoran.getManager().getUsername().equals(username)) {
+					r = tempRestoran;
+					break;
+				}
+			}
+			
+			for(Artikal tempArt : r.getMenuItems()) {
+				if(a.getNaziv().equals(tempArt.getNaziv())) {
+					return null;
+				}
+			}
+			r.getMenuItems().add(a);
+			
+			
+			Gson gson = new Gson();
+			Collection<Restoran> tmp = this.restorani.values();
+			String fileInput = gson.toJson(tmp);
+			
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "restorani.json", false))){
+				System.out.println("Upis novog restorana u bazu.");
+				bw.append(fileInput);
+				bw.append("\n");
+				bw.close();
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+	
+			
+			return a;
+		}
+		
 }

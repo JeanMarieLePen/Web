@@ -11,6 +11,7 @@ import UserProfileUpdate from './components/UserProfileUpdate'
 import About from './components/About'
 import CreateProduct from './components/CreateProduct'
 import RestaurantDetails from './components/RestaurantDetails'
+import RestaurantDetailsManager from './components/RestaurantDetailsManager'
 
 
 export default[
@@ -71,7 +72,7 @@ export default[
         component:UserProfileUpdate
     },
     {
-        path:'/about',
+        path:'/createProduct',
         name:'CreateProduct',
         component:CreateProduct
     },
@@ -79,6 +80,11 @@ export default[
         path:'/restaurants/:id/details',
         name:'RestaurantDetails',
         component:RestaurantDetails
+    },
+    {
+        path:'/restaurant/details',
+        name:'RestaurantDetailsManager',
+        component:RestaurantDetailsManager
     }
     
 

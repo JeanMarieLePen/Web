@@ -69,6 +69,15 @@ class DataService{
     getRestaurant(id){
         return axios.get(`${API_URL}/restaurants/${id}`);
     }
+    addProduct(id, product){
+        return axios.put(`${API_URL}/restaurants/${id}`, product)
+    }
+    getProducts(id){
+        return axios.get(`${API_URL}/restaurants/yours/${id}/`)
+    }
+    getRestaurantByManager(id){
+        return axios.get(`${API_URL}/restaurants/bymanager/${id}`);
+    }
 
 
     //admin

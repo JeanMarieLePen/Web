@@ -1,11 +1,13 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -14,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 
 import dao.CustomerDAO;
 import dao.RestoranDAO;
+import model.Artikal;
 import model.Customer;
 import model.Lokacija;
 import model.Manager;
@@ -134,5 +137,29 @@ public class RestoranService {
 	public Collection<Restoran> getRestaurantsWithNoManagers(){
 		RestoranDAO dao = (RestoranDAO)ctx.getAttribute("restoranDAO");
 		return dao.findAllRestaurantsWithNoManagers();
+	}
+	
+	@PUT
+	@Path("/{username}/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Artikal addArtikal(@PathParam ("username") String username, Artikal a) {
+		RestoranDAO dao = (RestoranDAO)ctx.getAttribute("restoranDAO");
+		return dao.addArtikal(username, a);
+	}
+	
+	@GET
+	@Path("/bymanager/{username}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Restoran getRestaurantByManager(@PathParam("username") String username) {
+		RestoranDAO dao = (RestoranDAO)ctx.getAttribute("restoranDAO");
+		return dao.getRestoranByManager(username);
+	}
+	
+	@GET
+	@Path("/yours/{username}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Artikal> getProducts(@PathParam("username") String username) {
+		RestoranDAO dao = (RestoranDAO)ctx.getAttribute("restoranDAO");
+		return dao.getProducts(username);
 	}
 }

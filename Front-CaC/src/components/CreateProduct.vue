@@ -2,21 +2,17 @@
     <div>
         <div class="container">
             <label class='label'>Naziv artikla:</label>
-            <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unestite naziv artikla"  v-model="newProduct.name">
+            <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unestite naziv artikla"  v-model="newProduct.naziv">
             <label  for="ddd" class='label'>Cena artikla:</label>
             <input style="width:100%; padding:10px; margin-bottom:25px" type="number" id="ddd" name="ddd" min="1" max="500000" placeholder="Unestite cenu artikla"  v-model="newProduct.cena">
             <label class='label'>Unesite tip artikla:</label>
             <span class="col-xl-3 col-md-6 mb-1">
-                <select style="padding:5px;" v-model="newProduct.tip">
+                <select style="padding:5px;" v-model="newProduct.typeOfArtikal">
                     <option disabled value="">Odabir tipa</option>
                     <option v-bind:key="tipTemp.tipp" v-for="tipTemp in tipovi">{{tipTemp.tipp}}</option>
                 </select>
             </span>
-            <label class='label'>Restoran kom pripada:</label>
-            <select style="padding:5px;" v-model="newProduct.restaurant">
-                <option disabled value="">Odabir restorana</option>
-                <option v-bind:key="restoran.naziv" v-for="restoran in restorani">{{restoran.naziv}}</option>
-            </select>
+            <br>
             <label class='label'>Kolicina:</label>
             <input style="width:100%; padding:10px; margin-bottom:25px" type="number" placeholder="Unestite kolicinu"  v-model="newProduct.kolicina">
             <!-- <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unestite restoran kojim upravlja menadzer..."  v-model="newManager.password">   -->
@@ -32,7 +28,7 @@
                 </div>
             </div>
             <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
-            <div v-if='messages.errorResponse' class="alert alert-success" v-html="messages.errorResponse"></div>
+            <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
             <button class="btn btn-success" v-on:click='createProduct()'>Potvrdi</button>
         </div>
     </div>
@@ -44,6 +40,7 @@ import dataService from '../services/DataService'
 export default {
     data(){
         return{
+            username:'',
              restorani:[
                 // {naziv:'test1'},
                 // {naziv:'test2'}
@@ -51,12 +48,10 @@ export default {
             newProduct:{
                 naziv:'',
                 cena:'',
-                tip:'',
+                typeOfArtikal:'',
                 kolicina:'',
-                restorankompripada:'',
                 opis:'',               
-                images:null,
-                restaurant:''              
+                slika:''        
             },
             messages:{
                 successResponse:'',
@@ -74,7 +69,8 @@ export default {
 
             console.log(JSON.stringify(this.newProduct));
             console.log(this.newProduct);
-            dataService.addProduct(this.newProduct).then(response => {
+            console.log("NA BEK IDE KORISNICKO IME: " + this.username);
+            dataService.addProduct(this.username, this.newProduct).then(response => {
                 if(response.data !== ''){
                     this.messages.successResponse= "<h4>Uspesno ste kreirali artikal.</h4>"
                     setTimeout(() => this.messages.successResponse='', 3000);
@@ -91,14 +87,20 @@ export default {
                 }
             })
         },
-        getRestaurants:function(){
-            dataService.getAllRestaurants().then(response => {
-                this.restorani.response.data;
-            });
+        uploadImage:function(e){
+            const reader = new FileReader();
+            let image = e.target.files[0];
+            console.log(image);
+            reader.readAsDataURL(image);
+            reader.onload = () => {
+                this.newProduct.slika = reader.result;
+            }
+            
         }
     },
     created(){      
-        this.getRestaurants();
+        let temp = JSON.parse(localStorage.getItem('token'));
+        this.username = temp.username;
     }
 }
 </script>
