@@ -15,7 +15,8 @@ export const bus = new Vue();
 Vue.use(VueRouter)
 Vue.use(VueGoogleMaps, {
   load:{
-    key:'AIzaSyC1mmG4iL9qR_o0G03QY8F9l60CMZKXm10',
+    // key:'AIzaSyC1mmG4iL9qR_o0G03QY8F9l60CMZKXm10',
+    key:'',
     libraries: 'places'
   },
 })
