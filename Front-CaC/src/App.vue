@@ -16,6 +16,7 @@ import Footer from './components/Footer'
 import Navigation from './components/Navigation'
 import axios from "axios"
 
+
 export default {
   name: 'app',
   components: {

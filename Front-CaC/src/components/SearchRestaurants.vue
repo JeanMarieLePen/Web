@@ -7,45 +7,59 @@
         
         <div class='container ' id='search'>
             <nav class="navbar navbar-light bg-light justify-content-between">
-                <a class="navbar-brand">Search</a>
+                <a class="navbar-brand">Pretraga restorana</a>
                 <form class="form-inline">     
-                       
-                        <div style='display:inline;' id="advanced_search">
-                            <div id='second-row' class="row"  style="margin-top:5px;">
-                                <span class="col-xl-2 col-md-6 mb-1">
-                                    <button style='margin-right:5px;' class='btn btn-outline-primary my-2 my-sm-0' v-on:click="resetFilter()">Reset all</button>
-                                </span> 
+                    <div style='display:inline;' id="advanced_search">
+                        <div id='second-row' class="row"  style="margin-top:5px;">
+                            
+                            <div class="input-group">
                                 <span class="col-xl-3 col-md-6 mb-1">
-                                    <span class="span_search">Naziv restorana</span>
-                                    <input class="form-control mr-sm-2" type="text" placeholder="Naziv restorana" aria-label="Search" v-model="searchedRestoran.name">
-                                </span>
-                                <span class="col-xl-3 col-md-6 mb-3"> 
-                                    <span class="span_search">Tip restorana</span>
-                                    <select style="padding:5px;" v-model="searchedRestoran.type">
-                                        <option disabled value="">Tip restorana </option>
-                                        <option v-bind:key="tempTip.naziv"  v-for="tempTip in typesOfRestaurants">{{tempTip.naziv}}</option>
-                                    </select>
-                                </span>
-                                <span class="col-xl-3 col-md-6 mb-3"> 
-                                    <span class="span_search">Lokacija restorana</span>
-                                    <input class="form-control mr-sm-2" type="text" placeholder="Country/City" aria-label="Search" v-model="searchedRestoran.lokacija">
-                                </span>
-                                
-                            </div><!--/second_row-->
+                                <span class="span_search">Naziv restorana</span>
+                                <input class="form-control mr-sm-2" type="text" placeholder="Naziv restorana" aria-label="Search" v-model="searchedRestoran.name">
+                            </span>
+                            <span class="col-xl-3 col-md-6 mb-3"> 
+                                <span class="span_search">Tip restorana</span>
+                                <select style="padding:5px;" v-model="searchedRestoran.type">
+                                    <option disabled value="">Tip restorana </option>
+                                    <option v-bind:key="tempTip.naziv"  v-for="tempTip in typesOfRestaurants">{{tempTip.naziv}}</option>
+                                </select>
+                            </span>
+                            <span class="col-xl-3 col-md-6 mb-3"> 
+                                <span class="span_search">Lokacija restorana</span>
+                                <input class="form-control mr-sm-2" type="text" placeholder="Country/City" aria-label="Search" v-model="searchedRestoran.lokacija">
+                            </span>
+                            <span class="col-xl-3 col-md-6 mb-3"> 
+                                <span class="span_search">Ocena restorana</span>
+                                <input class="form-control mr-sm-2" type="text" placeholder="Country/City" aria-label="Search" v-model="searchedRestoran.ocena">
+                            </span>
+                            </div>
+                            
+                            
+                        </div><!--/second_row-->
+                        <div class="button-group">
+                            <span class="col-xl-2 col-md-6 mb-1">
+                                <button style='margin-right:5px;' class='btn btn-outline-primary my-2 my-sm-0' v-on:click="resetFilter()">Reset all</button>
+                            </span> 
                             <span class="col-xl-3 col-md-6 mb-2"> 
                                 <button style="margin-left: 5px;" class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click.prevent='searchRestaurant()'>Search</button>
                             </span>
-                        </div><!--/advanced_search-->
-                        <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
-		    <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>  
+                        </div>
+                        
+                    </div><!--/advanced_search-->
+                    <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
+		            <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>  
                 </form>
             </nav>
         </div>
-        <div class="container" id='main'>
-            <span class="span_search">Filter restorana</span>
-            <input v-model="filterInput">
-            <span class="span_search">Prikaz samo otvorenih restorana</span>
-            <input type="checkbox" v-model="filterOpenedOnly">
+        <div style="margin-top:30px;" class="container" id='main'>
+            <div style="margin-bottom:30px;">
+                <span class="span_search">Filter restorana</span>
+                <input v-model="filterInput">
+                <span class="span_search">Prikaz samo otvorenih restorana</span>
+                <input type="checkbox" v-model="filterOpenedOnly">
+            </div>
+            
+            
             <table class="table">
                 <thead>
                     <tr>
@@ -66,6 +80,7 @@
                         <!-- <th>Logo</th> -->
                         <th>Otvoren</th>
                         <th>Detaljno</th>
+                        <th>Komentarisi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -80,6 +95,9 @@
                         <td v-show='!rst.opened'>{{"zatvoren"}}</td>
                         <td>
                             <button @click="showDetails(rst.name)" class=' btn btn-sm classButton shadow'>Detaljni prikaz</button>
+                        </td>
+                        <td>
+                            <button v-show="isCustomer" @click="comment(rst.name)" class=' btn btn-sm classButton shadow'>Komentarisi</button>
                         </td>
                     </tr>
                 </tbody>
@@ -99,7 +117,7 @@ export default {
             currentSort: 'ocenaRestorana',
             currentSortDir: 'asc',
 
-
+            isCustomer:true,
 
             searchedRestoran:{
                 name:'',
@@ -263,14 +281,17 @@ export default {
         },
         showDetails:function(id){
             this.$router.push(`/restaurants/${id}/details`);
+        },
+        comment:function(id){
+            this.$router.push(`/commentNew/${id}`)
         }
     },
     created(){
-        if(JSON.parse(localStorage.getItem('token')) == null){
-            this.$router.push(`/login`);
-        }else{
-            this.getAllRestaurants();
-        }
+        // if(JSON.parse(localStorage.getItem('token')) == null){
+        //     this.$router.push(`/login`);
+        // }else{
+        //     this.getAllRestaurants();
+        // }
         
     }
 }

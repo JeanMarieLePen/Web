@@ -78,6 +78,11 @@ class DataService{
     getRestaurantByManager(id){
         return axios.get(`${API_URL}/restaurants/bymanager/${id}`);
     }
+    addComment(id, comment){
+        return axios.post(`${API_URL}/restaurants/comment/${id}`, comment);
+    }
+
+
 
 
     //admin

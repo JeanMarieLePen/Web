@@ -1,10 +1,28 @@
 package model;
 
 public class Komentar {
+	
+	private int id;
 	private String kupacKomentator;
 	private String komentarisaniRestoran;
 	private String tekstKomentara;
 	private int ocena;
+	public Komentar() {
+		super();
+	}
+	public Komentar(String kupacKomentator, String komentarisaniRestoran, String tekstKomentara, int ocena) {
+		super();
+		this.kupacKomentator = kupacKomentator;
+		this.komentarisaniRestoran = komentarisaniRestoran;
+		this.tekstKomentara = tekstKomentara;
+		this.ocena = ocena;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getKupacKomentator() {
 		return kupacKomentator;
 	}
@@ -29,13 +47,4 @@ public class Komentar {
 	public void setOcena(int ocena) {
 		this.ocena = ocena;
 	}
-	public Komentar(String kupacKomentator, String komentarisaniRestoran, String tekstKomentara, int ocena) {
-		super();
-		this.kupacKomentator = kupacKomentator;
-		this.komentarisaniRestoran = komentarisaniRestoran;
-		this.tekstKomentara = tekstKomentara;
-		this.ocena = ocena;
-	}
-	
-	
 }

@@ -85,6 +85,7 @@ public class ManagerDAO {
 				
 				System.out.println("Lokacija upisivanja u fajl: " + contextPath);
 				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "managers.json", false))){
+					System.out.println("string koji se unosi u managers.json: " + fileInput);
 					System.out.println("Upis novog menadzera u bazu.");
 					bw.append(fileInput);
 					bw.append("\n");

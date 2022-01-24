@@ -1,5 +1,5 @@
 <template>
-    <div id="footer">
+    <div id="footer" class="bg-gold text-white">
         <p>Copyrights &copy; Cash n' Curry</p>
     </div>
 </template>
@@ -18,12 +18,15 @@ export default {
 <style scoped>
 
 #footer{
+    position: fixed;
+    bottom : 0;
     padding:20px;
     margin-top:50px;
     background-color:gold;
     color:#35424a;
     text-align: center;
     font-size: 14px;
+    width:100%
 }
 
 </style>

@@ -1,52 +1,243 @@
 <template>
-    <div>
+    <div style="width:50%">
         <div class="container">
-
-            <label class='label'>Naziv restorana:</label>
-            <input style="width:100%; padding:10px; margin-bottom:25px" type="text"  v-model="loadRestaurant.name">
-            <label class='label'>Tip restorana:</label>
-            <input style="width:100%; padding:10px; margin-bottom:25px" type="text"  v-model="loadRestaurant.type">
-            <label class='label'>Logo:</label>
-            <div>
-                <img width="750" height="500" :src="`${loadRestaurant.images[0]}`" />
+            <h2>Pregled detalja o restoranu {{loadRestaurant.name}}</h2>
+            <p>Prikaz detalja i statistike o restoranu...</p>
+            <table class="table" id="table_restaurantdetails">
+                <tbody>
+                    <tr>
+                        <td colspan="2"> 
+                            <div width="90%">
+                                <!-- <img style="width:400px;height:400px" src="/src/assets/profile.png"> -->
+                                <carousel-3d style="width:400px;height:600">
+                                    <slide :index="0">
+                                        <img  src="/src/assets/dadada.png">
+                                    </slide>
+                                    <slide :index="1">
+                                        <img  src="/src/assets/hrana.jpg">
+                                    </slide>
+                                    <slide :index="2">
+                                        <img  src="/src/assets/restau.png">
+                                    </slide>
+                                    <slide :index="3">
+                                        <img  src="/src/assets/delivery.png">
+                                    </slide>
+                                    <!-- <slide v-for="(slide, i) in avanturaEntity.slike" :index="i" :key="i">
+                                        <template slot-scope="{ index, isCurrent, leftIndex, rightIndex }">
+                                            <img :data-index="index" :class="{ current: isCurrent, onLeft: (leftIndex >= 0), onRight: (rightIndex >= 0) }" :src="slide.src">
+                                        </template>
+                                    </slide> -->
+                                </carousel-3d>
+                            </div>
+                            <div  class="text-center">
+                                <button @click="showComments()" class="btn btn-primary">Komentari</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Naziv restorana:</label>
+                        </td>
+                        <td>
+                           
+                            <label>{{loadRestaurant.name}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Tip restorana:</label>
+                        </td>
+                        <td>
+                            <label>{{loadRestaurant.type}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Menadzer restorana:</label>
+                        </td>
+                        <td>
+                            <label>{{loadRestaurant.manager.username}}</label>
+                            <button class="btn btn-primary" @click="managerProfile()">Profil</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Ocena restorana({{ocenaRestorana}}):</label>
+                        </td>
+                        <td>
+                            <starrating v-model="loadRestaurant.ocena" :star-size="30" read-only></starrating>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Adresa restorana:</label>
+                        </td>
+                        <td>
+                            <div style="display:inline-block">
+                                <label style="width:100%">{{loadRestaurant.lokacija.ulica}} {{loadRestaurant.lokacija.broj}} {{loadRestaurant.lokacija.mesto}} {{loadRestaurant.lokacija.drzava}}</label>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+                <tr>
+                    <td colspan="2">
+                        <GmapMap
+                            :center="center"
+                            :zoom="15"
+                            map-type-id="terrain"
+                            style="margin-bottom:200px;width: 100%; height: 500px;"
+                            >
+                            <GmapMarker
+                                :key="index"
+                                v-for="(m, index) in lokacije"
+                                :position="m.position"
+                                :clickable="true"
+                                :draggable="true"
+                                @click="center=m.position"
+                            />
+                        </GmapMap>
+                    </td>
+                </tr>
+            </table>
+            <div class="container" style="min-height:300px;">
+                <h2>Pregled ponude restorana</h2>
+                 <p>Prikaz artikala u ponudi...</p>
+                <section style="margin-left: 10px; margin-bottom:100px">
+                    <div>
+                    <!-- if we are 3 cards wide start a new row -->
+                        <div class="row">
+                            <div class="col-md-4" v-bind:key="tempArtikal.naziv" v-for="tempArtikal in loadRestaurant.menuItems">
+                                <div style="margin-bottom:30px;" class="card h-100">
+                                    <img class="card-img-top" :src="tempArtikal.slika" alt="card image collar">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Artikal: {{tempArtikal.naziv}}</h5>
+                                        <p class="card-text">Cena: {{tempArtikal.cena}}</p>
+                                        <button v-on:click="addToCart(tempAvantura.id)" class="btn btn-primary">Dodaj</button>
+                                        <!-- <button v-show="isOwner" v-on:click="removeEntity(tempVikendica.id)" class="btn btn-danger">Ukloni</button> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-            <label class='label'>Menadzer:</label>
-            <input style="width:100%; padding:10px; margin-bottom:25px" type="text"  v-model="loadRestaurant.manager.username">
         </div>
+    
     </div>
 </template>
 
 <script>
 import dataService from '../services/DataService'
 import starRating from 'vue-star-rating'
+import {Carousel3d, Slide} from 'vue-carousel-3d'
 
 export default {
+    mounted(){
+        // this.setLocationLatLng();
+        this.getLocationFromAddress();
+    },
     
     data(){
         return{
+            //mapa varijable
+            center: { 
+                lat: 39.7837304, 
+                lng: -100.4458825 
+            },
+            lokacije:[],
+
             loadRestaurant:{
-                name:'',
-                type:'',
-                menuItems:null,
-                opened:'',
-                lokacija:null,
+                name:'temp_ime',
+                type:'pecenjara',
+                menuItems:[],
+                opened:'true',
+                lokacija:{
+                    ulica:'nemanjina',
+                    broj:'11',
+                    mesto:'beograd',
+                    drzava:'srbija',
+                    xCoord: 31232,
+                    yCoord: 23142,
+                },
                 images:[],
-                comments:null,
-                manager:'',
-                ocena:''
+                comments:[],
+                manager:{
+                    username:'temp_manager',
+                },
+                ocena:4
             },
         }
     },
     methods:{
+        managerProfile(){
+            // this.$router.push(`/profile/`)
+        },
+        showComments(){
+            this.$router.push(`/commentNew/${this.loadRestaurant.name}`);
+        },
         getRestaurant(){
             dataService.getRestaurant(this.id).then(response => {
                 this.loadRestaurant = response.data;
                 console.log("Naziv pronadjenog restorana je: " + this.loadRestaurant.name);
                 console.log("string slike: " + this.loadRestaurant.images[0])
             })
-        }
+        },
+        setLocationLatLng(){
+            navigator.geolocation.getCurrentPosition(geolocation => {
+                this.center = {
+                    lat: geolocation.coords.latitude,
+                    lng: geolocation.coords.longitude
+                };
+            });
+        },
+        getLocationFromAddress(){
+            var geocoder = new google.maps.Geocoder();
+            var str = this.loadRestaurant.lokacija.ulica + ', ' + this.loadRestaurant.lokacija.broj+ ', ' + this.loadRestaurant.lokacija.mesto+ ', ' + this.loadRestaurant.lokacija.drzava
+            console.log('Adresa za koju ce traziti long i lat: ' + str)
+            this.lokacije = [];
+            var self = this;
+            geocoder.geocode({'address': str}, function(results, status){
+                if (status == google.maps.GeocoderStatus.OK) {
+                    
+                    console.log('status ok')
+                    // this.center  = results[0].geometry.location
+                    console.log('ispis rezultata: ' + results[0].geometry.location)
+
+                    let tempString = results[0].geometry.location.toString();
+                    let tempDuzina = tempString.length;
+                    let tempString2 = tempString.slice(1, tempDuzina -2)
+                    let tempSplits = tempString2.split(',')
+                    let tempLat = parseFloat(tempSplits[0])
+                    let tempLng = parseFloat(tempSplits[1])
+                    let tempMarker = {
+                        position:{
+                            lat : tempLat,
+                            lng : tempLng
+                        }
+                        
+                    }
+                    console.log('Broj markera pre: ' + self.lokacije.length)
+                    self.lokacije.push(tempMarker)
+                    console.log('Broj markera posle: ' + self.lokacije.length)
+                    self.center = results[0].geometry.location;
+                    self.loadRestaurant.lokacija.xCoord = tempLat;
+                    self.loadRestaurant.lokacija.yCoord = tempLng;
+                }else {
+                }
+            });                
+        },
     },
     computed:{
+        ocenaRestorana(){
+            let tempSize = this.loadRestaurant.comments.length;
+            let tempOcena = 0
+            for(let i = 0; i < tempSize; i++){
+                tempOcena += this.loadRestaurant.comments[i].ocena;
+            }
+            let ocena = tempOcena/tempSize;
+            return ocena;
+        },
         id(){
             return this.$route.params.id;
         },
@@ -67,14 +258,16 @@ export default {
     },
     },
     created(){
-        if(JSON.parse(localStorage.getItem('token')) == null){
-            this.$router.push(`/login`);
-        }else{
-            this.getRestaurant();
-        }
+        // if(JSON.parse(localStorage.getItem('token')) == null){
+        //     this.$router.push(`/login`);
+        // }else{
+        //     this.getRestaurant();
+        // }
     },
     components:{
-        "star-rating" : starRating
+        starrating : starRating,
+        carousel3d:Carousel3d,
+        slide:Slide,
     }
 
 
@@ -85,4 +278,25 @@ export default {
 </script>
 
 <style scoped>
+#table_restaurantdetails{
+    border-style: solid;
+}
+#table_restaurantdetails tr:nth-child(even){
+    background-color: lightgray;
+    font-weight: 600;
+}
+#table_restaurantdetails tr:nth-child(odd){
+    font-weight: 600;
+    background-color: white;
+}
+#table_restaurantdetails td:first-child{
+    width: 30%;
+}
+#table_restaurantdetails td:last-child{
+    width: 100%;
+}
+input{
+    width: 100%;
+}
+
 </style>

@@ -38,8 +38,6 @@ public class LoginService {
 	public void init() {
 		 this.contextPath = ctx.getRealPath("");
 	}
-	
-	
 	@POST
 	@Path("/{username}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -58,70 +56,80 @@ public class LoginService {
 		Map<String, Customer> customers = new HashMap<>();
 		Map<String, Manager> managers = new HashMap<>();
 		
+		//potrazi u administratorima, ako nadjes prekini izvrsavanje metode
 		try {	
-				JsonReader reader = new JsonReader(new FileReader(contextPath + "administrators.json"));
-				Gson gson = new Gson();
-				Administrator[] tempAdministrators = gson.fromJson(reader, Administrator[].class);
-				for(Administrator c : tempAdministrators) {
-					administrators.put(c.getUsername(), c);
-				}
-			}catch(Exception ex) {
-				ex.printStackTrace();
+			JsonReader reader = new JsonReader(new FileReader(contextPath + "administrators.json"));
+			Gson gson = new Gson();
+			Administrator[] tempAdministrators = gson.fromJson(reader, Administrator[].class);
+			for(Administrator c : tempAdministrators) {
+				administrators.put(c.getUsername(), c);
+			}
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		if(administrators.containsKey(username)) {
+			System.out.println("SIFRA PROCITANA IZ BAZE[ADMIN]: " + administrators.get(username).getPassword());
+			if(administrators.get(username).getPassword().equals(pw)) {
+				tempRole = "admin";
+				tempLog.setRole("admin");
+				tempLog.setUsername(username);
 			}
 			
-			try {
-				JsonReader reader = new JsonReader(new FileReader(contextPath + "/customers.json"));
-				Gson gson = new Gson();
-				Customer[] tempCustomers = gson.fromJson(reader, Customer[].class);
-				for(Customer c : tempCustomers) {
-					customers.put(c.getUsername(), c);
-				}
-			}catch(Exception ex) {
-				ex.printStackTrace();
-			}
-			try {
-				JsonReader reader = new JsonReader(new FileReader(contextPath + "managers.json"));
-				Gson gson = new Gson();
-				Manager[] tempManagers = gson.fromJson(reader, Manager[].class);
-				if(tempManagers != null) {
-					for(Manager c : tempManagers) {
-						managers.put(c.getUsername(), c);
-					}
-				}
-
-			}catch(Exception ex) {
-				ex.printStackTrace();
-			}
-			
-			if(administrators.containsKey(username)) {
-				System.out.println("SIFRA PROCITANA IZ BAZE: " + administrators.get(username).getPassword());
-				if(administrators.get(username).getPassword().equals(pw)) {
-					tempRole = "admin";
-					tempLog.setRole("admin");
-					tempLog.setUsername(username);
-				}
-				
-				return tempLog;
-			}
-			if(customers.containsKey(username)) {
-				if(customers.get(username).getPassword().equals(pw)) {
-					tempRole = "customer";
-					tempLog.setRole("customer");
-					tempLog.setUsername(username);
-				}
-				
-				return tempLog;
-			}
-			if(managers.containsKey(username)) {
-				if(managers.get(username).getPassword().equals(pw)) {
-					tempRole = "manager";
-					tempLog.setRole("manager");
-					tempLog.setUsername(username);
-				}
-				
-				return tempLog;
-			}
 			return tempLog;
+		}
+		
+		//potrazi u customers, ako nadjes prekini izvrsavanje metode
+		try {
+			JsonReader reader = new JsonReader(new FileReader(contextPath + "customers.json"));
+			Gson gson = new Gson();
+			Customer[] tempCustomers = gson.fromJson(reader, Customer[].class);
+			for(Customer c : tempCustomers) {
+				customers.put(c.getUsername(), c);
+			}
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		if(customers.containsKey(username)) {
+			System.out.println("SIFRA PROCITANA IZ BAZE[CUSTOMER]: " + customers.get(username).getPassword());
+			if(customers.get(username).getPassword().equals(pw)) {
+				tempRole = "customer";
+				tempLog.setRole("customer");
+				tempLog.setUsername(username);
+			}
+			
+			return tempLog;
+		}
+		
+		//potrazi u managers, ako nadjes prekini izvrsavanje metode
+		try {
+			JsonReader reader = new JsonReader(new FileReader(contextPath + "managers.json"));
+			Gson gson = new Gson();
+			Manager[] tempManagers = gson.fromJson(reader, Manager[].class);
+			if(tempManagers != null) {
+				for(Manager c : tempManagers) {
+					managers.put(c.getUsername(), c);
+				}
+			}
+
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		if(managers.containsKey(username)) {
+			System.out.println("SIFRA PROCITANA IZ BAZE[MANAGER]: " + managers.get(username).getPassword());
+			if(managers.get(username).getPassword().equals(pw)) {
+				tempRole = "manager";
+				tempLog.setRole("manager");
+				tempLog.setUsername(username);
+			}
+			
+			return tempLog;
+		}
+		//fali provera za dostavljace
+		
+		
+		
+		//ako ne nadjes nista, vrati null
+		return tempLog;
 			
 	}
 	

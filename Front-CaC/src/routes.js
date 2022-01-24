@@ -12,9 +12,20 @@ import About from './components/About'
 import CreateProduct from './components/CreateProduct'
 import RestaurantDetails from './components/RestaurantDetails'
 import RestaurantDetailsManager from './components/RestaurantDetailsManager'
+import CommentNew from './components/CommentNew'
 
 
 export default[
+    {   
+        path:'/commentNew/:id/',
+        name:'CommentNew',
+        component:CommentNew
+    },
+    {
+        path:'/about',
+        name:'About',
+        component:About
+    },
     {
         path:'/',
         name:'Home',
@@ -59,20 +70,24 @@ export default[
         path:'/home',
         name:'Homepage',
         component:Homepage
-    }
-    ,
+    },
     {
         path:'/profile',
         name:'UserProfile',
         component:UserProfile
     },
+    // {
+    //     path:'/profile/:id',
+    //     name:'UserProfile',
+    //     component:UserProfile
+    // },
     {
         path:'/profile/:id/update',
         name:'UserProfileUpdate',
         component:UserProfileUpdate
     },
     {
-        path:'/createProduct',
+        path:'/newProduct',
         name:'CreateProduct',
         component:CreateProduct
     },

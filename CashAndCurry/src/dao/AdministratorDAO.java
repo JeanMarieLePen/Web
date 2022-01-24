@@ -40,7 +40,7 @@ public class AdministratorDAO {
 				listOfAdministrators.add(a);
 				//dodajem i u mapu za svaki slucaj ako mapa bude zgodnija
 				administrators.put(a.getUsername(), a);*/
-			
+			System.out.println("test ispis iz administratorDAO: " + contextPath);
 			JsonReader reader = new JsonReader(new FileReader(contextPath + "administrators.json"));
 			Gson gson = new Gson();
 			Administrator[] tempAdministrators = gson.fromJson(reader, Administrator[].class);

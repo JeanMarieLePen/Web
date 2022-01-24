@@ -23,6 +23,18 @@
                         </div>
                     </div>
             </div>
+            <div class="container">
+                <h3>Pregled komentara:</h3>
+                    <div class="col-xl-3 col-md-6 mb-4" v-bind:key="comm.kupacKomentator" v-for="comm in loadRestaurant.comments">
+                        <div class="card border-0 shadow">
+                                <div id='username'>{{comm.kupacKomentator}} </div>
+                                <div id='comment'>
+                                    <input width="300" height="200" readonly v-model="comm.text"/>
+                                    
+                                </div>
+                        </div>
+                    </div>
+            </div>
         </div>
     </div>
 </template>
@@ -54,8 +66,7 @@ export default {
             console.log("uislo u getRestaurant")
             dataService.getRestaurantByManager(this.username).then(response => {
                 this.loadRestaurant = response.data;
-                console.log("Naziv pronadjenog restorana je: " + this.loadRestaurant.name);
-                console.log("string slike: " + this.loadRestaurant.images[0])
+                console.log("KOMENTARI" + this.loadRestaurant.comments)
 
                 dataService.getProducts(this.username).then(response => {
                     this.loadRestaurant.menuItems = response.data;
@@ -84,13 +95,13 @@ export default {
     },
     },
     created(){
-        if(JSON.parse(localStorage.getItem('token')) == null){
-            this.$router.push(`/login`);
-        }else{
-            let temp = JSON.parse(localStorage.getItem('token'));
-            this.username = temp.username;
-            this.getRestaurant();
-        }
+        // if(JSON.parse(localStorage.getItem('token')) == null){
+        //     this.$router.push(`/login`);
+        // }else{
+        //     let temp = JSON.parse(localStorage.getItem('token'));
+        //     this.username = temp.username;
+        //     this.getRestaurant();
+        // }
     },
     components:{
         "star-rating" : starRating

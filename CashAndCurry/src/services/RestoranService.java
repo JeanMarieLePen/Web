@@ -91,8 +91,8 @@ public class RestoranService {
 				else if(tempTokens[0].equals("lokacija")) {
 					if(!tempTokens[1].equals("_")) {
 						lokacija = tempTokens[1];
-						Lokacija l = new Lokacija(lokacija);
-						r.setLokacija(l);
+//						Lokacija l = new Lokacija(lokacija, s, s, s, ocena, ocena);
+//						r.setLokacija(l);
 						tempBoolean = true;
 					}
 					

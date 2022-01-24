@@ -67,9 +67,10 @@ public class OrderDAO {
 	
 	//metoda koja cuva porudzbinu u bazu
 	public Order addNewOrder(Order order) {
-		if(customers.containsKey(order.getKupac().getUsername())){
+		if(customers.containsKey(order.getIdKupca())){
 			//dodajemo novu porudzbinu
-			customers.get(order.getKupac().getUsername()).getListOfAllOrders().add(order);
+			customers.get(order.getIdKupca()).getListOfAllOrders().add(order);
+//			customers.get(order.getKupac().getUsername()).getListOfAllOrders().add(order);
 			Gson gson = new Gson();
 			String temp = gson.toJson(customers);
 			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "customers.json", true))){
@@ -85,9 +86,9 @@ public class OrderDAO {
 	}
 	//metoda koja brise porudzbinu
 	public Order removeOrder(Order order) {
-		if(customers.containsKey(order.getKupac().getUsername())){
+		if(customers.containsKey(order.getIdKupca())){
 			//brisemo zeljenu porudzbinu
-			customers.get(order.getKupac().getUsername()).getListOfAllOrders().remove(order);
+			customers.get(order.getIdKupca()).getListOfAllOrders().remove(order);
 			Gson gson = new Gson();
 			String temp = gson.toJson(customers);
 			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "customers.json", true))){

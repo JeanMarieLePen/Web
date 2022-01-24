@@ -11,10 +11,11 @@ public class Administrator extends GenericUser {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Administrator(String username, String password, String name, String lastname, String gender,
+	public Administrator(boolean obrisan, String username, String password, String name, String lastname, String gender,
 			String dateOfBirth) {
-		super(username, password, name, lastname, gender, dateOfBirth);
+		super(obrisan, username, password, name, lastname, gender, dateOfBirth);
 		// TODO Auto-generated constructor stub
 	}
 
+	
 }

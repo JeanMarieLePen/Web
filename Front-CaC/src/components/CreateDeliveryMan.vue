@@ -68,11 +68,11 @@ export default {
         }
     },
     created(){
-        if(JSON.parse(localStorage.getItem('token')) == null){
-            this.$router.push(`/login`);
-        }else{
+        // if(JSON.parse(localStorage.getItem('token')) == null){
+        //     this.$router.push(`/login`);
+        // }else{
 
-        }
+        // }
       }
 }
 

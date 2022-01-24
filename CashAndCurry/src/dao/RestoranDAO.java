@@ -163,7 +163,11 @@ public class RestoranDAO {
 			
 //			Predicate<Restoran> nameFilter = e -> e.getName().equals(restoran.getName()) && e.getType().equals(restoran.getType());
 			Predicate<Restoran> nameFilter = e -> e.getName().equals(restoran.getName());
-			Predicate<Restoran> lokacijaFilter = e -> e.getLokacija().getAddress().equals(restoran.getLokacija().getAddress()); 
+//			Predicate<Restoran> lokacijaFilter = e -> e.getLokacija().getAddress().equals(restoran.getLokacija().getAddress()); 
+			
+			//treba da postoji pretraga po drzavi i gradu -> 2 filtera za lokaciju
+			Predicate<Restoran> lokacijaFilter = e -> e.getLokacija().getDrzava().equals(restoran.getLokacija().getDrzava());
+			Predicate<Restoran> lokacijaFilter2 = e -> e.getLokacija().getMesto().equals(restoran.getLokacija().getMesto());
 			Predicate<Restoran> tipFilter = e -> e.getType().equals(restoran.getType());
 			Predicate<Restoran> ocenaFilter = e -> e.getOcena() >= restoran.getOcena();
 //			if(restoran.getName()!= "" && restoran.getLokacija() != null && restoran.getOcena() > 0 && restoran.getType() != "") {

@@ -9,22 +9,26 @@ public class Order {
 	private String izKogRestorana;
 	private String datumIVremePorudzbine;
 	private int cena;
-	private Customer kupac;
+	private String idKupca;
+//	private Customer kupac;
 	//obrada, u pripremi, ceka dostavljaca, u transportu, dostavljena, otkazana
 //	private enum status{
 //		obrada, uPripremi, cekaDostavljaca, uTransportu, dostvaljena, otkazana
 //	}
 	private String statusPorudzbine;
-	
-	public Order(String idPorudzbine, ArrayList<String> listaNarucenihArtikala, String izKogRestorana,
-			String datumIVremePorudzbine, int cena, Customer kupac, String statusPorudzbine) {
+
+	public Order() {
+		
+	}
+
+	public Order(ArrayList<String> listaNarucenihArtikala, String izKogRestorana, String datumIVremePorudzbine,
+			int cena, String idKupca, String statusPorudzbine) {
 		super();
-		this.idPorudzbine = idPorudzbine;
 		this.listaNarucenihArtikala = listaNarucenihArtikala;
 		this.izKogRestorana = izKogRestorana;
 		this.datumIVremePorudzbine = datumIVremePorudzbine;
 		this.cena = cena;
-		this.kupac = kupac;
+		this.idKupca = idKupca;
 		this.statusPorudzbine = statusPorudzbine;
 	}
 
@@ -68,12 +72,12 @@ public class Order {
 		this.cena = cena;
 	}
 
-	public Customer getKupac() {
-		return kupac;
+	public String getIdKupca() {
+		return idKupca;
 	}
 
-	public void setKupac(Customer kupac) {
-		this.kupac = kupac;
+	public void setIdKupca(String idKupca) {
+		this.idKupca = idKupca;
 	}
 
 	public String getStatusPorudzbine() {
@@ -82,9 +86,5 @@ public class Order {
 
 	public void setStatusPorudzbine(String statusPorudzbine) {
 		this.statusPorudzbine = statusPorudzbine;
-	}
-
-	public Order() {
-		
 	}
 }

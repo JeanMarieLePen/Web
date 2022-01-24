@@ -25,7 +25,14 @@
           </ul>
           
           <router-link to='/login' class="nav-link" exact> <button v-show="loggedIn==false" class="btn" id='btnLogin'>Log In</button> </router-link>
+          
           <button  class="btn" v-show="loggedIn==true" id='btnLogout' v-on:click='logOut()'>Log Out</button> 
+          <router-link to='/login' class="nav-link" exact> 
+            <button @click="goToCart()" style="background" class="btn btn-primary">
+               <img src="/src/assets/shopping-cart.png" style="float:left;margin-right:0.5em; height:20px;width:40px;">
+              Korpa
+              </button> 
+          </router-link>
           <!-- <router-link to='/searchRestaurants' class="nav-link" exact>
             <button class="btn" id="btnLogin">Kreiraj korisnika</button>
           </router-link> -->
@@ -99,6 +106,11 @@ a{
   border-radius: 10px;
 }
 
+#btnLogin{
+  color:#fff;
+  border:none;
+  padding: 0 20px;
+}
 #btnLogin{
   height:38px;
   background-color:gold;

@@ -5,15 +5,41 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public class Restoran {
 	
+	private int id;
 	private String name;
 	private String type;
 	private ArrayList<Artikal> menuItems = new ArrayList<Artikal>();
 	private boolean opened;
 	private Lokacija lokacija;
+	private String logo;
 	private ArrayList<String> images = new ArrayList<String>();
 	private ArrayList<Komentar> comments = new ArrayList<Komentar>();
 	private Manager manager;
 	private int ocena = 0;
+	
+	public Restoran() {
+		super();
+	}
+	public Restoran(String name, String type, ArrayList<Artikal> menuItems, boolean opened, Lokacija lokacija,
+			String logo, ArrayList<String> images, ArrayList<Komentar> comments, Manager manager, int ocena) {
+		super();
+		this.name = name;
+		this.type = type;
+		this.menuItems = menuItems;
+		this.opened = opened;
+		this.lokacija = lokacija;
+		this.logo = logo;
+		this.images = images;
+		this.comments = comments;
+		this.manager = manager;
+		this.ocena = ocena;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getName() {
 		return name;
 	}
@@ -44,6 +70,12 @@ public class Restoran {
 	public void setLokacija(Lokacija lokacija) {
 		this.lokacija = lokacija;
 	}
+	public String getLogo() {
+		return logo;
+	}
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
 	public ArrayList<String> getImages() {
 		return images;
 	}
@@ -68,24 +100,4 @@ public class Restoran {
 	public void setOcena(int ocena) {
 		this.ocena = ocena;
 	}
-	
-	public Restoran() {
-		
-	}
-	
-	public Restoran(String name, String type, ArrayList<Artikal> menuItems, boolean opened, Lokacija lokacija,
-			ArrayList<String> images, ArrayList<Komentar> comments, Manager manager, int ocena) {
-		super();
-		this.name = name;
-		this.type = type;
-		this.menuItems = menuItems;
-		this.opened = opened;
-		this.lokacija = lokacija;
-		this.images = images;
-		this.comments = comments;
-		this.manager = manager;
-		this.ocena = ocena;
-	}
-	
-	
 }
