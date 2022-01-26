@@ -30,8 +30,8 @@
                         </td>
                         <td>
                             <span >
-                                <select style="padding:5px; width:100%;" v-model="stanjeAktivnosti">
-                                    <option disabled value="">Odabir stanja</option>
+                                <select style="padding:5px; width:100%;" v-model="newManager.opened" >
+                                    <option disabled value="">Odabir pola</option>
                                     <option v-bind:key="polTemp.naziv" v-for="polTemp in opcije">{{polTemp.naziv}}</option>
                                 </select>
                             </span>
@@ -65,24 +65,20 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <!-- <div style="height:200px; overflow-y: scroll;" class="container">
+                                            <div style="height:200px; overflow-y: scroll;" class="container">
                                                 <div class="col-ml-4" v-bind:key="tempManager.username" v-for="tempManager in slobodniMenadzeri">
                                                     <div class="card">
                                                         <div class="card-img-top" style="margin-top:10px; margin-bottom:10px">{{tempManager.username}}</div>
                                                     </div>
                                                 </div>
-                                            </div> -->
-                                            <select v-model="selectedManager" >
-                                                <option disabled value="">Odaberite slobodnog menadzera...</option>
-                                                <option v-bind:key="tempMenadzer.username" v-for="tempMenadzer in slobodniMenadzeri">{{tempMenadzer.username}}</option>
-                                            </select>
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>
                                 <tfoot>
                                     <td colspan="2" class="text-center">
                                         <div>
-                                            <button v-if="slobodniMenadzeri.length == 0" style="font-weight:600;display:inline-block;width:100px;" class="btn btn-warning"  @click="createManagerDialog()">Dodaj</button>
+                                            <button style="font-weight:600;display:inline-block;width:100px;" class="btn btn-warning"  @click="createManagerDialog()">Dodaj</button>
                                             <button v-show="showCreateManager" style="font-weight:600;display:inline-block;width:100px;" class="btn btn-error"  @click="closeDialog()">Zatvori</button>
                                         </div> 
                                         <div v-show="showCreateManager">
@@ -185,7 +181,7 @@
                             </table>
                         </td>
                     </tr>
-                    <!-- <tr style="height:500px">
+                    <tr style="height:500px">
                         <td>Slike restorana:</td>
                         <td>
                             <table id="tabela_5" class="table table-dark">
@@ -217,21 +213,9 @@
                                 </tfoot>
                             </table>
                         </td>
-                    </tr> -->
+                    </tr>
 
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="2">
-                            <div class="text-center">
-                                <!-- <button @click="testirajZahtev()" class="btn btn-primary">Test zahteva</button> -->
-                                <button @click="createRestaurant()" class="btn btn-success">Kreiraj</button>
-                                <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
-                                <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
-                            </div>
-                        </td>
-                    </tr>
-                </tfoot>
             </table>
             <GmapMap
                 :center="center"
@@ -270,7 +254,7 @@ export default {
                 username:'',
                 name:'',
                 lastname:'',
-                password:'',
+                password:'1234',
                 gender:'',
                 dateOfBirth:'',
                 restaurant:''
@@ -297,7 +281,7 @@ export default {
 
             //dodatne promenljive za prikaz loga i slika
             logo:[],
-            // images:[],
+            images:[],
             //dodatna promenljiva za kupljenje podataka o adresi
             adresa:{
                 ulica:'',
@@ -320,8 +304,8 @@ export default {
                 lokacija:{
 
                 },
-                logo:'',
-                // images:[],
+                logo:[],
+                images:[],
                 comments:[],
                 manager:'',
                 ocena:''
@@ -342,16 +326,11 @@ export default {
                 }
             ],
 
-            //pomocna promenljiva za selekciju stanja aktivnosti restorana
-            stanjeAktivnosti: '',
-
             //pomocne promenljive za razdvajanje zauzetih od slobodnih menadzera -> trebalo bi na beku da se uradi ovo
-            selectedManager:null,
             slobodniMenadzeri:[],
-            kreiranNoviMenadzer: false,
-
-
-
+            freeManagers:[],
+            allManagers:[],
+            restaurantsWithManager:[],
             //pomocna promenljiva koja je kontejner poruka koje se ispisuju korisniku
             messages:{
                 successResponse:'',
@@ -365,20 +344,6 @@ export default {
             
         }
             
-    },
-    watch:{
-        'selectedManager' : function(){
-            this.odabranManager();
-        },
-        'stanjeAktivnosti' : function(){
-            if(this.stanjeAktivnosti == 'radi'){
-                console.log('Restoran radi');
-                this.newRestaurant.opened = true;
-            }else{
-                console.log("Restoran ne radi");
-                this.newRestaurant.opened = false;
-            }
-        }
     },
     components:{
         vuejsDatepicker : Datepicker,
@@ -396,13 +361,10 @@ export default {
                 }else{
                     this.menadzerDodat = true;
                     console.log('uspesno kreiran menadzer');
-                    this.newManager.dateOfBirth = this.newManager.dateOfBirth.toString().substring(4, 15);
                     this.messagesManager.successResponse= "<h4>Uspesno ste kreirali menadzera.</h4>"
                     this.slobodniMenadzeri.push(this.newManager);
                     setTimeout(() => this.messagesManager.successResponse='', 3000);
-                    this.kreiranNoviMenadzer = true;
                     this.showCreateManager = false;
-                    this.newRestaurant.manager = this.newManager.username;
                 }
             }else{
                 this.messagesManager.errorResponse= "<h4>Vec ste dodali menadzera.</h4>"
@@ -480,62 +442,96 @@ export default {
                 }
             });                
         },
-        
+        addChoosenType:function(tipRestorana){
+            this.newRestaurant.type = tipRestorana;
+        },
+        addChoosenManager:function(){
+            for(let i = 0; i < this.freeManagers.length; i++){
+                if(this.newRestaurant.manager == this.freeManagers[i].username){
+                    this.newRestaurant.manager = this.freeManagers[i];
+                    break;
+                }
+            }
+            console.log("Za menadzera je postavljen: " + this.newRestaurant.manager.username);
+        },
+        getRestaurantsWithManagment:function(){
+            dataService.getRestaurantsWithManager().then(response => {
+                //dobijamo listu svih restorana koji imaju menadzera
+                this.restaurantsWithManager = response.data;
+                
+                console.log("Restorani sa menadzerom: " + this.restaurantsWithManager.length);
+                console.log("USERNAME JEDNOG OD MENADZERA: " + this.restaurantsWithManager[0].manager.name);
+            })
+        },
+        getManagers:function(){
+            console.log("GET ALL MANAGERS")
+            dataService.getFreeManagers().then(response => {
+                this.freeManagers = response.data;
+                console.log("USERNAME JEDNOG OD MENADZERA 2: " + this.freeManagers[0].username);
+                console.log("STIGLO SA BEKA:" + this.freeManagers[1].lastname);
+                this.separateFreeManagers();
+            })
+        },
+        separateFreeManagers(){
+            //u tempManagers su privremeno smesteni SVI menadzeri iz baze
+            // console.log("AAAAAAAAA")
+            let tempManagers = this.freeManagers;
+            this.freeManagers = [];
+            // console.log("BROJ ELEMENATA U tempManagers: " + tempManagers.length);
+            let menadzerImaZaduzenje = false;
+            for(let i = 0; i < tempManagers.length; i++){
+                for(let j = 0; j < this.restaurantsWithManager.length; j++){
+                    if(tempManagers[i].username === this.restaurantsWithManager[j].manager.username){
+                        console.log('uslo u if')
+                        menadzerImaZaduzenje = true;
+                        
+                    }
+                }
+                
+                if(menadzerImaZaduzenje === false){
+                    // console.log("Ustanovljeno da menadzer: " + tempManagers[i].username + " ne radi u restoranu")
+                    // console.log("DODAT JEDAN")
+                    this.freeManagers.push(tempManagers[i]);
+                }else{
+                    menadzerImaZaduzenje = false;
+                }
+            }
+
+
+        },
+        getUsernames:function(){
+            dataService.getAllManagers().then(response => {
+                this.allManagers = response.data;
+            })
+        },
         createRestaurant:function(){
-            console.log('pokusaj kreiranja')
             if (this.newRestaurant.name == "") {
-                this.messages.errorResponse = `<h4>Polje naziv restorana ne moze biti prazno!</h4>`;
-                setTimeout(() => this.messages.errorResponse = '', 3000);
+                this.messages.errorName = `<h4>Polje naziv restorana ne moze biti prazno!</h4>`;
+                setTimeout(() => this.messages.errorName = '', 3000);
             }
             else if (this.newRestaurant.type == "") {
-                this.messages.errorResponse = `<h4>Polje tip restorana ne moze biti prazno!</h4>`;
-                setTimeout(() => this.messages.errorResponse = '', 3000);
+                this.messages.errorType = `<h4>Polje tip restorana ne moze biti prazno!</h4>`;
+                setTimeout(() => this.messages.errorType = '', 3000);
             }
-            else if (this.newRestaurant.logo == "") {
-                this.messages.errorResponse= `<h4>Morate izabrati logo restorana!</h4>`;
-                setTimeout(() => this.messages.errorResponse = '', 3000);
+            else if (this.newRestaurant.images.length == 0) {
+                this.messages.errorLogo= `<h4>Morate izabrati logo restorana!</h4>`;
+                setTimeout(() => this.messages.errorLogo = '', 3000);
             }
             else if (this.newRestaurant.manager === "") {
-                this.messages.errorResponse = `<h4>Morate izabrati menadzera restorana!</h4>`;
-                setTimeout(() => this.messages.errorResponse = '', 3000);
+                this.messages.errorManager = `<h4>Morate izabrati menadzera restorana!</h4>`;
+                setTimeout(() => this.messages.errorManager = '', 3000);
             }
-            else if (this.adresa.xCoord === "" || this.adresa.yCoord === "") {
-                this.messages.errorResponse = `<h4>Niste izracunali koordinate lokacije!</h4>`;
-                setTimeout(() => this.messages.errorResponse = '', 3000);
+            else if (this.newRestaurant.adresa.xCoord === "" || this.newRestaurant.adresa.yCoord === "") {
+                this.messages.errorAddress = `<h4>Niste izracunali koordinate lokacije!</h4>`;
+                setTimeout(() => this.messages.errorManager = '', 3000);
             }
-           
-            else{
-                console.log('proslo provere');
-                this.newRestaurant.lokacija = this.adresa;
 
-                //postavljenje polja restaurant na vrednost polja name objekta newRestaurant(u oba slucaja, i kada ima slobodnih i kada kreira novi)
-                this.newManager.restaurant = this.newRestaurant.name;
+            else{
                 console.log("NA BEK SE SALJE OBJEKAT newRestaurant: " + JSON.stringify(this.newRestaurant));
-                console.log("Na server se salje objekat newManager: " + JSON.stringify(this.newManager));
                 dataService.addRestaurant(this.newRestaurant).then(response =>{
-                    // alert("Uspesno ste dodali restoran.");
-                    // this.$router.push("/home");
-                }).catch(error => {
-                    console.log(error.response);
+                    alert("Uspesno ste dodali restoran.");
+                    this.$router.push("/home");
                 });
-                if(this.kreiranNoviMenadzer == true){
-                    dataService.addManager(this.newManager).then(response => {
-                        console.log("Dodat novi menadzer");
-                        alert("Uspesno ste dodali restoran.");
-                        this.$router.push("/home");
-                    }).catch(error => {
-                        console.log(error.response);
-                    });
-                }else if(this.kreiranNoviMenadzer == false){
-                    dataService.updateManagerRestoran(this.newManager).then(response => {
-                        console.log(response.data)
-                        console.log("Izmenjen postojeci menadzer");
-                        // alert("Uspesno ste dodali restoran.");
-                        // this.$router.push("/home");
-                    }).catch(error => {
-                        console.log(error.response);
-                    })
-                }
             }
 
             
@@ -555,20 +551,10 @@ export default {
                 let reader = new FileReader();
                 reader.readAsDataURL(tempImages[i]);
                 reader.onload = () => {
-                    // this.newRestaurant.images.push(reader.result);
-                    // this.images.push(reader.result);
+                    this.newRestaurant.images.push(reader.result);
+                    this.images.push(reader.result);
                 }
             }
-        },
-        odabranManager(){
-            console.log('Odabran menadzer: ' + this.selectedManager);
-            for(let i = 0; i < this.slobodniMenadzeri.length; i++){
-                if(this.slobodniMenadzeri[i].username == this.selectedManager){
-                    this.newManager = this.slobodniMenadzeri[i];
-                }
-            }
-            this.newRestaurant.manager = this.selectedManager;
-            console.log('Menadzer novog restorana: ' + this.newRestaurant.manager)
         },
         uploadImage:function(e){
             
@@ -578,55 +564,33 @@ export default {
             console.log(image);
             reader.readAsDataURL(image);
             reader.onload = () => {
-                this.newRestaurant.logo = reader.result.toString();
+                this.newRestaurant.logo.push(reader.result);
                 this.logo.push(reader.result);
                 console.log("odabran logo");
             }
             
         },
         ponistiIzbor(){
-            // this.images = [];
-            // this.newRestaurant.images = [];
+            this.images = [];
         },
         ponistiIzborLoga(){
-            this.logo = [];
-            this.newRestaurant.logo = '';
+            this.logo = '';
         },
-
-        // testirajZahtev(){
-        //     console.log('lista menadzera')
-        //     dataService.getFreeManagers().then(response => {
-        //         console.log('stigla lista slobodnih menadzera')
-        //         this.slobodniMenadzeri = response.data;
-        //     }).catch(error => {
-        //         console.log(error.response);
-        //     });
-            
-        
-        // },
-        getListOfManagers(){
-            console.log('lista menadzera')
-            dataService.getFreeManagers().then(response => {
-                console.log('stigla lista slobodnih menadzera')
-                this.slobodniMenadzeri = response.data;
-            }).catch(error => {
-                console.log(error.response);
-            });
-        }
     },
     created(){
-        if(JSON.parse(localStorage.getItem('token')) == null){
-            this.$router.push(`/login`);
-        }else{
-            this.getListOfManagers();
-        }
+        // if(JSON.parse(localStorage.getItem('token')) == null){
+        //     this.$router.push(`/login`);
+        // }else{
+        //     this.getRestaurantsWithManagment();
+        //     this.getManagers();
+        // }
         
     }
     
 }
 </script>
 <style>
-#table_newrestaurant td:first-child{
+/* #table_newrestaurant td:first-child{
     font-weight: 700;
     width:30%;
     
@@ -643,5 +607,5 @@ export default {
 }
 input{
     width: 100%;
-}
+} */
 </style>

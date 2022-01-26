@@ -11,6 +11,9 @@
                                 <!-- <img style="width:400px;height:400px" src="/src/assets/profile.png"> -->
                                 <carousel-3d style="width:400px;height:600">
                                     <slide :index="0">
+                                        <img  :src="loadRestaurant.logo">
+                                    </slide>
+                                    <!-- <slide :index="0">
                                         <img  src="/src/assets/dadada.png">
                                     </slide>
                                     <slide :index="1">
@@ -21,8 +24,8 @@
                                     </slide>
                                     <slide :index="3">
                                         <img  src="/src/assets/delivery.png">
-                                    </slide>
-                                    <!-- <slide v-for="(slide, i) in avanturaEntity.slike" :index="i" :key="i">
+                                    </slide> -->
+                                    <!-- <slide v-for="(slide, i) in loadRestaurant.logo" :index="i" :key="i">
                                         <template slot-scope="{ index, isCurrent, leftIndex, rightIndex }">
                                             <img :data-index="index" :class="{ current: isCurrent, onLeft: (leftIndex >= 0), onRight: (rightIndex >= 0) }" :src="slide.src">
                                         </template>
@@ -56,7 +59,7 @@
                             <label>Menadzer restorana:</label>
                         </td>
                         <td>
-                            <label>{{loadRestaurant.manager.username}}</label>
+                            <label>{{loadRestaurant.manager}}</label>
                             <button class="btn btn-primary" @click="managerProfile()">Profil</button>
                         </td>
                     </tr>
@@ -134,8 +137,10 @@ import {Carousel3d, Slide} from 'vue-carousel-3d'
 
 export default {
     mounted(){
+        
         // this.setLocationLatLng();
-        this.getLocationFromAddress();
+         setTimeout(() => this.getLocationFromAddress(), 1500);
+        // this.getLocationFromAddress();
     },
     
     data(){
@@ -148,24 +153,22 @@ export default {
             lokacije:[],
 
             loadRestaurant:{
-                name:'temp_ime',
-                type:'pecenjara',
+                name:'',
+                type:'',
                 menuItems:[],
-                opened:'true',
+                opened:true,
                 lokacija:{
-                    ulica:'nemanjina',
-                    broj:'11',
-                    mesto:'beograd',
-                    drzava:'srbija',
-                    xCoord: 31232,
-                    yCoord: 23142,
+                    ulica:'',
+                    broj:'',
+                    mesto:'',
+                    drzava:'',
+                    xCoord:0,
+                    yCoord: 0,
                 },
-                images:[],
+                logo:'',
                 comments:[],
-                manager:{
-                    username:'temp_manager',
-                },
-                ocena:4
+                manager:'',
+                ocena:0
             },
         }
     },
@@ -180,7 +183,9 @@ export default {
             dataService.getRestaurant(this.id).then(response => {
                 this.loadRestaurant = response.data;
                 console.log("Naziv pronadjenog restorana je: " + this.loadRestaurant.name);
-                console.log("string slike: " + this.loadRestaurant.images[0])
+                // console.log("string slike: " + this.loadRestaurant.logo)
+            }).catch(error => {
+                console.log(error.response);
             })
         },
         setLocationLatLng(){
@@ -263,6 +268,7 @@ export default {
         // }else{
         //     this.getRestaurant();
         // }
+        this.getRestaurant();
     },
     components:{
         starrating : starRating,

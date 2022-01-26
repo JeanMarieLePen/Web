@@ -1,11 +1,73 @@
 <template>
-	<div id="user-profile-update">
+	<div style="margin-bottom:150px;" id="user-profile-update">
 		<div id='main'>
 			<div class="container" id='page-title'>
 				<h1 style="margin-top:10px;color:#35424a;">Izmena profila <span id='titleEffect'>{{role}}</span></h1>
 				<hr style='background:#35424a;height:1px;'>
 			</div>
 
+            <div class="container" v-show="isDeliveryMan">
+				<h4>Promena podataka</h4>
+				<hr>
+				<fieldset class="form-group">
+					<label>Korisnicko ime</label>
+					<input type="text" class="form-control" v-model="profileDeliveryMan.username" disabled />
+				</fieldset>
+
+				<div v-if='messages.errorFirstName' id='testError' class="alert alert-danger" v-html="messages.errorFirstName"></div>
+				<fieldset class="form-group" >
+					<label>Ime</label>
+					<input type="text" class="form-control" v-model="profileDeliveryMan.name" />
+				</fieldset>
+
+				<div v-if='messages.errorLastName' class="alert alert-danger" v-html="messages.errorLastName"></div>
+				<fieldset class="form-group" >
+					<label>Prezime</label>
+					<input type="text" class="form-control" v-model="profileDeliveryMan.lastname" />
+				</fieldset>
+
+				<div class="form-label-group" >
+					<label>Pol</label>
+					<br>
+					<input type="radio" v-model="profileDeliveryMan.gender" required value="Muski"> Muski
+					<input type="radio" v-model="profileDeliveryMan.gender" required value="Zenski"> Zenski
+					<br>
+					<br>
+				</div>
+
+                <label style="padding:5px;" class='label'>Datum rodjenja:</label>
+                <vuejsDatepicker style="padding:5px;" placeholder="Odaberite datum rodjenja" v-model="selectedDate1">
+                </vuejsDatepicker>
+
+                <hr>
+				<h4>Promena lozinke</h4>
+				<hr>
+				<div v-if='messages.errorNotEqualOldPassword' class="alert alert-danger" v-html="messages.errorNotEqualOldPassword"></div>
+				<div v-if='messages.errorOldPass' class="alert alert-danger" v-html="messages.errorOldPass"></div>
+				<fieldset class="form-group">
+					<label>Stara lozinka</label>
+					<input type="password" class="form-control" v-model="changedPassword.oldPassword" placeholder="Unesite staru loznku..." />
+				</fieldset>
+
+				<div v-if='messages.errorNewPass' class="alert alert-danger" v-html="messages.errorNewPass"></div>
+				<fieldset class="form-group">
+					<label>Nova lozinka</label>
+					<input type="password" class="form-control" v-model="changedPassword.newPassword" placeholder="Unesite novu loznku..." />
+				</fieldset>
+
+				<div v-if='messages.errorNotEqualNewPassword' class="alert alert-danger" v-html="messages.errorNotEqualNewPassword"></div>
+				<div v-if='messages.errorRepNewPass' class="alert alert-danger" v-html="messages.errorRepNewPass"></div>
+				<fieldset class="form-group">
+					<label>Ponovite novu lozinku</label>
+					<input type="password" class="form-control" v-model="changedPassword.newPasswordRepeat" placeholder="Ponovite novu loznku..."  />
+				</fieldset>                    
+
+				<button type="button" class="btn btn-lg btn-success" v-on:click='updateProfile(profileDeliveryMan)'> Save </button>
+				<hr>
+				<div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
+				<div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
+
+			</div>
 
 			<div class="container" v-show="isAdmin">
 				<h4>Promena podataka</h4>
@@ -37,7 +99,7 @@
 				</div>
 
                 <label style="padding:5px;" class='label'>Datum rodjenja:</label>
-                <vuejsDatepicker style="padding:5px;" placeholder="Odaberite datum rodjenja" v-model="profileAdmin.dateOfBirth">
+                <vuejsDatepicker  style="padding:5px;" placeholder="Odaberite datum rodjenja" v-model="selectedDate2">
                 </vuejsDatepicker>
 
                 <hr>
@@ -100,7 +162,7 @@
 				</div>
 
                 <label style="padding:5px;" class='label'>Datum rodjenja:</label>
-                <vuejsDatepicker style="padding:5px;" placeholder="Odaberite datum rodjenja" v-model="profileManager.dateOfBirth">
+                <vuejsDatepicker style="padding:5px;" placeholder="Odaberite datum rodjenja" v-model="selectedDate3">
                 </vuejsDatepicker>
 
                 <hr>
@@ -165,7 +227,7 @@
 				</div>
 
                 <label style="padding:5px;" class='label'>Datum rodjenja:</label>
-                <vuejsDatepicker style="padding:5px;" placeholder="Odaberite datum rodjenja" v-model="profileCustomer.dateOfBirth">
+                <vuejsDatepicker style="padding:5px;" placeholder="Odaberite datum rodjenja" v-model="selectedDate4">
                 </vuejsDatepicker>
 
                 <hr>
@@ -206,47 +268,88 @@
 import dataService from "../services/DataService"
 import Datepicker from 'vuejs-datepicker'
 export default {
+    components:{
+        vuejsDatepicker:Datepicker,
+    },
     data(){
         return{
             role:'',
+
+            profileDeliveryMan: {
+                id:'',
+                obrisan:false,
+                username:'',
+                password:'',
+                name:'',
+                lastname:'',
+                gender:'',
+                dateOfBirth:'',
+
+
+                listOfActiveOrders:[],
+                listOfAllOrders:[],
+
+                oldPassword:'',
+            },
+
             profileManager: {
                 id:'',
+                obrisan:false,
                 username:'',
+                password:'',
                 name:'',
                 lastname:'',
-                password:'',
                 gender:'',
                 dateOfBirth:'',
-                restaurant:''
+
+
+                restaurant:'',
+
+                oldPassword:'',
             },
+
             profileCustomer:{
                 id:'',
+                obrisan:false,
                 username:'',
+                password:'',
                 name:'',
                 lastname:'',
-                password:'',
                 gender:'',
                 dateOfBirth:'',
+
                 listOfAllOrders:null,
                 cart:null,
                 numberOfPoints:0,
-                typeOfCustomer:''
+                typeOfCustomer:'',
+
+
+                oldPassword:'',
             },
+
             profileAdmin:{
                 id:'',
+                obrisan:false,
                 username:'',
+                password:'',
                 name:'',
                 lastname:'',
-                password:'',
                 gender:'',
-                dateOfBirth:''
+                dateOfBirth:'',
+
+                oldPassword:'',
             },
 			changedPassword: {
                 oldPassword: '',
                 newPassword: '',
                 newPasswordRepeat: '',
             },
-			
+
+            //pomocne promenljive za hvatanje vrednosti datuma
+            selectedDate1:'',
+			selectedDate2:'',
+            selectedDate3:'',
+            selectedDate4:'',
 			messages: {
                 errorFirstName: '',
                 errorLastName: '',
@@ -261,12 +364,36 @@ export default {
                 errorResponse: '',
                 successResponse: '',
             },
+
+            //pomocne promenljive za prikaz segmenata spram uloge
             isAdmin:false,
             isManager:false,
-            isCustomer:false
+            isCustomer:false,
+            isDeliveryMan:false,
+        }
+    },
+    watch:{
+        'selectedDate1' : function(val){
+            console.log(this.profileCustomer.dateOfBirth);
+            this.profileCustomer.dateOfBirth = this.selectedDate1.toString().substring(4, 15);
+        },
+        'selectedDate2' : function(val, oldVal){
+            console.log('Datum rodjenja pre obrade: ' + this.profileAdmin.dateOfBirth);
+            this.profileAdmin.dateOfBirth = this.selectedDate2.toString().substring(4, 15);
+            console.log('Datum rodjenja posle obrade: ' + this.profileAdmin.dateOfBirth);
+        },
+        'selectedDate3' : function(val){
+            console.log(this.profileManager.dateOfBirth);
+            this.profileManager.dateOfBirth = this.selectedDate3.toString().substring(4, 15);
+        },
+        'selectedDate4' : function(val){
+            console.log(this.profileDeliveryMan.dateOfBirth);
+            this.profileDeliveryMan.dateOfBirth = this.selectedDate4.toString().substring(4, 15);
         }
     },
     methods:{
+            
+           
         updateProfile: function (profile) {
         //OSOBA
             if  (profile.name == '') {
@@ -317,11 +444,31 @@ export default {
                 else {
                     //ako je stara sifra dobro uneta, a nove se poklapaju,
                     //stara sifra se menja novom.
-                    profile.passwordConfirm = this.changedPassword.oldPassword;
+                    profile.oldPassword = this.changedPassword.oldPassword;
                     profile.password = this.changedPassword.newPassword;
 
                     if(this.role === "admin"){
+                        console.log('Kreiranje admina rodjenog: ' + this.profileAdmin.dateOfBirth)
                         dataService.updateAdmin(profile).then(response => {
+                            this.messages.successResponse = `<h4>Vas profil je uspesno izmenjen!</h4>`;
+                            setTimeout(() => this.messages.successResponse = '', 3000);
+                            profile = response.data;
+                        }).catch(error => {
+                            console.log(error.response)
+                        if(error.response.status === 500  && error.response.data.message==='Incorrect old password!'){
+                            this.messages.errorResponse = `<h4>Vasa stara sifra je netacna! Molimo Vas pokusajte ponovo...</h4>`;
+            
+                            setTimeout(()=>this.messages.errorResponse='', 5000);
+                        }
+                        else if (error.response.status === 500 || error.response.status === 404) {
+                            this.messages.errorResponse = `<h4>Imali smo nekih problema na serveru,  molimo Vas pokusajte ponovo kasnije!</h4>`;
+                            setTimeout(() => this.messages.errorResponse = '', 5000);
+                        }
+                
+                        });
+                    }
+                     if(this.role === "delivery_man"){
+                        dataService.updateDeliveryMan(profile).then(response => {
                             this.messages.successResponse = `<h4>Vas profil je uspesno izmenjen!</h4>`;
                             setTimeout(() => this.messages.successResponse = '', 3000);
                             profile = response.data;
@@ -441,12 +588,20 @@ export default {
             }
 		},
 		getUserProfileData(id){
+            console.log("utvrdjivanje uloge")
             let parsToken = JSON.parse(localStorage.getItem('token'));
             this.role = parsToken.role;
             if(parsToken.role === "admin"){
                 this.isAdmin = true;
                 dataService.getAdmin(id).then(response => {
                     this.profileAdmin = response.data;
+                })
+            }
+            if(parsToken.role === "delivery_man"){
+                this.isDeliveryMan = true;
+                dataService.getDeliveryMan(id).then(response => {
+                    console.log("korisnik je delivery_man")
+                    this.profileDeliveryMan = response.data;
                 })
             }
             if(parsToken.role === "manager"){
@@ -473,15 +628,13 @@ export default {
         }
     },
     created(){
-        // if(JSON.parse(localStorage.getItem('token')) == null){
-        //     this.$router.push(`/login`);
-        // }else{
-        //     this.getUserProfileData(this.id);
-        // }
+        if(JSON.parse(localStorage.getItem('token')) == null){
+            this.$router.push(`/login`);
+        }else{
+            this.getUserProfileData(this.id);
+        }
     },
-    components:{
-        vuejsDatepicker:Datepicker,
-    }
+    
 }
 </script>
 

@@ -19,7 +19,6 @@ class DataService{
         return axios.get(`${API_URL}/customers/${username}`);
     }
     addCustomer(customer){
-        console.log("AAAAA")
         return axios.post(`${API_URL}/customers/`, customer);
     }
     updateCustomer(customer){
@@ -32,7 +31,7 @@ class DataService{
         return axios.post(`${API_URL}/managers/`, manager);
     }
     getFreeManagers(){
-        return axios.get(`${API_URL}/managers/free`);
+        return axios.get(`${API_URL}/managers/free/`);
     }
     getAllManagers(){
         return axios.get(`${API_URL}/managers/`);
@@ -43,11 +42,23 @@ class DataService{
     updateManager(manager){
         return axios.put(`${API_URL}/managers/`, manager);
     }
+    updateManagerRestoran(manager){
+        return axios.put(`${API_URL}/managers/dodelaRestorana`, manager);
+    }
 
     //DeliveryMan
     addDeliveryMan(deliveryMan){
         console.log("DataService:addDeliveryMan");
         return axios.post(`${API_URL}/deliverymen/`, deliveryMan);
+    }
+    getDeliveryMan(id){
+        return axios.get(`${API_URL}/deliverymen/${id}`);
+    }
+    getAllDeliveryMen(){
+        return axios.get(`${API_URL}/deliverymen/`);
+    }
+    updateDeliveryMan(deliveryMan){
+        return axios.put(`${API_URL}/deliverymen/`, deliveryMan);
     }
 
     //Restaurants

@@ -1,7 +1,7 @@
 <template>
     <div style="width:50%">
         <div class="container">
-        <h2>Kreiranje novog artikla</h2>
+        <h2>Kreiranje novog artikla za restoran</h2> <h2 style="color:blue">{{restaurant.name}}</h2>
         <p>Popunite formular kako biste kreirali novi artikal...</p>
         <table class="table" id="table_newproduct">
             <tbody>
@@ -47,7 +47,7 @@
                         <label class='label'>Opis:</label>
                     </td>
                     <td>
-                        <input type="number" placeholder="Unesite opis"  v-model="newProduct.opis">
+                        <input type="text" placeholder="Unesite opis"  v-model="newProduct.opis">
                     </td>
                 </tr>
                 <tr style="height:500px">
@@ -122,10 +122,9 @@ export default {
     data(){
         return{
             username:'',
-             restorani:[
-                // {naziv:'test1'},
-                // {naziv:'test2'}
-            ],
+             restaurant:{
+
+             },
 
             slike:[],
             newProduct:{
@@ -134,7 +133,7 @@ export default {
                 typeOfArtikal:'',
                 kolicina:'',
                 opis:'',               
-                slike:[],       
+                slika:[],       
             },
             messages:{
                 successResponse:'',
@@ -155,8 +154,17 @@ export default {
         },
     },
     methods:{
+        getRestaurant(){
+            dataService.getRestaurantByManager(this.username).then(response => {
+                this.restaurant = response.data;
+                console.log(this.restaurant)
+                console.log('stigao restoran sa servera: ' + this.restaurant.name);
+            }).catch(error => {
+                console.log(error.response);
+            });
+        },
         ponistiIzbor(){
-            this.newProduct.slike = [];
+            this.newProduct.slika = '',
             this.slike = [];
         },
         createProduct:function(){
@@ -165,17 +173,21 @@ export default {
             console.log(JSON.stringify(this.newProduct));
             console.log(this.newProduct);
             console.log("NA BEK IDE KORISNICKO IME: " + this.username);
-            dataService.addProduct(this.username, this.newProduct).then(response => {
-                if(response.data !== ''){
+            dataService.addProduct(this.restaurant.name, this.newProduct).then(response => {
+                console.log(response.data);
+                if(response.data.length !==0){
+                    console.log('aaaa')
                     this.messages.successResponse= "<h4>Uspesno ste kreirali artikal.</h4>"
                     setTimeout(() => this.messages.successResponse='', 3000);
                 }else{
+                    console.log('bbbb')
                     this.messages.errorResponse= "<h4>Vec postoji artikal sa tim imenom.</h4>"
                     setTimeout(() => this.messages.errorResponse='', 3000);
                 }
                 
                 
             }).catch(error => {
+                console.log(error.response)
                 if(error.response.status === 500 || error.response.status === 404){
                         this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
                         setTimeout(() => this.messages.errorResponse='', 5000);
@@ -197,7 +209,7 @@ export default {
                 let reader = new FileReader();
                 reader.readAsDataURL(images[i]);
                 reader.onload = () => {
-                    this.newProduct.slike.push(reader.result);
+                    this.newProduct.slika = reader.result.toString();
                     this.slike.push(reader.result);
                 }
             }
@@ -206,6 +218,7 @@ export default {
     created(){      
         let temp = JSON.parse(localStorage.getItem('token'));
         this.username = temp.username;
+        this.getRestaurant();
     }
 }
 </script>

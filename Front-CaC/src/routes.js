@@ -15,6 +15,9 @@ import RestaurantDetailsManager from './components/RestaurantDetailsManager'
 import CommentNew from './components/CommentNew'
 
 
+import KreirajRestoran from './components/KreirajRestoran'
+
+
 export default[
     {   
         path:'/commentNew/:id/',
@@ -102,5 +105,16 @@ export default[
         component:RestaurantDetailsManager
     }
     
+
+
+
+
+
+    ,
+    {   
+        path:'/kreiraj',
+        name:'KreirajRestoran',
+        component:KreirajRestoran
+    },
 
 ]

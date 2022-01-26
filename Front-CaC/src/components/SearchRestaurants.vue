@@ -26,7 +26,7 @@
                             </span>
                             <span class="col-xl-3 col-md-6 mb-3"> 
                                 <span class="span_search">Lokacija restorana</span>
-                                <input class="form-control mr-sm-2" type="text" placeholder="Country/City" aria-label="Search" v-model="searchedRestoran.lokacija">
+                                <input class="form-control mr-sm-2" type="text" placeholder="Country/City" aria-label="Search" v-model="searchedRestoran.lokacija.drzava">
                             </span>
                             <span class="col-xl-3 col-md-6 mb-3"> 
                                 <span class="span_search">Ocena restorana</span>
@@ -41,7 +41,7 @@
                                 <button style='margin-right:5px;' class='btn btn-outline-primary my-2 my-sm-0' v-on:click="resetFilter()">Reset all</button>
                             </span> 
                             <span class="col-xl-3 col-md-6 mb-2"> 
-                                <button style="margin-left: 5px;" class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click.prevent='searchRestaurant()'>Search</button>
+                                <button style="margin-left: 5px;" class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click.prevent='search()'>Search</button>
                             </span>
                         </div>
                         
@@ -77,7 +77,7 @@
                             <img v-if='currentSortDir == "desc" && currentSort== "ocenaRestorana" ' src='../assets/down-arrow1.1.png'>
                         </th>
                         <th>Menadzer</th>
-                        <!-- <th>Logo</th> -->
+                        <th>Logo:</th>
                         <th>Otvoren</th>
                         <th>Detaljno</th>
                         <th>Komentarisi</th>
@@ -87,10 +87,12 @@
                     <tr v-bind:key='rst.name' v-for="rst in sortRestaurants">
                         <td>{{rst.name}}</td>
                         <td>{{rst.type}}</td>
-                        <td>{{rst.lokacija}}</td>
+                        <td>{{rst.lokacija.ulica}}, {{rst.lokacija.broj}}, {{rst.lokacija.mesto}}, {{rst.lokacija.drzava}}</td>
                         <td>{{rst.ocena}}</td>
-                        <td>{{rst.manager.username}}</td>
-                        <!-- <td>{{rst.images}}</td> -->
+                        <td>{{rst.manager}}</td>
+                        <td>
+                            <img class="card-img-top" style="margin-top:10px; margin-bottom:10px" :src="rst.logo">
+                        </td>
                         <td v-show='rst.opened'>{{"otvoren"}}</td>
                         <td v-show='!rst.opened'>{{"zatvoren"}}</td>
                         <td>
@@ -109,6 +111,7 @@
 
 <script>
 import dataService from '../services/DataService'
+
 export default {
     data(){
         return{
@@ -120,13 +123,22 @@ export default {
             isCustomer:true,
 
             searchedRestoran:{
+                id:'',
                 name:'',
                 type:'',
-                menuItems:null,
+                menuItems:[],
                 opened:'',
-                lokacija:'',
-                images:null,
-                comments:null,
+                lokacija:{
+                    id:'',
+                    ulica:'',
+                    broj:'',
+                    mesto:'',
+                    drzava:'',
+                    xCoord:'',
+                    yCoord:'',
+                },
+                logo:'',
+                comments:[],
                 manager:'',
                 ocena:''
             },
@@ -150,28 +162,6 @@ export default {
                 errorResponse: '',
                 successResponse: '',
             },
-            locations:[
-                {
-                    country:'Serbia',
-                    city:'Novi Sad'
-                },
-                {
-                    country:'Serbia',
-                    city:'Belgrade'
-                },
-                {
-                    country:'Serbia',
-                    city:'Nis'
-                },
-                {
-                    country:'Serbia',
-                    city:'Pristina'
-                },
-                {
-                    country:'Serbia',
-                    city:'Subotica'
-                }
-            ],
             sort(s){
                 if(s == this.currentSort){
                     this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc';
@@ -214,7 +204,7 @@ export default {
                 }
             }
         },
-        searchRestaurant(){
+        search(){
             console.log("na bek ide restoran: " + JSON.stringify(this.searchedRestoran));
             let zahtev = 'name:';
             if(this.searchedRestoran.name != ""){
@@ -224,8 +214,8 @@ export default {
                 zahtev += "_";
             }
             zahtev += "&lokacija:"
-            if(this.searchedRestoran.lokacija != ""){
-                zahtev += this.searchedRestoran.lokacija;
+            if(this.searchedRestoran.lokacija.drzava != ''){
+                zahtev += this.searchedRestoran.lokacija.drzava;
             }
             else{
                 zahtev += "_";
@@ -248,13 +238,15 @@ export default {
             dataService.searchRestaurant(zahtev).then(response =>{
                 console.log("Stigli rezultati pretrage");
                 this.displayedRestaurants = response.data;
-            })
+            }).catch(error => {
+                console.log(error.response);
+            });
         },
         filterReset(){
             this.searchedRestoran.name = null;
             this.searchedRestoran.type = null;
             this.searchedRestoran.lokacija = null;
-            this.searchedRestoran.prosecnaOcena = null;
+            this.searchedRestoran.ocena = null;
             this.searchedRestoran.logo = null;
             this.searchedRestoran.manager = null;
         },
