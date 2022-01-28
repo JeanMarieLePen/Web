@@ -104,6 +104,29 @@ class DataService{
         return axios.put(`${API_URL}/administrators`, admin);
     }
 
+    //porudzbine kupac
+    getSvojePorudzbine(id){
+        return axios.get(`${API_URL}/ordersCustomer/${id}`);
+    }
+    getNedostavljenePorudzbine(id){
+        return axios.get(`${API_URL}/ordersCustomer/${id}`);
+    }
+    
+    //porudzbine manager
+    getSvePorudzbine(id){
+        return axios.get(`${API_URL}/ordersManager/${id}`);
+    }
+
+    //porudzbine dostavljac
+    getSveCekanje(){
+        return axios.get(`${API_URL}/ordersDeliveryMan`);
+    }
+    getSvojeNedostavljenePorudzbine(id){
+        return axios.get(`${API_URL}/ordersDeliveryMan/${id}`);
+    }
+    getZaduzenePorudzbine(id){
+        return axios.get(`${API_URL}/ordersDeliveryMan/${id}`);
+    }
 }
 
 export default new DataService();
