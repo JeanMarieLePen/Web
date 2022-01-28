@@ -65,7 +65,7 @@
                     </router-link>
                 </div>
             </div>
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div v-show="isCustomer" class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/searchRestaurants" class="nav-link"
                         exact>
@@ -77,6 +77,11 @@
                     </router-link>
                 </div>
             </div>
+<<<<<<< HEAD
+=======
+            
+            
+>>>>>>> 22f9fc2444d5dc8e037001f21990eaaefc6e11f3
             <div v-show="isManager" class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/newProduct" class="nav-link"
@@ -89,6 +94,8 @@
                     </router-link>
                 </div>
             </div>
+
+            
             <div v-show="isManager" class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/moderation" class="nav-link"
@@ -99,6 +106,47 @@
                         </div>
                     </router-link>
                 </div>
+            </div>
+
+            <div v-show='isCustomer' class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-0 shadow">
+                    <router-link style='text-decoration: none;color:#35424a;' to="/ordersCustomer" class="nav-link"
+                        exact>
+                        <img src="../assets/orderrr.png" class="card-img-top" alt="...">
+                        <div class="card-body text-center">
+                            <h5 class="card-title mb-0">Pregledajte svoje porudzbine</h5>
+                            
+                        </div>
+                    </router-link>
+                </div>
+            </div>
+
+            <div v-show="isManager" class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-0 shadow">
+                    <router-link style='text-decoration: none;color:#35424a;' to="/ordersManager" class="nav-link"
+                        exact>
+                        <img src="../assets/orderrr.png" class="card-img-top" alt="...">
+                        <div class="card-body text-center">
+                            <h5 class="card-title mb-0">Pregledajte sve porudzbine za vas restoran</h5>
+                           
+                        </div>
+                    </router-link>
+                </div>
+            
+            </div>
+
+             <div v-show="isDeliveryMan" class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-0 shadow">
+                    <router-link style='text-decoration: none;color:#35424a;' to="/ordersDeliveryMan" class="nav-link"
+                        exact>
+                        <img src="../assets/orderrr.png" class="card-img-top" alt="...">
+                        <div class="card-body text-center">
+                            <h5 class="card-title mb-0">Pregledajte porudzbine za koje ste zaduzeni</h5>
+                           
+                        </div>
+                    </router-link>
+                </div>
+            
             </div>
         </div><!-- /.row -->
     </div>
@@ -122,7 +170,7 @@ export default {
             },
             mode: false,
             isAdmin: false,
-            isCustomer: false,
+            isCustomer: true,
             isDeliveryMan: false,
             isManager: false,
             role: ''

@@ -18,6 +18,13 @@ import CommentNew from './components/CommentNew'
 import ShoppingCart from './components/ShoppingCart'
 
 import ModeracijaKomentara from './components/ModeracijaKomentara'
+import KreirajRestoran from './components/KreirajRestoran'
+
+import Porudzbina from './components/Porudzbina'
+import PorudzbineKupac from './components/PorudzbineKupac'
+import PorudzbineManager from './components/PorudzbineManager'
+import PorudzbineDeliveryMan from './components/PorudzbineDeliveryMan'
+
 
 export default[
     {
@@ -115,4 +122,33 @@ export default[
         name:'ModeracijaKomentara',
         component:ModeracijaKomentara,
     },
+
+    ,
+    {   
+        path:'/kreiraj',
+        name:'KreirajRestoran',
+        component:KreirajRestoran
+    },
+    
+    {
+        path:'/ordersCustomer',
+        name:'PorudzbineKupac',
+        component:PorudzbineKupac
+    },
+    {
+        path:'/ordersDeliveryMan',
+        name:'PorudzbineDeliveryMan',
+        component:PorudzbineDeliveryMan
+    },
+    {
+        path:'/ordersManager',
+        name:'PorudzbineManager',
+        component:PorudzbineManager
+    },
+    {
+        path:'/order',
+        name:'Porudzbina',
+        component:Porudzbina
+    }
+
 ]

@@ -102,7 +102,7 @@ export default {
       if(JSON.parse(localStorage.getItem('token')) != null){
             this.$router.push(`/`);
       }else{
-
+            
       }
     }
   }

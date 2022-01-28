@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
     <div style="width:50%">
         <div class="container">
             <h2>Moderacija komentara o restoranu</h2>
@@ -100,6 +101,17 @@ export default {
         this.getId();
         this.getModerated();
         this.getUnmoderated();
+=======
+    
+</template>
+
+<script>
+export default {
+    data(){
+        return{
+
+        }
+>>>>>>> 22f9fc2444d5dc8e037001f21990eaaefc6e11f3
     }
 }
 </script>

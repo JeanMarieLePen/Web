@@ -58,7 +58,11 @@
                             Datum rodjenja:
                         </td>
                         <td>
+<<<<<<< HEAD
                             <vuejsDatepicker input-class="width:100%" class="form-control" placeholder="Odaberite datum rodjenja" v-model="selectedDate"></vuejsDatepicker>
+=======
+                            <vuejsDatepicker input-class="width:100%" class="form-control" placeholder="Odaberite datum rodjenja" v-model="newCustomer.dateOfBirth"></vuejsDatepicker>
+>>>>>>> 22f9fc2444d5dc8e037001f21990eaaefc6e11f3
                         </td>
                     </tr>
                 </tbody>
@@ -106,10 +110,17 @@ export default {
         }
     },
     watch:{
+<<<<<<< HEAD
         'selectedDate' : function(val){
             console.log('Datum rodjenja pre: ' + this.selectedDate);
             // this.newCustomer.dateOfBirth = this.newCustomer.dateOfBirth.toString().substring(4, 15);
              this.newCustomer.dateOfBirth = this.selectedDate.toString().substring(4, 15);
+=======
+        'newCustomer.dateOfBirth' : function(val){
+            console.log('Datum rodjenja: ' + this.newCustomer.dateOfBirth);
+            // this.newCustomer.dateOfBirth = this.newCustomer.dateOfBirth.toString().substring(4, 15);
+             this.newCustomer.dateOfBirth.toString().substring(4, 15);
+>>>>>>> 22f9fc2444d5dc8e037001f21990eaaefc6e11f3
              console.log('Datum rodjenja posle: ' + this.newCustomer.dateOfBirth);
         }
     },
