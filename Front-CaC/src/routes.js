@@ -15,7 +15,16 @@ import RestaurantDetailsManager from './components/RestaurantDetailsManager'
 import CommentNew from './components/CommentNew'
 
 
+import ShoppingCart from './components/ShoppingCart'
+
+import ModeracijaKomentara from './components/ModeracijaKomentara'
+
 export default[
+    {
+        path:'/shoppingCart',
+        name:'ShoppingCart',
+        component:ShoppingCart
+    },
     {   
         path:'/commentNew/:id/',
         name:'CommentNew',
@@ -100,7 +109,10 @@ export default[
         path:'/restaurant/details',
         name:'RestaurantDetailsManager',
         component:RestaurantDetailsManager
-    }
-    
-
+    },
+    {
+        path:'/moderation',
+        name:'ModeracijaKomentara',
+        component:ModeracijaKomentara,
+    },
 ]
