@@ -1,31 +1,77 @@
 <template>
-    <div>
+    <div style="width:50%">
         <div class="container">
-            <label class='label'>Korisnicko ime:</label>
-            <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unestite korisnicko ime..."  v-model="newDeliveryMan.username">
-            <label class='label'>Ime:</label>
-            <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unestite ime dostavljaca..."  v-model="newDeliveryMan.name">
-            <label class='label'>Prezime:</label>
-            <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unestite  prezime dostavljaca..."  v-model="newDeliveryMan.lastname">
-            <label class='label'>Lozinka:</label>
-            <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Unestite pol dostavljaca..."  v-model="newDeliveryMan.password">
-            <label style="padding:5px;" class='label'>Pol</label>
-            <span class="col-xl-3 col-md-6 mb-1">
-                <select style="padding:5px;" v-model="newDeliveryMan.gender">
-                    <option disabled value="">Odabir pola</option>
-                    <option v-bind:key="polTemp.naziv" v-for="polTemp in polovi">{{polTemp.naziv}}</option>
-                </select>
-            </span>
-            
-            <label style="padding:5px;" class='label'>Datum rodjenja:</label>
-            <vuejsDatepicker style="padding:5px;" placeholder="Odaberite datum rodjenja" v-model="newDeliveryMan.dateOfBirth">
-            </vuejsDatepicker>
-            
-            
-            <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
-            <div v-if='messages.errorResponse' class="alert alert-success" v-html="messages.errorResponse"></div>
-            <button class="btn btn-success" v-on:click='createDeliveryMan()'>Potvrdi</button>
+            <table class="table" id="table_newdeliveryman">
+                <tbody>
+                    <tr>
+                        <td>
+                            Korisnicko ime:
+                        </td>
+                        <td>
+                            <input type="text" placeholder="Unesite korisnicko ime..."  v-model="newDeliveryMan.username">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Ime:
+                        </td>
+                        <td>
+                            <input type="text" placeholder="Unesite ime..."  v-model="newDeliveryMan.name">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Prezime:
+                        </td>
+                        <td>
+                            <input type="text" placeholder="Unesite prezime..."  v-model="newDeliveryMan.lastname">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Lozinka:
+                        </td>
+                        <td>
+                            <input type="password" placeholder="Unesite lozinku..." v-model="newDeliveryMan.password">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Pol:
+                        </td>
+                        <td>
+                            <span >
+                                <select style="width:100%" v-model="newDeliveryMan.gender">
+                                    <option disabled value="">Odabir pola</option>
+                                    <option v-bind:key="polTemp.naziv" v-for="polTemp in polovi">{{polTemp.naziv}}</option>
+                                </select>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Datum rodjenja:
+                        </td>
+                        <td>
+                            <vuejsDatepicker v-model="selectedDate" style="padding:5px;" placeholder="Odaberite datum rodjenja" ></vuejsDatepicker>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2">
+                            <div class="text-center">
+                                <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
+                                <div v-if='messages.errorResponse' class="alert alert-error" v-html="messages.errorResponse"></div>
+                                <button class="btn btn-success" v-on:click='createDeliveryMan()'>Potvrdi</button>
+                            </div>
+                            
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
+        
     </div>
 </template>
 
@@ -34,6 +80,16 @@ import dataService from '../services/DataService'
 import Datepicker from 'vuejs-datepicker'
 
 export default {
+    components:{
+        vuejsDatepicker:Datepicker
+    },
+    watch:{
+        'selectedDate' : function(val, oldVal){
+            console.log('Datum pre: ' + this.newDeliveryMan.dateOfBirth);
+             this.newDeliveryMan.dateOfBirth = this.selectedDate.toString().substring(4, 15);
+            console.log('Datum posle: ' + this.newDeliveryMan.dateOfBirth);
+        }
+    },
     data(){
         return{
             newDeliveryMan:{
@@ -44,6 +100,8 @@ export default {
                 gender:'',
                 dateOfBirth:''              
             },
+            selectedDate: '',
+
             messages:{
                 successResponse:'',
                 errorResponse:'',
@@ -80,6 +138,23 @@ export default {
 
 
 <style scoped>
-
+#table_newdeliveryman td:first-child{
+    font-weight: 700;
+    width:30%;
+    
+}
+#table_newdeliveryman tr:nth-child(even){
+    background-color: lightgray;
+    font-weight: 600;
+}
+#table_newdeliveryman td:last-child{
+    width:100%;
+}
+#table_newdeliveryman{
+    border-style: solid;
+}
+input{
+    width: 100%;
+}
 
 </style>

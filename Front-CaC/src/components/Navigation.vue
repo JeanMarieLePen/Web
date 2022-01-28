@@ -27,12 +27,32 @@
           <router-link to='/login' class="nav-link" exact> <button v-show="loggedIn==false" class="btn" id='btnLogin'>Log In</button> </router-link>
           
           <button  class="btn" v-show="loggedIn==true" id='btnLogout' v-on:click='logOut()'>Log Out</button> 
-          <router-link to='/login' class="nav-link" exact> 
+          
+
+          <router-link to='/shoppingCart' class="nav-link" exact> 
+            <span>{{numberOfItems}}</span>
             <button @click="goToCart()" style="background" class="btn btn-primary">
-               <img src="/src/assets/shopping-cart.png" style="float:left;margin-right:0.5em; height:20px;width:40px;">
-              Korpa
+               <!-- <img src="/src/assets/shopping-cart.png" style="float:left;margin-right:0.5em; height:20px;width:40px;"> -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+              </svg>
+              
               </button> 
+
           </router-link>
+          <!-- <div class="nav__cart">
+            <button>
+              <i class="fas fa-shopping-cart"></i>
+              
+            </button>
+            <span class="total-quantity">0</span>
+            <div class="cart-dropdown">
+              <ul class="cart-dropdown__list">
+                <li>Product</li>
+              </ul>
+            </div>
+          </div> -->
+
           <!-- <router-link to='/searchRestaurants' class="nav-link" exact>
             <button class="btn" id="btnLogin">Kreiraj korisnika</button>
           </router-link> -->
@@ -46,6 +66,7 @@
 <script> 
 import axios from 'axios'
 import { bus } from '../main'; 
+
 export default {
   name: 'Navigation',
   components: {
@@ -56,7 +77,19 @@ export default {
       loggedIn: localStorage.getItem('token') ? true : false,
     }
   },
+  computed:{
+    numberOfItems(){
+      var lista = JSON.parse(localStorage.getItem('shoppingList')) || []
+      return lista.length;
+    }
+  },
   methods:{
+    onOver() {
+        this.$refs.dropdown.visible = true;
+      },
+      onLeave() {
+        this.$refs.dropdown.visible = false;
+      },
     logOut:function(){
       if(confirm('Da li ste sigurni da se zelite izlogovati?')){
         if(localStorage.getItem('token')){

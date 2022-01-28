@@ -13,11 +13,11 @@
             <div v-if="messages.successMsg" style="margin-left: 200px;" class="alert alert-success" v-html="messages.successMsg"></div>
             <div v-if="messages.errorMsg" style="margin-left: 200px;" class="alert alert-danger" v-html="messages.errorMsg"></div>
             <div >
-                <div  v-for="tempComment in komentari" v-bind:key="tempComment.kupacKomentator" class="comments-box">
+                <div  v-for="tempComment in komentari" v-bind:key="tempComment.id" class="comments-box">
                 <div>
                     <p class="author">
                     {{tempComment.author}} 
-                    <starrating v-model="tempComment.ocena" :star-size="20" read-only @rating-selected="setRating()" style="margin-left:10px;display:inline-block"></starrating>
+                    <starrating v-model="tempComment.ocena" :star-size="20" read-only style="margin-left:10px;display:inline-block"></starrating>
                     </p>
                 </div>
                 
@@ -34,7 +34,11 @@
 
 <script>
 import dataService from '../services/DataService'
+import starRating from 'vue-star-rating'
 export default {
+    components:{
+        starrating : starRating,
+    },
     data(){
         return{
             isAdmin : false,
@@ -42,7 +46,7 @@ export default {
             //pomocna varijabla za prikaz sekcije za kreiranej komentara
             showEntity: true,
             komentarisaoRestoran: false,
-            ocena:'',
+            ocena:0,
             //pomocna varijabla u koju ce se ucitavati svi komentari o restoranu 
             komentari:[],
 
@@ -60,16 +64,31 @@ export default {
         }
     },
     methods : {
+        loadComments(){
+            dataService.getAllCommentsByRestaurantId(this.$route.params.id).then(response => {
+                console.log('stigla lista svih komentara za prikaz');
+                this.komentari = response.data;
+            }).catch(error => {
+                console.log(error.response);
+            });
+        },
+        setRating(){
+            console.log('selektovani rejting je: ' + this.ocena);
+            this.noviKomentar.ocena = this.ocena;
+        },
         addComment: function () {
             if (this.noviKomentar.tekstKomentara == '') {
                 this.messages.errorText = `<h4>Tekst komentara ne moze biti prazan!</h4>`;
                 setTimeout(() => this.messages.errorText = '', 3000);
             }
             else{
-                console.log(JSON.stringify(this.noviKomentar))
-                dataService.addComment(this.id, this.noviKomentar).then(response => {
+
+                console.log('na bek ide: ' + JSON.stringify(this.noviKomentar));
+                dataService.addComment(this.noviKomentar).then(response => {
                     console.log("dodat novi komentar");
-                })
+                }).catch(error => {
+                    console.log(error.response);
+                });
             }
             // else{
             //     dataService.addComment()
@@ -77,15 +96,17 @@ export default {
         }
     },
     computed:{
-        id(){
-            return this.$route.params.id;
-        },
+        // id(){
+        //     return this.$route.params.id;
+        // },
     },
     created(){
         let temp = JSON.parse(localStorage.getItem('token'));
         this.noviKomentar.kupacKomentator = temp.username;
-        this.komentarisaniRestoran = this.$route.params.id;
-
+        this.noviKomentar.komentarisaniRestoran = this.$route.params.id;
+        console.log('komentarisani restoran je: ' + this.$route.params.id);
+        console.log('komentarisani restoran je: ' + this.noviKomentar.komentarisaniRestoran);
+        this.loadComments();
     }
 }
 </script>

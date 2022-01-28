@@ -11,6 +11,9 @@
                                 <!-- <img style="width:400px;height:400px" src="/src/assets/profile.png"> -->
                                 <carousel-3d style="width:400px;height:600">
                                     <slide :index="0">
+                                        <img  :src="loadRestaurant.logo">
+                                    </slide>
+                                    <!-- <slide :index="0">
                                         <img  src="/src/assets/dadada.png">
                                     </slide>
                                     <slide :index="1">
@@ -21,8 +24,8 @@
                                     </slide>
                                     <slide :index="3">
                                         <img  src="/src/assets/delivery.png">
-                                    </slide>
-                                    <!-- <slide v-for="(slide, i) in avanturaEntity.slike" :index="i" :key="i">
+                                    </slide> -->
+                                    <!-- <slide v-for="(slide, i) in loadRestaurant.logo" :index="i" :key="i">
                                         <template slot-scope="{ index, isCurrent, leftIndex, rightIndex }">
                                             <img :data-index="index" :class="{ current: isCurrent, onLeft: (leftIndex >= 0), onRight: (rightIndex >= 0) }" :src="slide.src">
                                         </template>
@@ -56,13 +59,14 @@
                             <label>Menadzer restorana:</label>
                         </td>
                         <td>
-                            <label>{{loadRestaurant.manager.username}}</label>
+                            <label>{{loadRestaurant.manager}}</label>
                             <button class="btn btn-primary" @click="managerProfile()">Profil</button>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <label>Ocena restorana({{ocenaRestorana}}):</label>
+                            <!-- <button class="btn btn-primary" style="background:white">{{ocenaRestorana}}</button> -->
                         </td>
                         <td>
                             <starrating v-model="loadRestaurant.ocena" :star-size="30" read-only></starrating>
@@ -107,13 +111,17 @@
                     <div>
                     <!-- if we are 3 cards wide start a new row -->
                         <div class="row">
-                            <div class="col-md-4" v-bind:key="tempArtikal.naziv" v-for="tempArtikal in loadRestaurant.menuItems">
+                            <div class="col-md-6" v-bind:key="index" v-for="(tempArtikal, index) in loadRestaurant.menuItems">
                                 <div style="margin-bottom:30px;" class="card h-100">
-                                    <img class="card-img-top" :src="tempArtikal.slika" alt="card image collar">
+                                    <img class="card-img-top" style="width:100%;height:50%;" :src="tempArtikal.slika" alt="card image collar">
                                     <div class="card-body">
                                         <h5 class="card-title">Artikal: {{tempArtikal.naziv}}</h5>
                                         <p class="card-text">Cena: {{tempArtikal.cena}}</p>
-                                        <button v-on:click="addToCart(tempAvantura.id)" class="btn btn-primary">Dodaj</button>
+                                        <input id="kolicina" v-model="inputValues[index]" style="width:50%" type="number" ref="inputValue" placeholder="Kolicina..." min="0">
+                                        <button v-on:click="addToCart(tempArtikal, index)" class="btn btn-primary">Dodaj</button>
+                                        <button v-if="isCartEmpty" v-on:click="removeFromCart(tempArtikal, index)" class="btn btn-warning">Ponisti</button>
+                                        <br>
+                                        <p class="card-text" style="margin-top:10px;font-weight:800">Ukupno: {{calculatePrice(tempArtikal, index)}} din.</p>
                                         <!-- <button v-show="isOwner" v-on:click="removeEntity(tempVikendica.id)" class="btn btn-danger">Ukloni</button> -->
                                     </div>
                                 </div>
@@ -134,12 +142,16 @@ import {Carousel3d, Slide} from 'vue-carousel-3d'
 
 export default {
     mounted(){
+        
         // this.setLocationLatLng();
-        this.getLocationFromAddress();
+         setTimeout(() => this.getLocationFromAddress(), 1500);
+        // this.getLocationFromAddress();
     },
     
     data(){
         return{
+
+           
             //mapa varijable
             center: { 
                 lat: 39.7837304, 
@@ -148,28 +160,80 @@ export default {
             lokacije:[],
 
             loadRestaurant:{
-                name:'temp_ime',
-                type:'pecenjara',
+                name:'',
+                type:'',
                 menuItems:[],
-                opened:'true',
+                opened:true,
                 lokacija:{
-                    ulica:'nemanjina',
-                    broj:'11',
-                    mesto:'beograd',
-                    drzava:'srbija',
-                    xCoord: 31232,
-                    yCoord: 23142,
+                    ulica:'',
+                    broj:'',
+                    mesto:'',
+                    drzava:'',
+                    xCoord:0,
+                    yCoord: 0,
                 },
-                images:[],
+                logo:'',
                 comments:[],
-                manager:{
-                    username:'temp_manager',
-                },
-                ocena:4
+                manager:'',
+                ocena:0
             },
+             tempProduct:{
+                idRestorana : '',
+                nazivArtikla: '',
+                datumIVremePorudzbine : '',
+                cenaJedinice : '',
+                idNarucioca : '',
+                brKomada : '',
+            },
+            inputValues : [],
         }
     },
     methods:{
+        removeFromCart(product, index){
+            let tempUsername = JSON.parse(localStorage.getItem('token')).username;
+            console.log('Username: ' + tempUsername);
+            let tempLista = JSON.parse(localStorage.getItem('shoppingList')) || [];
+            for(let i = 0; i < tempLista.length; i++){
+                if(tempLista[i].nazivArtikla == product.naziv){
+                    console.log('Iz korpe obrisan artikal: ' + tempLista[i].nazivArtikla);
+                    tempLista.splice(i, 1);
+                    
+                }
+            }
+            let test = JSON.stringify(tempLista)
+            localStorage.setItem('shoppingList', test);
+        },
+        addToCart(product, index){
+            let tempUsername = JSON.parse(localStorage.getItem('token')).username;
+            console.log('Username: ' + tempUsername)
+            this.tempProduct.idRestorana = this.loadRestaurant.name;
+            this.tempProduct.nazivArtikla = product.naziv;
+            this.tempProduct.datumIVremePorudzbine = '',
+            this.tempProduct.cenaJedinice = product.cena;
+            this.tempProduct.idNarucioca = tempUsername;
+
+            // this.tempProduct.brKomada = this.$refs.inputValue,
+            // this.tempProduct.brKomada = document.getElementById('kolicina').value;
+            this.tempProduct.brKomada = this.inputValues[index];
+            console.log('Kolicina: ' + this.tempProduct.brKomada);
+            // console.log('Kolicina: ' + document.getElementById('kolicina').value);
+            // console.log('Ref inputValue: ' + this.$refs.inputValue)
+            console.log('Dodato u localstorage: ' + this.tempProduct.nazivArtikla + ', komada: ' + this.tempProduct.brKomada)
+            let tempLista = JSON.parse(localStorage.getItem('shoppingList')) || [];
+            console.log('Broj elemenata u shopping listi pre unosa: ' + tempLista.length);
+            tempLista.push(this.tempProduct);
+            console.log('Broj elemenata u shopping listi posle unosa: ' + tempLista.length);
+            let test = JSON.stringify(tempLista);
+            localStorage.setItem('shoppingList', test);
+
+
+
+            // let tempLista = Object.keys(localStorage.getItem('shoppingList'));
+            // console.log('Broj elemenata u shopping listi: ' + tempLista.length);
+            // tempLista.push(this.tempProduct);
+            // let test = JSON.stringify(tempLista)
+            // localStorage.setItem('shoppingList', test);
+        },
         managerProfile(){
             // this.$router.push(`/profile/`)
         },
@@ -180,7 +244,9 @@ export default {
             dataService.getRestaurant(this.id).then(response => {
                 this.loadRestaurant = response.data;
                 console.log("Naziv pronadjenog restorana je: " + this.loadRestaurant.name);
-                console.log("string slike: " + this.loadRestaurant.images[0])
+                // console.log("string slike: " + this.loadRestaurant.logo)
+            }).catch(error => {
+                console.log(error.response);
             })
         },
         setLocationLatLng(){
@@ -227,8 +293,26 @@ export default {
                 }
             });                
         },
+        calculatePrice(product, index){
+            if(this.inputValues[index] == 0){
+                return 0;
+            }else{
+                let result = this.inputValues[index] * product.cena;
+            return result;
+            }
+            
+        },
     },
     computed:{
+        
+        isCartEmpty(){
+            let tempLista = JSON.parse(localStorage.getItem('shoppingList')) || [];
+            if(tempLista.length == 0){
+                return false;
+            }else{
+                return true;
+            }
+        },
         ocenaRestorana(){
             let tempSize = this.loadRestaurant.comments.length;
             let tempOcena = 0
@@ -236,7 +320,7 @@ export default {
                 tempOcena += this.loadRestaurant.comments[i].ocena;
             }
             let ocena = tempOcena/tempSize;
-            return ocena;
+            return  parseInt(ocena);
         },
         id(){
             return this.$route.params.id;
@@ -263,6 +347,7 @@ export default {
         // }else{
         //     this.getRestaurant();
         // }
+        this.getRestaurant();
     },
     components:{
         starrating : starRating,

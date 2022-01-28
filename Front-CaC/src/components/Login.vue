@@ -71,13 +71,16 @@ export default {
               if(response.data !== ''){
                   console.log("Status 200");
                   this.token = response.data;
-                  axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.username;
+                  // axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.username;
                   console.log("Token koji se smesta u localstorage: " + JSON.stringify(this.token))
                   console.log(this.token.role)
                   if(this.token.role !== null){
                       localStorage.setItem('token', JSON.stringify(this.token))
                       bus.$emit('loggedIn',true);
                       this.$router.push('/home'); 
+                  }else{
+                    this.errorMessage = `<h4>Username ili password su pogresno uneti!</h4>`;
+                    setTimeout(()=>this.errorMessage='',3000);
                   }
                    
               }

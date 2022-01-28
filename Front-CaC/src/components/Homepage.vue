@@ -77,9 +77,9 @@
                     </router-link>
                 </div>
             </div>
-            <div class="col-xl-3 col-md-6 mb-4">
+            <div v-show="isManager" class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
-                    <router-link style='text-decoration: none;color:#35424a;' to="/createProduct" class="nav-link"
+                    <router-link style='text-decoration: none;color:#35424a;' to="/newProduct" class="nav-link"
                         exact>
                         <img src="../assets/search.png" class="card-img-top" alt="...">
                         <div class="card-body text-center">
@@ -91,11 +91,11 @@
             </div>
             <div v-show="isManager" class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
-                    <router-link style='text-decoration: none;color:#35424a;' to="/restaurant/details" class="nav-link"
+                    <router-link style='text-decoration: none;color:#35424a;' to="/moderation" class="nav-link"
                         exact>
                         <img src="../assets/search.png" class="card-img-top" alt="...">
                         <div class="card-body text-center">
-                            <h5 class="card-title mb-0">Upravljaj restoranom</h5>
+                            <h5 class="card-title mb-0">Moderacija komentara</h5>
                         </div>
                     </router-link>
                 </div>

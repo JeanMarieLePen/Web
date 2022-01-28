@@ -11,12 +11,14 @@
                 <!-- Osoba -->
                     <li class="list-group-item" >
                         <h5 class="header5">Korisnicko ime</h5>
+                        <h4 v-show="isDeliveryMan">{{profileDeliveryMan.username}}</h4>
                         <h4 v-show="isManager">{{profileManager.username}}</h4>
                         <h4 v-show="isAdmin">{{profileAdmin.username}}</h4>
                         <h4 v-show="isCustomer">{{profileCustomer.username}}</h4>
                     </li>
                     <li class="list-group-item" >
                         <h5 class="header5">Ime</h5>
+                        <h4 v-show="isDeliveryMan">{{profileDeliveryMan.name}}</h4>
                         <h4 v-show="isManager">{{profileManager.name}}</h4>
                         <h4 v-show="isAdmin">{{profileAdmin.name}}</h4>
                         <h4 v-show="isCustomer">{{profileCustomer.name}}</h4>
@@ -24,6 +26,7 @@
 
                     <li class="list-group-item" >
                         <h5 class="header5">Prezime</h5>
+                        <h4 v-show="isDeliveryMan">{{profileDeliveryMan.lastname}}</h4>
                         <h4 v-show="isManager">{{profileManager.lastname}}</h4>
                         <h4 v-show="isAdmin">{{profileAdmin.lastname}}</h4>
                         <h4 v-show="isCustomer">{{profileCustomer.lastname}}</h4>
@@ -31,6 +34,7 @@
 
                     <li class="list-group-item" >
                         <h5 class="header5">Pol</h5>
+                        <h4 v-show="isDeliveryMan">{{profileDeliveryMan.gender}}</h4>
                         <h4 v-show="isManager">{{profileManager.gender}}</h4>
                         <h4 v-show="isAdmin">{{profileAdmin.gender}}</h4>
                         <h4 v-show="isCustomer">{{profileCustomer.gender}}</h4>
@@ -38,6 +42,7 @@
 
                     <li class="list-group-item" >
                         <h5 class="header5">Datum rodjenja</h5>
+                        <h4 v-show="isDeliveryMan">{{profileDeliveryMan.dateOfBirth}}</h4>
                         <h4 v-show="isManager">{{profileManager.dateOfBirth}}</h4>
                         <h4 v-show="isAdmin">{{profileAdmin.dateOfBirth}}</h4>
                         <h4 v-show="isCustomer">{{profileCustomer.dateOfBirth}}</h4>
@@ -45,6 +50,7 @@
                 </ul>
 
                     <div id='buttonUpdate'>
+                    <button v-show="isDeliveryMan" type='button' class="btn btn-lg btn-success marg" v-on:click='updateUser(profileDeliveryMan.username)'> Update</button> 
                     <button v-show="isAdmin" type='button' class="btn btn-lg btn-success marg" v-on:click='updateUser(profileAdmin.username)'> Update</button> 
                     <button v-show="isManager" type='button' class="btn btn-lg btn-success marg" v-on:click='updateUser(profileManager.username)'> Update</button> 
                     <button v-show="isCustomer" type='button' class="btn btn-lg btn-success marg" v-on:click='updateUser(profileCustomer.username)'> Update</button> 
@@ -60,6 +66,19 @@ import dataService from '../services/DataService'
 export default {
     data(){
         return{
+            //ako je dostavljac
+            profileDeliveryMan:{
+                id:'',
+                username:'',
+                name:'',
+                lastname:'',
+                password:'',
+                gender:'',
+                dateOfBirth:'',
+                listOfActiveOrders:[],
+                listOfAllOrders:[],
+            },
+            //ako je menadzer
             profileManager: {
                 id:'',
                 username:'',
@@ -70,6 +89,7 @@ export default {
                 dateOfBirth:'',
                 restaurant:''
             },
+            //ako je Kupac
             profileCustomer:{
                 id:'',
                 username:'',
@@ -83,6 +103,7 @@ export default {
                 numberOfPoints:0,
                 typeOfCustomer:''
             },
+            //ako je admin
             profileAdmin:{
                 id:'',
                 username:'',
@@ -92,6 +113,9 @@ export default {
                 gender:'',
                 dateOfBirth:''
             },
+
+            //utvrdjivanje uloge Usera
+            isDeliveryMan:false,
             isAdmin:false,
             isManager:false,
             isCustomer:false
@@ -105,13 +129,19 @@ export default {
                     this.profileAdmin = response.data;
                 })
             }
+            if(parsToken.role === "delivery_man"){
+                dataService.getDeliveryMan(id).then(response => {
+                    
+                    this.profileDeliveryMan = response.data;
+                })
+            }
             if(parsToken.role === "manager"){
                 dataService.getManager(id).then(response => {
                     this.profileManager = response.data;
                 })
             }
             if(parsToken.role === "customer"){
-                dataService.getCustomer(id).then(respone => {
+                dataService.getCustomer(id).then(response => {
                     this.profileCustomer = response.data;
                 })
             }
@@ -122,29 +152,32 @@ export default {
         
     },
     computed:{
-        id() {
-            return this.$route.params.id; //preuzimam id usera na cijoj sam stranici za prikaz profila
-        },
+        // id() {
+        //     return this.$route.params.id; //preuzimam id usera na cijoj sam stranici za prikaz profila
+        // },
     },
 
     created(){
-        // if(JSON.parse(localStorage.getItem('token')) == null){
-        //     this.$router.push(`/login`);
-        // }else{
-        //     let parsToken = JSON.parse(localStorage.getItem('token'));
-        //     console.log("TOKEN PROCITAN IZ LOCALSTORAGE-a: " + localStorage.getItem('token'));
-        //     if(parsToken.role === "admin"){
-        //         this.isAdmin = true;
-        //     }
-        //     if(parsToken.role === "manager"){
-        //         this.isManager = true;
-        //     }
-        //     if(parsToken.role === "customer"){
-        //         this.isCustomer = true;
-        //     }
+        if(JSON.parse(localStorage.getItem('token')) == null){
+            this.$router.push(`/login`);
+        }else{
+            let parsToken = JSON.parse(localStorage.getItem('token'));
+            console.log("TOKEN PROCITAN IZ LOCALSTORAGE-a: " + localStorage.getItem('token'));
+            if(parsToken.role === "admin"){
+                this.isAdmin = true;
+            }
+            if(parsToken.role === "delivery_man"){
+                this.isDeliveryMan = true;
+            }
+            if(parsToken.role === "manager"){
+                this.isManager = true;
+            }
+            if(parsToken.role === "customer"){
+                this.isCustomer = true;
+            }
 
-        //     this.getUserProfileData(parsToken.username);
-        // }
+            this.getUserProfileData(parsToken.username);
+        }
     },
 
 }

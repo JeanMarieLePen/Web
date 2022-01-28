@@ -19,7 +19,6 @@ class DataService{
         return axios.get(`${API_URL}/customers/${username}`);
     }
     addCustomer(customer){
-        console.log("AAAAA")
         return axios.post(`${API_URL}/customers/`, customer);
     }
     updateCustomer(customer){
@@ -32,7 +31,7 @@ class DataService{
         return axios.post(`${API_URL}/managers/`, manager);
     }
     getFreeManagers(){
-        return axios.get(`${API_URL}/managers/free`);
+        return axios.get(`${API_URL}/managers/free/`);
     }
     getAllManagers(){
         return axios.get(`${API_URL}/managers/`);
@@ -43,11 +42,23 @@ class DataService{
     updateManager(manager){
         return axios.put(`${API_URL}/managers/`, manager);
     }
+    updateManagerRestoran(manager){
+        return axios.put(`${API_URL}/managers/dodelaRestorana`, manager);
+    }
 
     //DeliveryMan
     addDeliveryMan(deliveryMan){
         console.log("DataService:addDeliveryMan");
         return axios.post(`${API_URL}/deliverymen/`, deliveryMan);
+    }
+    getDeliveryMan(id){
+        return axios.get(`${API_URL}/deliverymen/${id}`);
+    }
+    getAllDeliveryMen(){
+        return axios.get(`${API_URL}/deliverymen/`);
+    }
+    updateDeliveryMan(deliveryMan){
+        return axios.put(`${API_URL}/deliverymen/`, deliveryMan);
     }
 
     //Restaurants
@@ -78,10 +89,24 @@ class DataService{
     getRestaurantByManager(id){
         return axios.get(`${API_URL}/restaurants/bymanager/${id}`);
     }
-    addComment(id, comment){
-        return axios.post(`${API_URL}/restaurants/comment/${id}`, comment);
-    }
 
+
+    //kreiranje komentara i cuvanje u bazu
+    addComment(comment){
+        return axios.post(`${API_URL}/comments/`, comment);
+    }
+    getAllCommentsByRestaurantId(idRestorana){
+        return axios.get(`${API_URL}/comments/byRestoran/${idRestorana}`);
+    }
+    getAllCommentsById(idManager){
+        return axios.get(`${API_URL}/comments/${idManager}`);
+    }
+    getAllUnmoderatedComments(idManager){
+        return axios.get(`${API_URL}/comments/unmoderated/${idManager}`);
+    }
+    sendModeratedCommentList(idManagera, komentari){
+        return axios.post(`${API_URL}/comments/moderated/${idManagera}`, komentari);
+    }
 
 
 
@@ -91,6 +116,12 @@ class DataService{
     }
     updateAdmin(admin){
         return axios.put(`${API_URL}/administrators`, admin);
+    }
+
+
+    //Order
+    addOrder(order){
+        return axios.post(`${API_URL}/orders/`, order);
     }
 
 }
