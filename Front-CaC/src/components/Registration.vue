@@ -30,12 +30,17 @@
                 <div class="form-group row">
                     <label class="col-sm-2;col-form-label">Datum rodjenja:</label>
                     <vuejsDatepicker input-class="width:100%" class="form-control" placeholder="Odaberite datum rodjenja" v-model="newCustomer.dateOfBirth"></vuejsDatepicker>
-                </div>
-                <div class="text-center">
-                    <button class="btn btn-success" v-on:click='createCustomer()'>Potvrdi</button>
-                    <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
-                    <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
-                </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2">
+<div class="text-center">
+                            <button class="btn btn-success" v-on:click='createCustomer()'>Potvrdi</button>
+                            <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
+                            <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
+                        </div>
                 </form>
         </div>
     </div>
