@@ -14,6 +14,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
+import dtos.UpdateAdminDTO;
 import model.Administrator;
 import model.Customer;
 
@@ -59,11 +60,13 @@ public class AdministratorDAO {
 		return administrators.containsKey(username) ? administrators.get(username) : null;
 	}
 	
+	
+	
 	public Administrator addNewAdministrator(Administrator administrator) {
 		if(!administrators.containsKey(administrator.getUsername())) {
 			administrators.put(administrator.getUsername(), administrator);
 			Gson gson = new Gson();
-			String temp = gson.toJson(administrators);
+			String temp = gson.toJson(administrators.values());
 			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "administrators.json", true))){
 				System.out.println("Upis novog administratora u bazu.");
 				bw.append(temp);
@@ -82,8 +85,8 @@ public class AdministratorDAO {
 			if(administrators.containsKey(administrator.getUsername())) {
 				administrators.replace(administrator.getUsername(), administrator);
 				Gson gson = new Gson();
-				String temp = gson.toJson(administrators);
-				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "administrators.json", true))){
+				String temp = gson.toJson(administrators.values());
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "administrators.json", false))){
 					bw.append(temp);
 					bw.append("\n");
 					bw.close();
@@ -111,6 +114,16 @@ public class AdministratorDAO {
 				return administrator;
 			}
 			return null;
+		}
+		public boolean checkPassword(String tempPassword, String username) {
+			System.out.println("Provera sifri");
+			if(administrators.containsKey(username)) {
+				String tempSifra = administrators.get(username).getPassword();
+				if(tempSifra.equals(tempPassword)) {
+					return true;
+				}
+			}
+			return false;
 		}
 	
 }

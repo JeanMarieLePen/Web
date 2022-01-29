@@ -1,6 +1,5 @@
 package services;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
@@ -43,35 +42,14 @@ public class KomentarService {
 		return dao.findAllKomentare(name);
 	}
 	
-	//dobavljanje svih komentara koje Kupac treba da vidi
-	@GET
-	@Path("/byRestoran/{name}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Komentar> getAllOdobreniKomentariForCustomer(@PathParam("name") String name){
-		KomentarDAO dao = (KomentarDAO)ctx.getAttribute("commentDAO");
-		return dao.findAllKomentareForCustomer(name);
-	}
-	
-	
 	//pregled svih NEODOBRENIH komentara ostavljenih na jedan restoran
 	@GET
-	@Path("/unmoderated/{name}")
+	@Path("/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Komentar> getAllNeodobreniKomentari(@PathParam("name") String name){
 		KomentarDAO dao = (KomentarDAO)ctx.getAttribute("commentDAO");
 		return dao.findAllUnmoderatedComments(name);
 	}
-	
-	@POST
-	@Path("/moderated/{name}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Komentar> sendModeratedComments(@PathParam("name") String name, ArrayList<Komentar> listaKomentara){
-		KomentarDAO dao = (KomentarDAO)ctx.getAttribute("commentDAO");
-		return dao.updateModeratedComments(name, listaKomentara);
-	}
-	
-	
-	
 	
 	
 	//pregled komentara koje je napravio jedan korisnik

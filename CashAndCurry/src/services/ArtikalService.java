@@ -52,7 +52,7 @@ public class ArtikalService {
 		return dao.findAllArtikli(nazivRestorana);
 	}
 	@GET
-	@Path("/{nazivArtikla}")
+	@Path("/artikal/{nazivArtikla}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Artikal> getArtikal(@PathParam("nazivArtikla") String naziv) {
 		ArtikalDAO dao = (ArtikalDAO)ctx.getAttribute("artikalDAO");

@@ -1,6 +1,5 @@
 package dao;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -68,24 +67,13 @@ public class KomentarDAO {
 	public Restoran getRestoranByNazivManagera(String nazivManagera) {
 		Restoran temp = null;
 		for(Restoran r : restorani.values()) {
-			if(r.getManager().equals(nazivManagera)) {
+			if(r.getManager() == nazivManagera) {
 				temp = r;
 				return temp;
 			}
 		}
 		return temp;
 	}
-	
-	
-	//metoda koja vraca listu svih ODOBRENIH komentara o jednom restoranu na osnovu imena restorana[KUPAC]
-		public Collection<Komentar> findAllKomentareForCustomer(String name){
-			if(this.restorani.containsKey(name)) {
-				return restorani.get(name).getComments();
-			}
-			return null;
-		}
-	
-	
 	
 	//metoda koja vraca listu svih ODOBRENIH komentara o jednom restoranu
 	public Collection<Komentar> findAllKomentare(String nazivManagera){
@@ -117,15 +105,6 @@ public class KomentarDAO {
 		return komentariKorisnika;
 	}
 	
-	public int calculateOcena(ArrayList<Komentar> listaKomentara) {
-		int temp = 0;
-		for(Komentar k : listaKomentara) {
-			temp += k.getOcena();
-		}
-		int ocena = temp / listaKomentara.size();
-		return ocena;
-	}
-	
 	public int generateId(String naziv) {
 		int generatedId = -1;
 		if(restorani.containsKey(naziv)) {
@@ -146,44 +125,13 @@ public class KomentarDAO {
 		return generatedId;
 	}
 	
-	public Collection<Komentar> updateModeratedComments(String name, ArrayList<Komentar> listaKomentara){
-		Restoran r = this.getRestoranByNazivManagera(name);
-		if(r != null) {
-			Map<Integer, Komentar> komentari = new HashMap<>();
-			for(Komentar k : r.getComments()) {
-				komentari.put(k.getId(), k);
-			}
-			
-			for(Komentar cmnt : listaKomentara) {
-				komentari.replace(cmnt.getId(), cmnt);
-			}
-			
-			ArrayList<Komentar> tempList = (ArrayList<Komentar>) komentari.values().stream().collect(Collectors.toList());
-			r.setComments(tempList);
-			
-			Gson gson = new Gson();
-			String temp = gson.toJson(this.restorani.values());
-			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "restorani.json", false))){
-				bw.append(temp);
-				bw.append("\n");
-				bw.close();
-			}catch(IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
-	}
-	
 	public Komentar save(Komentar comment) {
 		String nazivRestorana = comment.getKomentarisaniRestoran();
 		comment.setId(this.generateId(nazivRestorana));
 		restorani.get(nazivRestorana).getComments().add(comment);
-		restorani.get(nazivRestorana).setOcena(this.calculateOcena(restorani.get(nazivRestorana).getComments()));
-		System.out.println("Trenutna ocena restorana: " + nazivRestorana + " je " + restorani.get(nazivRestorana).getOcena());
 		Gson gson = new Gson();
 		//ovde sam imao gresku jer sam u fajl upisivao mapu a ne niz restorana
 		String temp = gson.toJson(this.restorani.values());
-		
 		try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "restorani.json", false))){
 			bw.append(temp);
 			bw.append("\n");

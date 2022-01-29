@@ -29,17 +29,12 @@
 				<div class="form-label-group" >
 					<label>Pol</label>
 					<br>
-<<<<<<< HEAD
 					<span >
                         <select style="padding:5px; width:100%;" v-model="profileDeliveryMan.pol">
                             <option disabled value="">Odabir pola</option>
                             <option v-bind:key="polTemp.naziv" v-for="polTemp in polovi">{{polTemp.naziv}}</option>
                         </select>
                     </span>
-=======
-					<input type="radio" v-model="profileDeliveryMan.gender" required value="Muski"> Muski
-					<input type="radio" v-model="profileDeliveryMan.gender" required value="Zenski"> Zenski
->>>>>>> 22f9fc2444d5dc8e037001f21990eaaefc6e11f3
 					<br>
 					<br>
 				</div>
@@ -295,15 +290,12 @@ export default {
         return{
             role:'',
 
-<<<<<<< HEAD
             polovi:[
                 {naziv:'musko'},
                 {naziv:'zensko'}
             ],
             trenutniPol:'',
 
-=======
->>>>>>> 22f9fc2444d5dc8e037001f21990eaaefc6e11f3
             profileDeliveryMan: {
                 id:'',
                 obrisan:false,
@@ -347,7 +339,6 @@ export default {
                 gender:'',
                 dateOfBirth:'',
 
-<<<<<<< HEAD
                 listOfAllOrders:[],
                 listOfCompletedOrders:[],
                 listOfCanceledOrders:[],
@@ -356,12 +347,6 @@ export default {
                 numberOfPoints:0,
                 typeOfCustomer:'',
                 listOfCommentsMade:[],
-=======
-                listOfAllOrders:null,
-                cart:null,
-                numberOfPoints:0,
-                typeOfCustomer:'',
->>>>>>> 22f9fc2444d5dc8e037001f21990eaaefc6e11f3
 
 
                 oldPassword:'',
@@ -416,10 +401,7 @@ export default {
         'selectedDate1' : function(val){
             console.log(this.profileCustomer.dateOfBirth);
             this.profileCustomer.dateOfBirth = this.selectedDate1.toString().substring(4, 15);
-<<<<<<< HEAD
             console.log(this.profileCustomer.dateOfBirth);
-=======
->>>>>>> 22f9fc2444d5dc8e037001f21990eaaefc6e11f3
         },
         'selectedDate2' : function(val, oldVal){
             console.log('Datum rodjenja pre obrade: ' + this.profileAdmin.dateOfBirth);
@@ -429,18 +411,12 @@ export default {
         'selectedDate3' : function(val){
             console.log(this.profileManager.dateOfBirth);
             this.profileManager.dateOfBirth = this.selectedDate3.toString().substring(4, 15);
-<<<<<<< HEAD
             console.log(this.profileManager.dateOfBirth);
-=======
->>>>>>> 22f9fc2444d5dc8e037001f21990eaaefc6e11f3
         },
         'selectedDate4' : function(val){
             console.log(this.profileDeliveryMan.dateOfBirth);
             this.profileDeliveryMan.dateOfBirth = this.selectedDate4.toString().substring(4, 15);
-<<<<<<< HEAD
             console.log(this.profileDeliveryMan.dateOfBirth);
-=======
->>>>>>> 22f9fc2444d5dc8e037001f21990eaaefc6e11f3
         }
     },
     methods:{
@@ -509,29 +485,7 @@ export default {
                             setTimeout(() => this.messages.successResponse = '', 3000);
                             profile = response.data;
                         }).catch(error => {
-<<<<<<< HEAD
                             console.log(error.response);
-=======
-                            console.log(error.response)
-                        if(error.response.status === 500  && error.response.data.message==='Incorrect old password!'){
-                            this.messages.errorResponse = `<h4>Vasa stara sifra je netacna! Molimo Vas pokusajte ponovo...</h4>`;
-            
-                            setTimeout(()=>this.messages.errorResponse='', 5000);
-                        }
-                        else if (error.response.status === 500 || error.response.status === 404) {
-                            this.messages.errorResponse = `<h4>Imali smo nekih problema na serveru,  molimo Vas pokusajte ponovo kasnije!</h4>`;
-                            setTimeout(() => this.messages.errorResponse = '', 5000);
-                        }
-                
-                        });
-                    }
-                     if(this.role === "delivery_man"){
-                        dataService.updateDeliveryMan(profile).then(response => {
-                            this.messages.successResponse = `<h4>Vas profil je uspesno izmenjen!</h4>`;
-                            setTimeout(() => this.messages.successResponse = '', 3000);
-                            profile = response.data;
-                        }).catch(error => {
->>>>>>> 22f9fc2444d5dc8e037001f21990eaaefc6e11f3
                         if(error.response.status === 500  && error.response.data.message==='Incorrect old password!'){
                             this.messages.errorResponse = `<h4>Vasa stara sifra je netacna! Molimo Vas pokusajte ponovo...</h4>`;
             

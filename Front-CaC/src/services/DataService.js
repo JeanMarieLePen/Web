@@ -118,14 +118,12 @@ class DataService{
         return axios.put(`${API_URL}/administrators`, admin);
     }
 
-<<<<<<< HEAD
 
     //Order
     addOrder(order){
         return axios.post(`${API_URL}/orders/`, order);
     }
 
-=======
     //porudzbine kupac
     getSvojePorudzbine(id){
         return axios.get(`${API_URL}/ordersCustomer/${id}`);
@@ -149,7 +147,6 @@ class DataService{
     getZaduzenePorudzbine(id){
         return axios.get(`${API_URL}/ordersDeliveryMan/${id}`);
     }
->>>>>>> 22f9fc2444d5dc8e037001f21990eaaefc6e11f3
 }
 
 export default new DataService();

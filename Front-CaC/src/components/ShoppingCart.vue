@@ -52,11 +52,11 @@ export default {
     methods:{
         createOrder(){
             let tempListofOrders = [];
-            for(let i = 0; i < this.sadrzajKorpe.length; i++){
-                for(let j = 0; j < tempListofOrders.length; j++){
-                    if(tempListofOrders[j].idRestorana != )
-                }
-            }
+            // for(let i = 0; i < this.sadrzajKorpe.length; i++){
+            //     for(let j = 0; j < tempListofOrders.length; j++){
+            //         if(tempListofOrders[j].idRestorana != )
+            //     }
+            // }
         },
         removeFromCart(product, index){
             let tempUsername = JSON.parse(localStorage.getItem('token')).username;

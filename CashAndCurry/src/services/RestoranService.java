@@ -91,8 +91,8 @@ public class RestoranService {
 				else if(tempTokens[0].equals("lokacija")) {
 					if(!tempTokens[1].equals("_")) {
 						lokacija = tempTokens[1];
-//						Lokacija l = new Lokacija(lokacija, s, s, s, ocena, ocena);
-//						r.setLokacija(l);
+						Lokacija l = new Lokacija("","", "", lokacija, 0, 0);
+						r.setLokacija(l);
 						tempBoolean = true;
 					}
 					
@@ -139,13 +139,22 @@ public class RestoranService {
 		return dao.findAllRestaurantsWithNoManagers();
 	}
 	
+//	@PUT
+//	@Path("/{username}/")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Artikal addArtikal(@PathParam ("username") String username, Artikal a) {
+//		RestoranDAO dao = (RestoranDAO)ctx.getAttribute("restoranDAO");
+//		return dao.addArtikal(username, a);
+//	}
+	
 	@PUT
-	@Path("/{username}/")
+	@Path("/{restaurantName}/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Artikal addArtikal(@PathParam ("username") String username, Artikal a) {
+	public Artikal addArtikal(@PathParam ("restaurantName") String restaurantName, Artikal a) {
 		RestoranDAO dao = (RestoranDAO)ctx.getAttribute("restoranDAO");
-		return dao.addArtikal(username, a);
+		return dao.addArtikal(restaurantName, a);
 	}
+	
 	
 	@GET
 	@Path("/bymanager/{username}")

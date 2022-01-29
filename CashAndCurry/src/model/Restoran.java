@@ -12,16 +12,16 @@ public class Restoran {
 	private boolean opened;
 	private Lokacija lokacija;
 	private String logo;
-	private ArrayList<String> images = new ArrayList<String>();
+//	private ArrayList<String> images = new ArrayList<String>();
 	private ArrayList<Komentar> comments = new ArrayList<Komentar>();
-	private Manager manager;
+	private String manager;
 	private int ocena = 0;
 	
 	public Restoran() {
 		super();
 	}
 	public Restoran(String name, String type, ArrayList<Artikal> menuItems, boolean opened, Lokacija lokacija,
-			String logo, ArrayList<String> images, ArrayList<Komentar> comments, Manager manager, int ocena) {
+			String logo, ArrayList<Komentar> comments, String manager, int ocena) {
 		super();
 		this.name = name;
 		this.type = type;
@@ -29,7 +29,6 @@ public class Restoran {
 		this.opened = opened;
 		this.lokacija = lokacija;
 		this.logo = logo;
-		this.images = images;
 		this.comments = comments;
 		this.manager = manager;
 		this.ocena = ocena;
@@ -76,22 +75,16 @@ public class Restoran {
 	public void setLogo(String logo) {
 		this.logo = logo;
 	}
-	public ArrayList<String> getImages() {
-		return images;
-	}
-	public void setImages(ArrayList<String> images) {
-		this.images = images;
-	}
 	public ArrayList<Komentar> getComments() {
 		return comments;
 	}
 	public void setComments(ArrayList<Komentar> comments) {
 		this.comments = comments;
 	}
-	public Manager getManager() {
+	public String getManager() {
 		return manager;
 	}
-	public void setManager(Manager manager) {
+	public void setManager(String manager) {
 		this.manager = manager;
 	}
 	public int getOcena() {

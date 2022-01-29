@@ -89,12 +89,8 @@
                         <td>{{rst.name}}</td>
                         <td>{{rst.type}}</td>
                         <td>{{rst.lokacija.ulica}}, {{rst.lokacija.broj}}, {{rst.lokacija.mesto}}, {{rst.lokacija.drzava}}</td>
-<<<<<<< HEAD
                         <!-- <td>{{rst.ocena}}</td> -->
                         <td><starrating read-only v-model="rst.ocena" :star-size="20"></starrating></td>
-=======
-                        <td>{{rst.ocena}}</td>
->>>>>>> 22f9fc2444d5dc8e037001f21990eaaefc6e11f3
                         <td>{{rst.manager}}</td>
                         <td>
                             <img class="card-img-top" style="margin-top:10px; margin-bottom:10px" :src="rst.logo">
@@ -117,11 +113,8 @@
 
 <script>
 import dataService from '../services/DataService'
-<<<<<<< HEAD
 import starRating from 'vue-star-rating'
 
-=======
->>>>>>> 22f9fc2444d5dc8e037001f21990eaaefc6e11f3
 
 export default {
     data(){

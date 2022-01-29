@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.PathParam;
 
 import dao.CustomerDAO;
+import dtos.UpdateCustomerDTO;
 import model.Customer;
 
 
@@ -88,9 +89,14 @@ public class CustomerService {
 	@PUT
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Customer updateCustomer(Customer customer) {
+	public Customer updateCustomer(UpdateCustomerDTO customer) {
 		CustomerDAO dao = (CustomerDAO)ctx.getAttribute("customerDAO");
-		return dao.updateCustomer(customer);
+		if(dao.checkPassword(customer.getOldPassword(), customer.getUsername()) == true) {
+			Customer c = new Customer(customer.getListOfAllOrders(), customer.getListOfCompletedOrders(), customer.getListOfCanceledOrders(), customer.getCart(), customer.getNumberOfCanceledOrders(), customer.getNumberOfPoints(),
+					customer.getTypeOfCustomer(), customer.getListOfCommentsMade());
+			return dao.updateCustomer(c);
+		}
+		return null;
 	}
 	
 }

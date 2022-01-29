@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 
 import dao.AdministratorDAO;
 import dao.CustomerDAO;
+import dtos.UpdateAdminDTO;
 import model.Administrator;
 import model.Customer;
 
@@ -60,12 +61,17 @@ public class AdministratorService {
 		AdministratorDAO dao = (AdministratorDAO)ctx.getAttribute("administratorDAO");
 		return dao.findAdministrator(username);
 	}
+	
 	@PUT
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Administrator updateAdministrator(Administrator administrator) {
+	public Administrator updateAdministrator(UpdateAdminDTO administrator) {
 		AdministratorDAO dao = (AdministratorDAO)ctx.getAttribute("administratorDAO");
-		return dao.updateAdministrator(administrator);
+		if(dao.checkPassword(administrator.getOldPassword(), administrator.getUsername()) == true) {
+			Administrator a = new Administrator(administrator.isObrisan(), administrator.getUsername(), administrator.getPassword(), administrator.getName(), administrator.getLastname(), administrator.getGender(), administrator.getDateOfBirth());
+			return dao.updateAdministrator(a);
+		}
+		return null;
 	}
 
 }

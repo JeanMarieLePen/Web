@@ -77,11 +77,8 @@
                     </router-link>
                 </div>
             </div>
-<<<<<<< HEAD
-=======
             
             
->>>>>>> 22f9fc2444d5dc8e037001f21990eaaefc6e11f3
             <div v-show="isManager" class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/newProduct" class="nav-link"

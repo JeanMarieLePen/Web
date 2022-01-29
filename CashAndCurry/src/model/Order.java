@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Order {
 
-	private String idPorudzbine;
-	private ArrayList<String> listaNarucenihArtikala = new ArrayList<String>();
+	private int idPorudzbine;
+	private ArrayList<ArtikalOrder> listaNarucenihArtikala = new ArrayList<ArtikalOrder>();
 	private String izKogRestorana;
 	private String datumIVremePorudzbine;
 	private int cena;
@@ -16,13 +16,13 @@ public class Order {
 //		obrada, uPripremi, cekaDostavljaca, uTransportu, dostvaljena, otkazana
 //	}
 	private String statusPorudzbine;
+	private String idDeliveryMana;
 
 	public Order() {
 		
 	}
-
-	public Order(ArrayList<String> listaNarucenihArtikala, String izKogRestorana, String datumIVremePorudzbine,
-			int cena, String idKupca, String statusPorudzbine) {
+	public Order(ArrayList<ArtikalOrder> listaNarucenihArtikala, String izKogRestorana, String datumIVremePorudzbine,
+			int cena, String idKupca, String statusPorudzbine, String idDeliveryMana) {
 		super();
 		this.listaNarucenihArtikala = listaNarucenihArtikala;
 		this.izKogRestorana = izKogRestorana;
@@ -30,21 +30,28 @@ public class Order {
 		this.cena = cena;
 		this.idKupca = idKupca;
 		this.statusPorudzbine = statusPorudzbine;
+		this.idDeliveryMana = idDeliveryMana;
 	}
 
-	public String getIdPorudzbine() {
+	
+
+	public String getIdDeliveryMana() {
+		return idDeliveryMana;
+	}
+	public void setIdDeliveryMana(String idDeliveryMana) {
+		this.idDeliveryMana = idDeliveryMana;
+	}
+	public int getIdPorudzbine() {
 		return idPorudzbine;
 	}
-
-	public void setIdPorudzbine(String idPorudzbine) {
+	public void setIdPorudzbine(int idPorudzbine) {
 		this.idPorudzbine = idPorudzbine;
 	}
-
-	public ArrayList<String> getListaNarucenihArtikala() {
+	public ArrayList<ArtikalOrder> getListaNarucenihArtikala() {
 		return listaNarucenihArtikala;
 	}
 
-	public void setListaNarucenihArtikala(ArrayList<String> listaNarucenihArtikala) {
+	public void setListaNarucenihArtikala(ArrayList<ArtikalOrder> listaNarucenihArtikala) {
 		this.listaNarucenihArtikala = listaNarucenihArtikala;
 	}
 

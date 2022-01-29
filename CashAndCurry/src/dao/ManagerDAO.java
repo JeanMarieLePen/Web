@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -17,6 +19,7 @@ import com.google.gson.stream.JsonReader;
 
 import model.Customer;
 import model.Manager;
+import model.Restoran;
 
 
 public class ManagerDAO {
@@ -51,6 +54,27 @@ public class ManagerDAO {
 		}
 		
 	}
+	
+	public int generateId(String naziv) {
+		int generatedId = -1;
+		if(managers.containsKey(naziv)) {
+			ArrayList<Manager> listaManagera = (ArrayList<Manager>) this.managers.values().stream().collect(Collectors.toList());
+			List<Integer> listIds = new ArrayList<Integer>();
+			
+			for(Manager m : listaManagera) {
+				listIds.add(m.getId());
+			}
+			
+			for(int i = 0; i < listIds.size() + 1; i++) {
+				if(!listIds.contains(i)) {
+					generatedId = i;
+					break;
+				}
+			}
+		}
+		return generatedId;
+	}
+	
 	public Collection<Manager> findAllManagers(){
 		return managers.values();
 	}
@@ -65,7 +89,7 @@ public class ManagerDAO {
 				tempLista.add(m);
 			}
 		}
-		
+		System.out.println("Broj slobodnih menadzera je: " + tempLista.size());
 		
 		return tempLista;
 		
@@ -75,8 +99,9 @@ public class ManagerDAO {
 		public Manager addNewManager(Manager manager) {
 			if(!managers.containsKey(manager.getUsername())) {
 				managers.put(manager.getUsername(), manager);
+				managers.get(manager.getUsername()).setId(this.generateId(manager.getUsername()));
 				Gson gson = new Gson();
-				String temp = gson.toJson(managers);
+				//String temp = gson.toJson(managers);
 				
 				Collection<Manager> tmp = this.managers.values();
 				String fileInput = gson.toJson(tmp);
@@ -109,7 +134,7 @@ public class ManagerDAO {
 			if(managers.containsKey(manager.getUsername())) {
 				managers.replace(manager.getUsername(), manager);
 				Gson gson = new Gson();
-				String temp = gson.toJson(managers);
+				String temp = gson.toJson(managers.values());
 				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "managers.json", false))){
 					bw.append(temp);
 					bw.append("\n");
@@ -138,6 +163,17 @@ public class ManagerDAO {
 				return manager;
 			}
 			return null;
+		}
+		
+		public boolean checkPassword(String tempPassword, String username) {
+			System.out.println("Provera sifri");
+			if(this.managers.containsKey(username)) {
+				String tempSifra = this.managers.get(username).getPassword();
+				if(tempSifra.equals(tempPassword)) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 }

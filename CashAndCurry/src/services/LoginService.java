@@ -21,6 +21,7 @@ import com.google.gson.stream.JsonReader;
 import dao.RestoranDAO;
 import model.Administrator;
 import model.Customer;
+import model.DeliveryMan;
 import model.LoginUser;
 import model.Manager;
 import model.Restoran;
@@ -55,6 +56,7 @@ public class LoginService {
 		Map<String, Administrator> administrators = new HashMap<>();
 		Map<String, Customer> customers = new HashMap<>();
 		Map<String, Manager> managers = new HashMap<>();
+		Map<String, DeliveryMan> deliverymen = new HashMap<>();
 		
 		//potrazi u administratorima, ako nadjes prekini izvrsavanje metode
 		try {	
@@ -124,13 +126,32 @@ public class LoginService {
 			
 			return tempLog;
 		}
-		//fali provera za dostavljace
-		
-		
-		
+		//potrazi u deliverymen, ako nadjes prekini izvrsavanje
+		try {
+			JsonReader reader = new JsonReader(new FileReader(contextPath + "deliverymen.json"));
+			Gson gson = new Gson();
+			DeliveryMan[] tempDeliverymen = gson.fromJson(reader, DeliveryMan[].class);
+			if(tempDeliverymen != null) {
+				for(DeliveryMan dm : tempDeliverymen) {
+					deliverymen.put(dm.getUsername(), dm);
+				}
+			}
+
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		if(deliverymen.containsKey(username)) {
+			System.out.println("SIFRA PROCITANA IZ BAZE[DELIVERY_MAN]: " + deliverymen.get(username).getPassword());
+			if(deliverymen.get(username).getPassword().equals(pw)) {
+				tempRole = "delivery_man";
+				tempLog.setRole("delivery_man");
+				tempLog.setUsername(username);
+			}
+			
+			return tempLog;
+		}
 		//ako ne nadjes nista, vrati null
 		return tempLog;
-			
 	}
 	
 }

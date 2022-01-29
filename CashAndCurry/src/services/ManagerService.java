@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import dao.ArtikalDAO;
 import dao.CustomerDAO;
 import dao.ManagerDAO;
+import dtos.UpdateManagerDTO;
 import model.Artikal;
 import model.Customer;
 import model.Manager;
@@ -71,7 +72,19 @@ public class ManagerService {
 	@PUT
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Manager updateManager(Manager manager) {
+	public Manager updateManager(UpdateManagerDTO manager) {
+		ManagerDAO dao = (ManagerDAO)ctx.getAttribute("managerDAO");
+		if(dao.checkPassword(manager.getOldPassword(), manager.getUsername()) == true) {
+			Manager m = new Manager(manager.isObrisan(), manager.getUsername(), manager.getPassword(), manager.getName(), manager.getLastname(), manager.getGender(), manager.getDateOfBirth(), manager.getRestaurant());
+			return dao.updateManager(m);
+		}
+		return null;
+	}
+	
+	@PUT
+	@Path("/dodelaRestorana")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Manager dodeliRestoran(Manager manager) {
 		ManagerDAO dao = (ManagerDAO)ctx.getAttribute("managerDAO");
 		return dao.updateManager(manager);
 	}

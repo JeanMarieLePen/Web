@@ -3,6 +3,7 @@ package model;
 public class Komentar {
 	
 	private int id;
+	private boolean odobren = false;
 	private String kupacKomentator;
 	private String komentarisaniRestoran;
 	private String tekstKomentara;
@@ -10,12 +11,13 @@ public class Komentar {
 	public Komentar() {
 		super();
 	}
-	public Komentar(String kupacKomentator, String komentarisaniRestoran, String tekstKomentara, int ocena) {
+	public Komentar(String kupacKomentator, String komentarisaniRestoran, String tekstKomentara, int ocena, boolean odobren) {
 		super();
 		this.kupacKomentator = kupacKomentator;
 		this.komentarisaniRestoran = komentarisaniRestoran;
 		this.tekstKomentara = tekstKomentara;
 		this.ocena = ocena;
+		this.odobren = odobren;
 	}
 	public int getId() {
 		return id;
@@ -46,5 +48,11 @@ public class Komentar {
 	}
 	public void setOcena(int ocena) {
 		this.ocena = ocena;
+	}
+	public boolean isOdobren() {
+		return odobren;
+	}
+	public void setOdobren(boolean odobren) {
+		this.odobren = odobren;
 	}
 }

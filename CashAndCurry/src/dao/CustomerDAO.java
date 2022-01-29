@@ -4,9 +4,12 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import model.Customer;
+import model.Manager;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -21,6 +24,8 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
+
 import sun.util.calendar.BaseCalendar.Date;
 public class CustomerDAO {
 	
@@ -33,6 +38,27 @@ public class CustomerDAO {
 	public CustomerDAO(String contextPath) {
 		this.contextPath = contextPath;
 		loadCustomers(contextPath);
+	}
+	
+	
+	public int generateId(String naziv) {
+		int generatedId = -1;
+		if(customers.containsKey(naziv)) {
+			ArrayList<Customer> listaCustomera = (ArrayList<Customer>) this.customers.values().stream().collect(Collectors.toList());
+			List<Integer> listIds = new ArrayList<Integer>();
+			
+			for(Customer c : listaCustomera) {
+				listIds.add(c.getId());
+			}
+			
+			for(int i = 0; i < listIds.size() + 1; i++) {
+				if(!listIds.contains(i)) {
+					generatedId = i;
+					break;
+				}
+			}
+		}
+		return generatedId;
 	}
 	
 	public void loadCustomers(String contextPath) {
@@ -60,8 +86,9 @@ public class CustomerDAO {
 	public Customer addNewCustomer(Customer customer) {
 		if(!customers.containsKey(customer.getUsername())) {
 			customers.put(customer.getUsername(), customer);
+			customers.get(customer.getUsername()).setId(this.generateId(customer.getUsername()));
 			Gson gson = new Gson();
-			String temp = gson.toJson(customers);
+//			String temp = gson.toJson(customers);
 			
 			Collection<Customer> tmp = this.customers.values();
 			String fileInput = gson.toJson(tmp);
@@ -84,7 +111,7 @@ public class CustomerDAO {
 		if(customers.containsKey(customer.getUsername())) {
 			customers.replace(customer.getUsername(), customer);
 			Gson gson = new Gson();
-			String temp = gson.toJson(customers);
+			String temp = gson.toJson(customers.values());
 			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "customers.json", false))){
 				bw.append(temp);
 				bw.append("\n");
@@ -113,6 +140,17 @@ public class CustomerDAO {
 			return customer;
 		}
 		return null;
+	}
+	
+	public boolean checkPassword(String tempPassword, String username) {
+		System.out.println("Provera sifri");
+		if(this.customers.containsKey(username)) {
+			String tempSifra = this.customers.get(username).getPassword();
+			if(tempSifra.equals(tempPassword)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }
