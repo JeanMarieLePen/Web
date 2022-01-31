@@ -177,13 +177,21 @@ export default {
                 manager:'',
                 ocena:0
             },
+
+            //umesto tempProduct-a napravim slozeniji objekat sa poljem tipa string i listom kao atributima
+            tempRestaurantOrder:{
+                izKogRestorana: '',
+                listOfProducts:[],
+            },
+
              tempProduct:{
-                idRestorana : '',
+                izKogRestorana : '',
                 nazivArtikla: '',
                 datumIVremePorudzbine : '',
                 cenaJedinice : '',
-                idNarucioca : '',
+                idKupca : '',
                 brKomada : '',
+                artikal : ''
             },
             inputValues : [],
         }
@@ -206,27 +214,93 @@ export default {
         addToCart(product, index){
             let tempUsername = JSON.parse(localStorage.getItem('token')).username;
             console.log('Username: ' + tempUsername)
-            this.tempProduct.idRestorana = this.loadRestaurant.name;
+
+            //postavljanje ID-a restorana na naziv restorana iz koga se narucuje
+            this.tempRestaurantOrder.izKogRestorana = this.loadRestaurant.name;
+
+            this.tempRestaurantOrder.izKogRestorana = this.loadRestaurant.name;
+            this.tempProduct.izKogRestorana = this.loadRestaurant.name;
             this.tempProduct.nazivArtikla = product.naziv;
             this.tempProduct.datumIVremePorudzbine = '',
             this.tempProduct.cenaJedinice = product.cena;
-            this.tempProduct.idNarucioca = tempUsername;
+            this.tempProduct.artikal = product;
+            this.tempProduct.idKupca = tempUsername;
 
             // this.tempProduct.brKomada = this.$refs.inputValue,
             // this.tempProduct.brKomada = document.getElementById('kolicina').value;
+
+
             this.tempProduct.brKomada = this.inputValues[index];
+            
             console.log('Kolicina: ' + this.tempProduct.brKomada);
             // console.log('Kolicina: ' + document.getElementById('kolicina').value);
             // console.log('Ref inputValue: ' + this.$refs.inputValue)
             console.log('Dodato u localstorage: ' + this.tempProduct.nazivArtikla + ', komada: ' + this.tempProduct.brKomada)
-            let tempLista = JSON.parse(localStorage.getItem('shoppingList')) || [];
-            console.log('Broj elemenata u shopping listi pre unosa: ' + tempLista.length);
-            tempLista.push(this.tempProduct);
-            console.log('Broj elemenata u shopping listi posle unosa: ' + tempLista.length);
-            let test = JSON.stringify(tempLista);
-            localStorage.setItem('shoppingList', test);
+            let tempLista = JSON.parse(localStorage.getItem('shoppingList'));
+            if(tempLista == null){
+                console.log('tempLista je prazna')
+                tempLista = [];
+            }
 
+            //petlja za proveru da li je iz istog restorana vec narucen taj artikal
+            let vecPostoji = false;
+            let indeksRestorana = 0;
+            if(tempLista.length > 0){
+                console.log('uslo u petlju')
+                for(let cntr = 0; cntr < tempLista.length; cntr++){
+                //ako postoji nesto naruceno iz tog restorana
+                    if(tempLista[cntr].izKogRestorana == this.loadRestaurant.name){
+                        indeksRestorana = cntr;
+                        for(let i = 0; i < tempLista[cntr].listOfProducts.length; i++){
+                            //ako postoji taj artikal porucen iz tog restorana
+                            if(tempLista[cntr].listOfProducts[i].nazivArtikla == product.naziv){
+                                console.log('Broj komada pre dodavanja: ' + tempLista[cntr].listOfProducts[i].brKomada);
+                                console.log('Broj komada za dodavanje: ' + this.inputValues[index]);
+                                let ukupno = parseInt(tempLista[cntr].listOfProducts[i].brKomada) + parseInt(this.inputValues[index]);
+                                tempLista[cntr].listOfProducts[i].brKomada = ukupno.toString();
+                                vecPostoji = true;
+                            }
+                        }
+                        // if(tempLista[cntr].nazivArtikla == product.naziv){
+                        //     console.log('Broj komada pre dodavanja: ' + tempLista[cntr].brKomada);
+                        //     console.log('Broj komada za dodavanje: ' + this.inputValues[index]);
+                        //     let ukupno = parseInt(tempLista[cntr].brKomada) + parseInt(this.inputValues[index]);
+                        //     tempLista[cntr].brKomada = ukupno.toString(); 
+                        //     vecPostoji = true;
+                        // }
+                    }
+                }
+            }
+            
 
+            if(vecPostoji == false){
+                if(tempLista.length > 0){
+                    console.log('Broj elemenata u shopping listi pre unosa: ' + tempLista[indeksRestorana].listOfProducts.length);
+                    tempLista[indeksRestorana].listOfProducts.push(this.tempProduct);
+                    console.log('Broj elemenata u shopping listi posle unosa: ' + tempLista[indeksRestorana].listOfProducts.length);
+                    let test = JSON.stringify(tempLista);
+                    localStorage.setItem('shoppingList', test);
+                }
+                else{
+                    this.tempRestaurantOrder.izKogRestorana = this.loadRestaurant.name;
+                    this.tempRestaurantOrder.listOfProducts.push(this.tempProduct);
+                    tempLista.push(this.tempRestaurantOrder);
+                    let test = JSON.stringify(tempLista);
+                    localStorage.setItem('shoppingList', test);
+                }
+                
+                
+                // console.log('Broj elemenata u shopping listi pre unosa: ' + tempLista.length);
+                // tempLista.push(this.tempProduct);
+                // console.log('Broj elemenata u shopping listi posle unosa: ' + tempLista.length);
+                // let test = JSON.stringify(tempLista);
+                // localStorage.setItem('shoppingList', test);
+            }else{
+                console.log('aaaa')
+                let test = JSON.stringify(tempLista);
+                localStorage.setItem('shoppingList', test);
+            }
+            
 
             // let tempLista = Object.keys(localStorage.getItem('shoppingList'));
             // console.log('Broj elemenata u shopping listi: ' + tempLista.length);
@@ -235,7 +309,7 @@ export default {
             // localStorage.setItem('shoppingList', test);
         },
         managerProfile(){
-            // this.$router.push(`/profile/`)
+            this.$router.push(`/profile/${this.manager}`)
         },
         showComments(){
             this.$router.push(`/commentNew/${this.loadRestaurant.name}`);

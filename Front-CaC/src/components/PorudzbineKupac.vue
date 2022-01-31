@@ -57,12 +57,14 @@ import dataService from '../services/DataService'
 
 export default{
     created(){
+        let tempUsername = JSON.parse(localStorage.getItem('token')).username;
+        console.log('Username: ' + tempUsername)
         try{
-            this.dataService.getSvojePorudzbine(this.$route.params.id).then(response => {
+            dataService.getSvojePorudzbine(tempUsername).then(response => {
             console.log("stigli podaci o svojim porudzbinama");
             this.porudzbine = response.data;
             });
-            this.dataService.getNedostavljenePorudzbine(this.$route.params.id).then(response => {
+            dataService.getNedostavljenePorudzbine(tempUsername).then(response => {
             console.log("stigli podaci o nedostavljenim porudzbinama");
             this.nedostavljenePorudzbine = response.data;
             });

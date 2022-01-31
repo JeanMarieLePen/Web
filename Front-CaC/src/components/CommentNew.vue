@@ -12,11 +12,11 @@
             </div>
             <div v-if="messages.successMsg" style="margin-left: 200px;" class="alert alert-success" v-html="messages.successMsg"></div>
             <div v-if="messages.errorMsg" style="margin-left: 200px;" class="alert alert-danger" v-html="messages.errorMsg"></div>
-            <div >
+            <div style="overflow-y: scroll;margin-bottom:100px;">
                 <div  v-for="tempComment in komentari" v-bind:key="tempComment.id" class="comments-box">
                 <div>
                     <p class="author">
-                    {{tempComment.author}} 
+                    {{tempComment.kupacKomentator}} 
                     <starrating v-model="tempComment.ocena" :star-size="20" read-only style="margin-left:10px;display:inline-block"></starrating>
                     </p>
                 </div>
@@ -90,6 +90,7 @@ export default {
                     console.log(error.response);
                 });
             }
+            this.showEntity = false;
             // else{
             //     dataService.addComment()
             // }

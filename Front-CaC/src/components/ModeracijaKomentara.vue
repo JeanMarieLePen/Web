@@ -7,8 +7,7 @@
             <div>
                 <h3>Prikaz neodobrenih komentara</h3>
                 <div>
-                    <div class="container" style="min-height:300px;">
-                        <h2>Pregled ponude restorana</h2>
+                    <div class="container" style="min-height:300px;overflow:auto;">
                         <p>Prikaz komentara o restoranu i usluzi koji nisu prosli moderaciju...</p>
                         <section style="margin-left: 10px; margin-bottom:100px">
                             <div>

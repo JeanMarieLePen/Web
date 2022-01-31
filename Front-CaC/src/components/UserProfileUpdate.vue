@@ -30,7 +30,7 @@
 					<label>Pol</label>
 					<br>
 					<span >
-                        <select style="padding:5px; width:100%;" v-model="profileDeliveryMan.pol">
+                        <select style="padding:5px; width:100%;" v-model="profileDeliveryMan.gender">
                             <option disabled value="">Odabir pola</option>
                             <option v-bind:key="polTemp.naziv" v-for="polTemp in polovi">{{polTemp.naziv}}</option>
                         </select>
@@ -97,7 +97,7 @@
 					<label>Pol</label>
 					<br>
 					<span >
-                        <select style="padding:5px; width:100%;" v-model="profileAdmin.pol">
+                        <select style="padding:5px; width:100%;" v-model="profileAdmin.gender">
                             <option disabled value="">Odabir pola</option>
                             <option v-bind:key="polTemp.naziv" v-for="polTemp in polovi">{{polTemp.naziv}}</option>
                         </select>
@@ -164,7 +164,7 @@
 					<label>Pol</label>
 					<br>
 					<span >
-                        <select style="padding:5px; width:100%;" v-model="profileManager.pol">
+                        <select style="padding:5px; width:100%;" v-model="profileManager.gender">
                             <option disabled value="">Odabir pola</option>
                             <option v-bind:key="polTemp.naziv" v-for="polTemp in polovi">{{polTemp.naziv}}</option>
                         </select>
@@ -232,7 +232,7 @@
 				<div class="form-group" >
 					<label>Pol</label>
 					<span>
-                        <select style="padding:5px; width:100%;" v-model="profileCustomer.pol">
+                        <select style="padding:5px; width:100%;" v-model="profileCustomer.gender">
                             <option disabled value="">Odabir pola</option>
                             <option v-bind:key="polTemp.naziv" v-for="polTemp in polovi">{{polTemp.naziv}}</option>
                         </select>
@@ -483,6 +483,7 @@ export default {
                         dataService.updateAdmin(profile).then(response => {
                             this.messages.successResponse = `<h4>Vas profil je uspesno izmenjen!</h4>`;
                             setTimeout(() => this.messages.successResponse = '', 3000);
+                            setTimeout(() => this.$router.push(`/home`), 4000);
                             profile = response.data;
                         }).catch(error => {
                             console.log(error.response);
@@ -502,6 +503,7 @@ export default {
                         dataService.updateDeliveryMan(profile).then(response => {
                             this.messages.successResponse = `<h4>Vas profil je uspesno izmenjen!</h4>`;
                             setTimeout(() => this.messages.successResponse = '', 3000);
+                            setTimeout(() => this.$router.push(`/home`), 4000);
                             profile = response.data;
                         }).catch(error => {
                         if(error.response.status === 500  && error.response.data.message==='Incorrect old password!'){
@@ -521,6 +523,7 @@ export default {
                         dataService.updateManager(profile).then(response => {
                             this.messages.successResponse = `<h4>Vas profil je uspesno izmenjen!</h4>`;
                             setTimeout(() => this.messages.successResponse = '', 3000);
+                            setTimeout(() => this.$router.push(`/home`), 4000);
                             profile = response.data;
                         }).catch(error => {
                         if(error.response.status === 500  && error.response.data.message==='Incorrect old password!'){
@@ -538,12 +541,15 @@ export default {
 
                     if(this.role === "customer"){
                         console.log('slanje na bek');
+                         console.log('salje se: ' + JSON.stringify(profile))
                         dataService.updateCustomer(profile).then(response => {
                             this.messages.successResponse = `<h4>Vas profil je uspesno izmenjen!</h4>`;
                             setTimeout(() => this.messages.successResponse = '', 3000);
+                            setTimeout(() => this.$router.push(`/home`), 4000);
+                            // this.$router.push(`/home`);
                             profile = response.data;
                         }).catch(error => {
-                            console.log(JSON.stringify(error));
+                            console.log(error.response);
                             
                         // if(error.response.status === 500  && error.response.data.message==='Incorrect old password!'){
                         //     this.messages.errorResponse = `<h4>Vasa stara sifra je netacna! Molimo Vas pokusajte ponovo...</h4>`;
