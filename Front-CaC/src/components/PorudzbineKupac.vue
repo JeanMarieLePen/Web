@@ -38,6 +38,13 @@
                                 <span style="padding-right:6px;" class="span_search"> - </span>
                                 <input class="form-control mr-sm-2" type="text" placeholder="max cena" aria-label="Search" v-model="searchedPorudzbine.cenaMax">
                                 </span>
+
+                                <span class="col-xl-2 col-md-6 mb-3 marg-top" >
+                                <button style="margin-left:90px;margin-top:150px" class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click.prevent='searchPorudzbine()'>Search</button>
+                            </span>
+                            <span id='searcIcon' class="col-xl-1 marg-top" style='margin-left:45px;'>
+                                <img v-on:click='isSearch = !isSearch' src='../assets/searchIcon1.png' style="display:inline;">
+                            </span>
                          </div>
                         </div>
                 </form>
@@ -311,7 +318,11 @@ export default{
 /* #user-profile#buttonUpdate{
   float:left;
 } */
-
+#searcIcon img:hover{
+    width:45px;
+    padding-bottom:3px;
+    cursor: pointer;
+}
 
 .span_search{
     /* padding:5px; */
