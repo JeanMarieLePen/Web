@@ -68,8 +68,11 @@ public class AdministratorService {
 	public Administrator updateAdministrator(UpdateAdminDTO administrator) {
 		AdministratorDAO dao = (AdministratorDAO)ctx.getAttribute("administratorDAO");
 		if(dao.checkPassword(administrator.getOldPassword(), administrator.getUsername()) == true) {
-			Administrator a = new Administrator(administrator.isObrisan(), administrator.getUsername(), administrator.getPassword(), administrator.getName(), administrator.getLastname(), administrator.getGender(), administrator.getDateOfBirth());
-			return dao.updateAdministrator(a);
+//			Administrator a = new Administrator(administrator.isObrisan(), administrator.getUsername(), administrator.getPassword(), administrator.getName(), administrator.getLastname(), administrator.getGender(), administrator.getDateOfBirth());
+			Administrator c = new Administrator();
+			c.setDateOfBirth(administrator.getDateOfBirth()); c.setGender(administrator.getGender()); c.setLastname(administrator.getLastname()); c.setName(administrator.getName());
+			c.setPassword(administrator.getPassword()); c.setUsername(administrator.getUsername());
+			return dao.updateAdministrator(c);
 		}
 		return null;
 	}

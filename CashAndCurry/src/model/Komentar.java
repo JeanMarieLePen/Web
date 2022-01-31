@@ -8,20 +8,43 @@ public class Komentar {
 	private String komentarisaniRestoran;
 	private String tekstKomentara;
 	private int ocena;
-	public Komentar() {
+	private boolean obrisanOdModeratora = false;
+	private boolean obrisanOdKupca = false;
+	public Komentar(boolean odobren, String kupacKomentator, String komentarisaniRestoran, String tekstKomentara,
+			int ocena, boolean obrisanOdModeratora, boolean obrisanOdKupca) {
 		super();
-	}
-	public Komentar(String kupacKomentator, String komentarisaniRestoran, String tekstKomentara, int ocena, boolean odobren) {
-		super();
+		this.odobren = odobren;
 		this.kupacKomentator = kupacKomentator;
 		this.komentarisaniRestoran = komentarisaniRestoran;
 		this.tekstKomentara = tekstKomentara;
 		this.ocena = ocena;
-		this.odobren = odobren;
+		this.obrisanOdModeratora = obrisanOdModeratora;
+		this.obrisanOdKupca = obrisanOdKupca;
 	}
+
+	public Komentar() {
+		super();
+	}
+	
+	public boolean isObrisanOdKupca() {
+		return obrisanOdKupca;
+	}
+
+	public void setObrisanOdKupca(boolean obrisanOdKupca) {
+		this.obrisanOdKupca = obrisanOdKupca;
+	}
+
 	public int getId() {
 		return id;
 	}
+	public boolean isObrisanOdModeratora() {
+		return obrisanOdModeratora;
+	}
+
+	public void setObrisanOdModeratora(boolean obrisanOdModeratora) {
+		this.obrisanOdModeratora = obrisanOdModeratora;
+	}
+
 	public void setId(int id) {
 		this.id = id;
 	}

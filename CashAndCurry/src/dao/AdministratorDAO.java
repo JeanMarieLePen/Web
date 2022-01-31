@@ -83,7 +83,14 @@ public class AdministratorDAO {
 	//izmena postojeceg korisnika i njegovo cuvanje u bazu
 		public Administrator updateAdministrator(Administrator administrator) {
 			if(administrators.containsKey(administrator.getUsername())) {
-				administrators.replace(administrator.getUsername(), administrator);
+//				administrators.replace(administrator.getUsername(), administrator);
+				
+				Administrator c = this.administrators.get(administrator.getUsername());
+				//menjam mu polja
+				c.setName(administrator.getName()); c.setLastname(administrator.getLastname());
+				c.setDateOfBirth(administrator.getDateOfBirth()); c.setPassword(administrator.getPassword());
+				c.setGender(administrator.getGender());
+				
 				Gson gson = new Gson();
 				String temp = gson.toJson(administrators.values());
 				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "administrators.json", false))){

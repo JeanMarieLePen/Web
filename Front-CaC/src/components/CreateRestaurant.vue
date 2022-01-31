@@ -270,7 +270,7 @@ export default {
                 username:'',
                 name:'',
                 lastname:'',
-                password:'',
+                password:'1234',
                 gender:'',
                 dateOfBirth:'',
                 restaurant:''
@@ -381,7 +381,7 @@ export default {
         }
     },
     components:{
-        vuejsDatepicker : Datepicker,
+        vuejsDatepicker:Datepicker
     },
     methods:{
         createManager:function(){
@@ -513,11 +513,16 @@ export default {
                 console.log("NA BEK SE SALJE OBJEKAT newRestaurant: " + JSON.stringify(this.newRestaurant));
                 console.log("Na server se salje objekat newManager: " + JSON.stringify(this.newManager));
                 dataService.addRestaurant(this.newRestaurant).then(response =>{
+                    if(response.data != null){
+                        alert("Uspesno ste dodali restoran.");
+                    }
                     // alert("Uspesno ste dodali restoran.");
                     // this.$router.push("/home");
                 }).catch(error => {
                     console.log(error.response);
                 });
+
+                //ako je kreiran novi menadzer onda ga upisujemo u bazu
                 if(this.kreiranNoviMenadzer == true){
                     dataService.addManager(this.newManager).then(response => {
                         console.log("Dodat novi menadzer");
@@ -525,7 +530,7 @@ export default {
                         this.$router.push("/home");
                     }).catch(error => {
                         console.log(error.response);
-                    });
+                    });//ako je izabran neki od postojecih menadzera onda se vrsi izmena u bazi
                 }else if(this.kreiranNoviMenadzer == false){
                     dataService.updateManagerRestoran(this.newManager).then(response => {
                         console.log(response.data)

@@ -65,6 +65,36 @@ public class KomentarDAO {
 		return null;
 	}
 	
+	//metoda koja brise komentar[sa aspekta MANAGER-a]
+	public Komentar removeComment(Komentar k) {
+		if(this.restorani.containsKey(k.getKomentarisaniRestoran())) {
+			ArrayList<Komentar> listaKomentara = this.restorani.get(k.getKomentarisaniRestoran()).getComments();
+			for(Komentar temp: listaKomentara) {
+				if(temp.getId() == k.getId()) {
+					temp.setObrisanOdModeratora(true);
+					break;
+				}
+			}
+			return k;
+		}
+		return null;
+	}
+	
+	//metoda koja brise komentar[sa aspekta USER-a]
+		public Komentar removeCommentUser(Komentar k) {
+			if(this.restorani.containsKey(k.getKomentarisaniRestoran())) {
+				ArrayList<Komentar> listaKomentara = this.restorani.get(k.getKomentarisaniRestoran()).getComments();
+				for(Komentar temp: listaKomentara) {
+					if(temp.getId() == k.getId()) {
+						temp.setObrisanOdKupca(true);
+						break;
+					}
+				}
+				return k;
+			}
+			return null;
+		}
+	
 	public Restoran getRestoranByNazivManagera(String nazivManagera) {
 		Restoran temp = null;
 		for(Restoran r : restorani.values()) {
@@ -92,7 +122,7 @@ public class KomentarDAO {
 		Restoran r = this.getRestoranByNazivManagera(nazivManagera);
 		ArrayList<Komentar> listaKomentara = new ArrayList<Komentar>();
 		for(Komentar k : r.getComments()) {
-			if(k.isOdobren() == true) {
+			if(k.isOdobren() == true && k.isObrisanOdKupca() == false && k.isObrisanOdModeratora() == false) {
 				listaKomentara.add(k);
 			}
 		}
@@ -202,19 +232,5 @@ public class KomentarDAO {
 	//brisanje odredjenog komentara(potrebno u model klasi Komentar dodati atribut idKomentara
 	//koji bi sluzio za laku identifikaciju komentara koji zelimo da obrisemo
 	
-	
-	
-//	public boolean removeKomentar(String nazivRestorana, String idKomentara) {
-//		
-//		if(restorani.get(nazivRestorana).getComments() != null) {
-//			ArrayList<Komentar> tempComments = restorani.get(nazivRestorana).getComments();
-//			for(Komentar k : tempComments) {
-//				if(k.getId().equals(idKomentara)) {
-//					tempComments.remove(k);
-//					return true;
-//				}
-//			}
-//		}
-//		return false;
-//	}
+
 }

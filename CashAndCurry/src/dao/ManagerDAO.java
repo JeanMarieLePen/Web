@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
+import model.Administrator;
 import model.Customer;
 import model.Manager;
 import model.Restoran;
@@ -132,7 +133,13 @@ public class ManagerDAO {
 		//izmena postojeceg korisnika i njegovo cuvanje u bazu
 		public Manager updateManager(Manager manager) {
 			if(managers.containsKey(manager.getUsername())) {
-				managers.replace(manager.getUsername(), manager);
+//				managers.replace(manager.getUsername(), manager);
+				Manager c = this.managers.get(manager.getUsername());
+				//menjam mu polja
+				c.setName(manager.getName()); c.setLastname(manager.getLastname());
+				c.setDateOfBirth(manager.getDateOfBirth()); c.setPassword(manager.getPassword());
+				c.setGender(manager.getGender());
+				
 				Gson gson = new Gson();
 				String temp = gson.toJson(managers.values());
 				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "managers.json", false))){

@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -91,6 +92,13 @@ public class KomentarService {
 		return dao.save(komentar);
 	}
 	
+	@DELETE
+	@Path("/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Komentar removeKomentarById(Komentar komentar) {
+		KomentarDAO dao = (KomentarDAO)ctx.getAttribute("commentDAO");
+		return dao.removeComment(komentar);
+	}
 	
 
 }

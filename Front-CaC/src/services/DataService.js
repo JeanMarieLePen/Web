@@ -22,7 +22,7 @@ class DataService{
         return axios.post(`${API_URL}/customers/`, customer);
     }
     updateCustomer(customer){
-        return axios.put.apply(`${API_URL}/customers/`, customer);
+        return axios.put(`${API_URL}/customers/`, customer);
     }
 
     //Manager
@@ -125,27 +125,27 @@ class DataService{
     }
 
     //porudzbine kupac
-    getSvojePorudzbine(id){
-        return axios.get(`${API_URL}/ordersCustomer/${id}`);
+    getSvojePorudzbine(username){
+        return axios.get(`${API_URL}/orders/${username}`);
     }
     getNedostavljenePorudzbine(id){
-        return axios.get(`${API_URL}/ordersCustomer/${id}`);
+        return axios.get(`${API_URL}/orders/notDelivered/${id}`);
     }
     
     //porudzbine manager
-    getSvePorudzbine(id){
-        return axios.get(`${API_URL}/ordersManager/${id}`);
+    getSvePorudzbine(name){
+        return axios.get(`${API_URL}/orders/byRestaurantName/${name}`);
     }
 
     //porudzbine dostavljac
     getSveCekanje(){
-        return axios.get(`${API_URL}/ordersDeliveryMan`);
+        return axios.get(`${API_URL}/orders/noDeliveryMan`);
     }
     getSvojeNedostavljenePorudzbine(id){
-        return axios.get(`${API_URL}/ordersDeliveryMan/${id}`);
+        return axios.get(`${API_URL}/orders/${id}`);
     }
     getZaduzenePorudzbine(id){
-        return axios.get(`${API_URL}/ordersDeliveryMan/${id}`);
+        return axios.get(`${API_URL}/orders/deliveryMan/${id}`);
     }
 }
 

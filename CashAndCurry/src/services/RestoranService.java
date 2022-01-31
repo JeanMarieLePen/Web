@@ -109,12 +109,12 @@ public class RestoranService {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		
-		System.out.println("NAZIV TRAZENOG RESTORANA JE: " + r.getName());
-		if(tempBoolean == true) {
-			return dao.findFilteredResults(r);
-		}
-			return null;		
+		return dao.findFilteredResults(r);
+//		System.out.println("NAZIV TRAZENOG RESTORANA JE: " + r.getName());
+//		if(tempBoolean == true) {
+//			
+//		}
+//			return null;		
 	}
 	
 	@GET

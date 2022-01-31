@@ -33,6 +33,7 @@ public class OrderDAO {
 		this.contextPath = contextPath;
 		loadOrders(contextPath);
 	}
+
 	
 	public void loadOrders(String contextPath) {
 		//ucitavamo sve Customere u mapu(svaki customer ima polje listaNarudzbina)
@@ -89,6 +90,7 @@ public class OrderDAO {
 	//metoda koja cuva porudzbinu u bazu
 	public Order addNewOrder(Order order) {
 			int tempId = this.generateId();
+			order.setIdPorudzbine(tempId);
 			this.orders.put(tempId, order);
 			
 			Gson gson = new Gson();
@@ -107,6 +109,10 @@ public class OrderDAO {
 	}
 	//metoda koja menja postojecu narudzbinu
 	public Order updateOrder(Order order) {
+		//ponovno ucitavanje da bi osigurali da su ucitane novounete vrednosti
+		this.orders = null;
+		loadOrders(contextPath);
+		
 		if(this.orders.containsKey(order.getIdPorudzbine())) {
 			this.orders.replace(order.getIdPorudzbine(), order);
 			Gson gson = new Gson();

@@ -98,13 +98,37 @@
                         <td v-show='rst.opened'>{{"otvoren"}}</td>
                         <td v-show='!rst.opened'>{{"zatvoren"}}</td>
                         <td>
-                            <button @click="showDetails(rst.name)" class=' btn btn-sm classButton shadow'>Detaljni prikaz</button>
+                            <button style="width:100px; height:40px;" @click="showDetails(rst.name)" class=' btn btn-sm classButton shadow'>Detalji</button>
                         </td>
                         <td>
-                            <button v-show="isCustomer" @click="comment(rst.name)" class=' btn btn-sm classButton shadow'>Komentarisi</button>
+                            <button style="width:100px; height:40px;" v-show="isCustomer" @click="comment(rst.name)" class=' btn btn-sm classButton shadow'>Komentarisi</button>
                         </td>
                     </tr>
                 </tbody>
+                <tfoot>
+                    <tr style="height:100px;">
+                        <td colspan="10"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="10">
+                            <GmapMap
+                            :center="center"
+                            :zoom="15"
+                            map-type-id="terrain"
+                            style="margin-bottom:200px;width: 100%; height: 500px;"
+                            >
+                            <GmapMarker
+                                :key="index"
+                                v-for="(m, index) in lokacije"
+                                :position="m.position"
+                                :clickable="true"
+                                :draggable="true"
+                                @click="center=m.position"
+                            />
+                        </GmapMap>
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
 
@@ -117,8 +141,20 @@ import starRating from 'vue-star-rating'
 
 
 export default {
+    mounted(){
+        this.setLocationLatLng();
+    },
     data(){
         return{
+            //dodatne promenljive za mapu
+            center: { 
+                lat: 39.7837304, 
+                lng: -100.4458825 
+            },
+            lokacije:[],
+
+
+
             filterOpenedOnly:false,
             filterInput:'',
             currentSort: 'ocenaRestorana',
@@ -188,6 +224,14 @@ export default {
         ponistiIzbor(){
             this.searchedRestoran.type = '';
         },
+        setLocationLatLng(){
+            navigator.geolocation.getCurrentPosition(geolocation => {
+                this.center = {
+                    lat: geolocation.coords.latitude,
+                    lng: geolocation.coords.longitude
+                };
+            });
+        },
         sortiraj(){
             if(this.currentSort == 'nazivRestorana'){
                 if(this.currentSortDir == 'asc'){
@@ -215,6 +259,7 @@ export default {
             }
         },
         search(){
+            
             console.log("na bek ide restoran: " + JSON.stringify(this.searchedRestoran));
             let zahtev = 'name:';
             if(this.searchedRestoran.name != ""){
@@ -247,7 +292,15 @@ export default {
             console.log("ZAHTEV: " + zahtev);
             dataService.searchRestaurant(zahtev).then(response =>{
                 console.log("Stigli rezultati pretrage");
+                this.lokacije = [];
                 this.displayedRestaurants = response.data;
+                for(let i = 0; i < this.displayedRestaurants.length; i++){
+                    console.log('dodata lokacija')
+                    this.lokacije.push({position:{lat: this.displayedRestaurants[i].lokacija.xCoord, lng : this.displayedRestaurants[i].lokacija.yCoord}});
+                    
+                }
+                this.center.lat = this.displayedRestaurants[0].lokacija.xCoord;
+                this.center.lng = this.displayedRestaurants[0].lokacija.yCoord;
             }).catch(error => {
                 console.log(error.response);
             });

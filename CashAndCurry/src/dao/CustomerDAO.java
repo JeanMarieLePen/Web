@@ -109,7 +109,14 @@ public class CustomerDAO {
 	//izmena postojeceg korisnika i njegovo cuvanje u bazu
 	public Customer updateCustomer(Customer customer) {
 		if(customers.containsKey(customer.getUsername())) {
-			customers.replace(customer.getUsername(), customer);
+			//dobavljam trazenog korisnika
+			Customer c = this.customers.get(customer.getUsername());
+			//menjam mu polja
+			c.setName(customer.getName()); c.setLastname(customer.getLastname());
+			c.setDateOfBirth(customer.getDateOfBirth()); c.setPassword(customer.getPassword());
+			c.setGender(customer.getGender());
+			//
+//			customers.replace(customer.getUsername(), c);
 			Gson gson = new Gson();
 			String temp = gson.toJson(customers.values());
 			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "customers.json", false))){
