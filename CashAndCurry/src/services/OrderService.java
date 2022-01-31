@@ -34,7 +34,7 @@ public class OrderService {
 	}
 	
 	
-	//metoda koja dobavlja sve metode narudzbine koje je napravio jedan korisnik
+	//metoda koja dobavlja sve narudzbine koje je napravio jedan korisnik
 	@GET
 	@Path("/{username}")
 	@Produces(MediaType.APPLICATION_JSON)

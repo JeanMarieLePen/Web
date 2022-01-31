@@ -71,17 +71,35 @@ export default {
   name: 'Navigation',
   components: {
   },
+  mounted() {
+    window.addEventListener('shoppingList-changed', (event) => {
+      this.lista = event.detail.storage;
+    });
+  },
 
   data:function(){
     return{
       loggedIn: localStorage.getItem('token') ? true : false,
+      // brojStavki : 0,
+      lista : [],
     }
   },
   computed:{
     numberOfItems(){
-      var lista = JSON.parse(localStorage.getItem('shoppingList')) || []
-      console.log('broj u listi: ' + lista.length)
-      return lista.length;
+      // var lista = JSON.parse(localStorage.getItem('shoppingList')) || []
+      // console.log('broj u listi: ' + lista.length)
+      // return lista.length;
+      let tempLista = JSON.parse(this.lista);
+      let listaTemp = [];
+      for(let i = 0; i < tempLista.length; i++){
+        for(let j = 0; j < tempLista[i].listOfProducts.length; j++){
+          listaTemp.push(tempLista[i].listOfProducts[j]);
+        }
+      }
+      let brojStavki = listaTemp.length;
+      // this.brojStavki = lista.length;
+      console.log("broj artikala: " + this.brojStavki)
+      return brojStavki;
     }
   },
   methods:{

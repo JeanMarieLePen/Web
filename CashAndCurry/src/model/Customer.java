@@ -21,10 +21,11 @@ public class Customer extends GenericUser{
 		super();
 	}
 
-	public Customer(ArrayList<Order> listOfAllOrders, ArrayList<Order> listOfCompletedOrders,
+	public Customer(boolean obrisan, String username, String password, String name, String lastname, String gender,
+			String dateOfBirth, ArrayList<Order> listOfAllOrders, ArrayList<Order> listOfCompletedOrders,
 			ArrayList<Order> listOfCanceledOrders, ArrayList<Artikal> cart, int numberOfCanceledOrders,
 			int numberOfPoints, String typeOfCustomer, ArrayList<Komentar> listOfCommentsMade) {
-		super();
+		super(obrisan, username, password, name, lastname, gender, dateOfBirth);
 		this.listOfAllOrders = listOfAllOrders;
 		this.listOfCompletedOrders = listOfCompletedOrders;
 		this.listOfCanceledOrders = listOfCanceledOrders;
@@ -34,6 +35,7 @@ public class Customer extends GenericUser{
 		this.typeOfCustomer = typeOfCustomer;
 		this.listOfCommentsMade = listOfCommentsMade;
 	}
+
 
 	public ArrayList<Order> getListOfAllOrders() {
 		return listOfAllOrders;

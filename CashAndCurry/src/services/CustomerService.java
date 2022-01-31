@@ -92,8 +92,9 @@ public class CustomerService {
 	public Customer updateCustomer(UpdateCustomerDTO customer) {
 		CustomerDAO dao = (CustomerDAO)ctx.getAttribute("customerDAO");
 		if(dao.checkPassword(customer.getOldPassword(), customer.getUsername()) == true) {
-			Customer c = new Customer(customer.getListOfAllOrders(), customer.getListOfCompletedOrders(), customer.getListOfCanceledOrders(), customer.getCart(), customer.getNumberOfCanceledOrders(), customer.getNumberOfPoints(),
-					customer.getTypeOfCustomer(), customer.getListOfCommentsMade());
+			Customer c = new Customer();
+			c.setDateOfBirth(customer.getDateOfBirth()); c.setGender(customer.getGender()); c.setLastname(customer.getLastname()); c.setName(customer.getName());
+			c.setPassword(customer.getPassword()); c.setUsername(customer.getUsername());
 			return dao.updateCustomer(c);
 		}
 		return null;

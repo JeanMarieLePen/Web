@@ -71,8 +71,12 @@ public class DeliveryManService {
 	public DeliveryMan updateDeliveryMan(UpdateDeliveryManDTO deliveryMan) {
 		DeliveryManDAO dao = (DeliveryManDAO)ctx.getAttribute("deliveryManDAO");
 		if(dao.checkPassword(deliveryMan.getOldPassword(), deliveryMan.getUsername()) == true) {
-			DeliveryMan dm = new DeliveryMan(deliveryMan.isObrisan(), deliveryMan.getUsername(), deliveryMan.getPassword(), deliveryMan.getName(), deliveryMan.getLastname(), deliveryMan.getGender(), deliveryMan.getDateOfBirth(), deliveryMan.getListOfActiveOrders(), deliveryMan.getListOfAllOrders());
-			return dao.updateDeliveryMan(dm);
+//			DeliveryMan dm = new DeliveryMan(deliveryMan.isObrisan(), deliveryMan.getUsername(), deliveryMan.getPassword(), deliveryMan.getName(), deliveryMan.getLastname(), deliveryMan.getGender(), deliveryMan.getDateOfBirth(), deliveryMan.getListOfActiveOrders(), deliveryMan.getListOfAllOrders());
+			DeliveryMan c = new DeliveryMan();
+			c.setDateOfBirth(deliveryMan.getDateOfBirth()); c.setGender(deliveryMan.getGender()); c.setLastname(deliveryMan.getLastname()); c.setName(deliveryMan.getName());
+			c.setPassword(deliveryMan.getPassword()); c.setUsername(deliveryMan.getUsername());
+			
+			return dao.updateDeliveryMan(c);
 		}
 		return null;
 	}

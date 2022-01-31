@@ -75,8 +75,13 @@ public class ManagerService {
 	public Manager updateManager(UpdateManagerDTO manager) {
 		ManagerDAO dao = (ManagerDAO)ctx.getAttribute("managerDAO");
 		if(dao.checkPassword(manager.getOldPassword(), manager.getUsername()) == true) {
-			Manager m = new Manager(manager.isObrisan(), manager.getUsername(), manager.getPassword(), manager.getName(), manager.getLastname(), manager.getGender(), manager.getDateOfBirth(), manager.getRestaurant());
-			return dao.updateManager(m);
+//			Manager m = new Manager(manager.isObrisan(), manager.getUsername(), manager.getPassword(), manager.getName(), manager.getLastname(), manager.getGender(), manager.getDateOfBirth(), manager.getRestaurant());
+			Manager c = new Manager();
+			c.setDateOfBirth(manager.getDateOfBirth()); c.setGender(manager.getGender()); c.setLastname(manager.getLastname()); c.setName(manager.getName());
+			c.setPassword(manager.getPassword()); c.setUsername(manager.getUsername());
+			
+			
+			return dao.updateManager(c);
 		}
 		return null;
 	}

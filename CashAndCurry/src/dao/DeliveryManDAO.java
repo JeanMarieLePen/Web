@@ -101,7 +101,12 @@ public class DeliveryManDAO {
 	//izmena postojeceg dostavljaca i smestanje u bazu
 	public DeliveryMan updateDeliveryMan(DeliveryMan deliveryMan) {
 		if(this.deliverymen.containsKey(deliveryMan.getUsername())) {
-			this.deliverymen.replace(deliveryMan.getUsername(), deliveryMan);
+			DeliveryMan c = this.deliverymen.get(deliveryMan.getUsername());
+			//menjam mu polja
+			c.setName(deliveryMan.getName()); c.setLastname(deliveryMan.getLastname());
+			c.setDateOfBirth(deliveryMan.getDateOfBirth()); c.setPassword(deliveryMan.getPassword());
+			c.setGender(deliveryMan.getGender());
+//			this.deliverymen.replace(deliveryMan.getUsername(), deliveryMan);
 			Gson gson = new Gson();
 			String temp = gson.toJson(this.deliverymen.values());
 			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "deliverymen.json", false))){
