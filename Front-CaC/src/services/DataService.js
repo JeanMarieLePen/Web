@@ -147,6 +147,15 @@ class DataService{
     getZaduzenePorudzbine(id){
         return axios.get(`${API_URL}/orders/deliveryMan/${id}`);
     }
+
+    searchPorudzbine(searchedQuery){
+        console.log(`${API_URL}/ads/search${searchedQuery}`);
+        return axios.get(`${API_URL}/ads/search${searchedQuery}`);
+    }
+
+    getAllPorudzbine(){
+        return axios.get(`${API_URL}/ads/img`);
+    }
 }
 
 export default new DataService();
