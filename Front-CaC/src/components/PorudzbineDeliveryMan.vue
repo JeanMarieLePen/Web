@@ -4,6 +4,89 @@
             <div class="container" id='page-title'>
                 <h1 style="margin-top:10px;"><span id='titleEffect'>Pregled porudzbina</span></h1>
                 <hr style='background:#35424a;height:1px;'>
+            <div class='container ' id='search'>
+                <nav class="navbar navbar-light bg-light justify-content-between">
+                    <a class="navbar-brand">Pretraga porudzbina</a>
+                    <form class="form-inline">     
+                        <div style='display:inline;' id="advanced_search">
+                            <div id='second-row' class="row"  style="margin-top:5px;">
+                                
+                                <div class="input-group">
+                                    <input class="form-control mr-sm-2" type="text" placeholder="Naziv restorana" aria-label="Search" v-model="searchedPorudzbine.nazivRestorana">
+                                    
+                                    <input class="form-control mr-sm-2" type="number" min="0" placeholder="min cena" aria-label="Search" v-model="searchedPorudzbine.cenaOd">
+                                    <span style="padding-right:6px;" class="span_search"> - </span>
+                                    <input class="form-control mr-sm-2" type="number" min="0" placeholder="max cena" aria-label="Search" v-model="searchedPorudzbine.cenaDo">
+                                
+                                    <span class="span_search">Od</span>
+                                    <vuejsDatepicker style="font-size:20px;"  placeholder="Pocetni datum..."
+                                        v-model="selectedDate1" :highlighted=" searchedPorudzbine" :disabled-dates="disabledDates">
+                                    </vuejsDatepicker>
+                                    <span class="span_search">Do</span>
+                                    <vuejsDatepicker style="font-size:20px;"  placeholder="Krajnji datum..."
+                                        v-model="selectedDate2" :highlighted="searchedPorudzbine" :disabled-dates="disabledDates">
+                                    </vuejsDatepicker>
+                                </div>
+                                
+                                
+                            </div><!--/second_row-->
+                            <br>
+                            <div class="button-group">
+                                <span class="col-xl-2 col-md-6 mb-1">
+                                    <button style='margin-right:5px;' class='btn btn-outline-primary my-2 my-sm-0' v-on:click="resetFilter()">Reset all</button>
+                                </span> 
+                                <span class="col-xl-3 col-md-6 mb-2"> 
+                                    <button style="margin-left: 5px;" class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click.prevent='search()'>Search</button>
+                                </span>
+                            </div>
+                            
+                        </div><!--/advanced_search-->
+                        <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
+                        <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>  
+                    </form>
+                </nav>
+            </div>
+                <div style="margin-top:30px;" class="container" id='main'>
+            <div style="margin-bottom:30px;">
+                <span class="span_search">Filtriranje po tipu restorana</span>
+                <input v-model="filterInput">
+                <span class="span_search">Filtriranje po statusu porudzbine</span>
+                <input v-model="filterStatus">
+            </div>
+            
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th @click="sort('nazivRestorana')" class="arrow">Naziv
+                            <img v-if='currentSortDir == "asc" && currentSort== "nazivRestorana"' src='../assets/up-arrow1.1.png'>
+                            <img v-if='currentSortDir == "desc" && currentSort== "nazivRestorana" ' src='../assets/down-arrow1.1.png'>
+                        </th>
+                        <th>Tip</th>
+                        <th @click="sort('datumPorudzbine')" class="arrow">Datum 
+                            <img v-if='currentSortDir == "asc" && currentSort== "datumPorudzbine"' src='../assets/up-arrow1.1.png'>
+                            <img v-if='currentSortDir == "desc" && currentSort== "datumPorudzbine" ' src='../assets/down-arrow1.1.png'>
+                        </th>
+                        <th @click="sort('cenaPorudzbine')" class="arrow"> Cena
+                            <img v-if='currentSortDir == "asc" && currentSort== "cenaPorudzbine"' src='../assets/up-arrow1.1.png'>
+                            <img v-if='currentSortDir == "desc" && currentSort== "cenaPorudzbine" ' src='../assets/down-arrow1.1.png'>
+                        </th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- <tr v-bind:key='rst.name' v-for="rst in sortPorudzbine">
+                        <td>{{rst.name}}</td>
+                        <td>{{rst.type}}</td>
+                        <td>{{rst.datum}}</td>
+                        <td>{{rst.cena}}</td>
+                        
+                        
+                    </tr> -->
+                </tbody>
+                
+            </table>
+        </div>
             </div>
             <div class="container" style="margin-bottom:100px;max-height:300px; overflow:auto;">
                 <h2>Pregled svih svojih porudzbina</h2>
@@ -78,6 +161,8 @@
 
 <script>
 import dataService from '../services/DataService'
+import Datepicker from 'vuejs-datepicker';
+import StarRating from "vue-star-rating";
 
 export default{
      created(){
@@ -93,8 +178,14 @@ export default{
         }
         
     },
+    
     computed:{
-        
+         sortPorudzbine:function(){
+            return this.porudzbine.filter(this.filterByType).filter(this.filterByStatus).sort(this.sortiraj);}
+    },
+     components: {
+        vuejsDatepicker:Datepicker,
+        "star-rating": StarRating,
     },
     methods:{
         takeOrder(order, index){
@@ -123,6 +214,46 @@ export default{
             }
             });
         },
+<<<<<<< HEAD
+=======
+        resetFilter:function(){
+            this.searchedPorudzbine.datumOd =  null;
+            this.searchedPorudzbine.datumDo =  null;
+            this.searchedPorudzbine.cenaOd =  null;
+            this.searchedPorudzbine.cenaDo =  null;
+            this.searchedPorudzbine.nazivRestorana = null;
+            
+
+            this.getAllPorudzbine();
+        },
+        
+        sortiraj(){
+            if(this.currentSort == 'nazivRestorana'){
+                if(this.currentSortDir == 'asc'){
+                    return this.porudzbine.sort((a, b) => (a.name > b.name) ? 1 : -1)
+                }
+                else{
+                    return this.porudzbine.sort((a, b) => (a.name < b.name) ? 1 : -1)
+                }
+            }
+            if(this.currentSort == 'cenaPorudzbine'){
+                if(this.currentSortDir == 'asc'){
+                    return this.porudzbine.sort((a, b) => (a.ocena > b.ocena) ? 1 : -1)
+                }
+                else{
+                    return this.porudzbine.sort((a, b) => (a.ocena < b.ocena) ? 1 : -1)
+                }
+            }
+            if(this.currentSort == 'datumPorudzbine'){
+                if(this.currentSortDir == 'asc'){
+                    return this.porudzbine.sort((a, b) => (a.lokacija > b.lokacija) ? 1 : -1)
+                }
+                else{
+                    return this.porudzbine.sort((a, b) => (a.lokacija < b.lokacija) ? 1 : -1)
+                }
+            }
+        },
+>>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
         getSveCekanje(){
             dataService.getSveCekanje().then(response => {
             console.log("stigli podaci o porudzbinama koje cekaju dostavljaca");
@@ -138,7 +269,83 @@ export default{
         entityDetails(tempId){
             this.$router.push(`/order/${tempId}`);
         },
+        searchPorudzbine() {     
+                    
+            // if (this.searchedPorudzbine.datumOd == null) {
+            //     this.messages.errorDates = `<h4>Morate odabrati početni termin porudzbine!</h4>`;
+            //     setTimeout(() => this.messages.errorDates = '', 5000);
+            // }
+            // else if (this.searchedPorudzbine.datumDo == null) {
+            //     this.messages.errorDates = `<h4>Morate odabrati krajnji termin porudzbine!</h4>`;
+            //     setTimeout(() => this.messages.errorDates = '', 5000);
+            // }
+                //Kada se jednom izvrsi pretraga, bila ona uspesna ili neuspesna uklanja se default prikaz stranice....
+                this.isAlreadySearched = true;
+                let searchedQuery = 'datumOd:';
+                if (!!this.searchedPorudzbine.datumOd) {
+                    let od_datuma = this.searchedPorudzbine.datumOd;
+                    searchedQuery += od_datuma;
+                }
+                else{
+                    searchedQuery += "_";
+                }
+                searchedQuery += "&datumDo:";
+                if (!!this.searchedPorudzbine.datumDo) {
+                    let do_datuma = this.searchedPorudzbine.datumDo;
+                    searchedQuery += do_datuma;
+                }
+                else{
+                    searchedQuery += "_";
+                }
+                searchedQuery += "&cenaOd:";
+                if (!!this.searchedPorudzbine.cenaOd) {
+                    searchedQuery += this.searchedPorudzbine.cenaOd;
+                }
+                else{
+                    searchedQuery += "_";
+                }
+                searchedQuery += "&cenaDo:";
+                if (!!this.searchedPorudzbine.cenaDo) {
+                    searchedQuery += this.searchedPorudzbine.cenaDo;
+                }
+                else{
+                    searchedQuery += "_";
+                }
+                searchedQuery += "&nazivRestorana:";
+                if (!this.searchedPorudzbine.nazivRestorana == '') {
+                    searchedQuery += this.searchedPorudzbine.nazivRestorana;
+                }
+                else{
+                    searchedQuery += "_";
+                }
+                console.log('Zahtev nakon formiranja: ' + searchedQuery);
+                dataService.searchPorudzbine(searchedQuery).then(response => {
+                   console.log('stigao filtrirane narudzbine');
+                   this.porudzbine = response.data;
+
+                }).catch(error =>{
+                    console.log(error.response);
+                });
+            
+            
+        },
         
+    },
+        
+        
+    
+    
+     watch:{
+        'selectedDate1':function(){
+            console.log('Datum pre obrade: ' + this.selectedDate1);
+            this.searchedPorudzbine.datumOd = this.selectedDate1.toString().substring(4, 15);
+            console.log("Datum posle obrade: " + this.searchedPorudzbine.datumOd)
+        },
+        'selectedDate2':function(){
+            console.log('Datum pre obrade: ' + this.selectedDate2);
+            this.searchedPorudzbine.datumDo = this.selectedDate2.toString().substring(4, 15);
+            console.log("Datum posle obrade: " + this.searchedPorudzbine.datumDo)
+        }
     },
     data() {
         return{
@@ -146,6 +353,37 @@ export default{
             porudzbine:[],
             nedostavljenePorudzbine:[],
             porudzbineCekanju:[],
+<<<<<<< HEAD
+=======
+
+             currentSort: 'cenaPorudzbine',
+            currentSortDir: 'asc',
+            filterInput:'',
+            // displayedPorudzbine:[],
+            filterStatus:'',
+
+             selectedDate1: '',
+            selectedDate2: '',
+             searchedPorudzbine: {
+                //Prilikom povezivanja preimenovati da odgovara nazivima atributa sa beka
+                datumOd: null,
+                datumDo: null,
+                cenaOd:null,
+                cenaDo:null,
+                nazivRestorana: '',
+            },
+            disabledDates: {
+                to: null
+            },
+            messages: {
+                errorAddress: '',
+                errorPrice: '',
+                errorPlannedCm: '',
+                errorDates: '',
+                errorResponse: '',
+                successResponse: '',
+            },
+>>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
         }
     },
 }
@@ -172,9 +410,28 @@ export default{
 } */
 
 
+#searcIcon img:hover{
+    width:45px;
+    padding-bottom:3px;
+    cursor: pointer;
+}
+
+.span_search{
+    /* padding:5px; */
+    padding-top:5px;
+    padding-left:5px;
+    padding-right:5px;
+    color:#35424a;
+    font-weight: bold;
+}
+
 .header5{
     color:#1E90FF;
     font-weight: bold;
+}
+
+#search_icon:hover{
+    cursor: pointer;
 }
 
 .marg{

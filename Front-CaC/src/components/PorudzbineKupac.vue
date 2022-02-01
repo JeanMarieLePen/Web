@@ -46,6 +46,7 @@
                     </form>
                 </nav>
             </div>
+<<<<<<< HEAD
                 <!-- <div class='container ' id='search'>
                     <nav class="navbar navbar-light bg-light justify-content-between">
                         <a style='font-weight:bold;margin-top:10px;color:#35424a;' class="navbar-brand">Search</a>
@@ -85,6 +86,49 @@
                         </form>
                     </nav>
                 </div> -->
+=======
+                <div style="margin-top:30px;" class="container" id='main'>
+            <div style="margin-bottom:30px;">
+                <span class="span_search">Filtriranje po tipu restorana</span>
+                <input v-model="filterInput">
+                <span class="span_search">Filtriranje po statusu porudzbine</span>
+                <input v-model="filterStatus">
+            </div>
+            
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th @click="sort('nazivRestorana')" class="arrow">Naziv
+                            <img v-if='currentSortDir == "asc" && currentSort== "nazivRestorana"' src='../assets/up-arrow1.1.png'>
+                            <img v-if='currentSortDir == "desc" && currentSort== "nazivRestorana" ' src='../assets/down-arrow1.1.png'>
+                        </th>
+                        <th>Tip</th>
+                        <th @click="sort('datumPorudzbine')" class="arrow">Datum 
+                            <img v-if='currentSortDir == "asc" && currentSort== "datumPorudzbine"' src='../assets/up-arrow1.1.png'>
+                            <img v-if='currentSortDir == "desc" && currentSort== "datumPorudzbine" ' src='../assets/down-arrow1.1.png'>
+                        </th>
+                        <th @click="sort('cenaPorudzbine')" class="arrow"> Cena
+                            <img v-if='currentSortDir == "asc" && currentSort== "cenaPorudzbine"' src='../assets/up-arrow1.1.png'>
+                            <img v-if='currentSortDir == "desc" && currentSort== "cenaPorudzbine" ' src='../assets/down-arrow1.1.png'>
+                        </th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- <tr v-bind:key='rst.name' v-for="rst in sortPorudzbine">
+                        <td>{{rst.name}}</td>
+                        <td>{{rst.type}}</td>
+                        <td>{{rst.datum}}</td>
+                        <td>{{rst.cena}}</td>
+                        
+                        
+                    </tr> -->
+                </tbody>
+                
+            </table>
+        </div>
+>>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
             </div>
             <div class="container" style="margin-bottom:100px;max-height:300px; overflow:auto;">
                 <h2>Pregled svih svojih porudzbina</h2>
@@ -165,8 +209,10 @@ export default{
         }
         
     },
-    computed:{
-        
+     computed:{
+        sortPorudzbine:function(){
+            return this.porudzbine.filter(this.filterByType).filter(this.filterByStatus).sort(this.sortiraj);
+        }
     },
     methods:{
         cancelOrder(orderId){
@@ -186,6 +232,10 @@ export default{
             this.searchedPorudzbine.cenaOd =  null;
             this.searchedPorudzbine.cenaDo =  null;
             this.searchedPorudzbine.nazivRestorana = null;
+<<<<<<< HEAD
+=======
+            
+>>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
 
             this.getAllPorudzbine();
         },
@@ -195,8 +245,40 @@ export default{
                 console.log(JSON.stringify(this.porudzbinee));
             });
         
+<<<<<<< HEAD
     },
     searchPorudzbine() {     
+=======
+        },
+        sortiraj(){
+            if(this.currentSort == 'nazivRestorana'){
+                if(this.currentSortDir == 'asc'){
+                    return this.porudzbine.sort((a, b) => (a.name > b.name) ? 1 : -1)
+                }
+                else{
+                    return this.porudzbine.sort((a, b) => (a.name < b.name) ? 1 : -1)
+                }
+            }
+            if(this.currentSort == 'cenaPorudzbine'){
+                if(this.currentSortDir == 'asc'){
+                    return this.porudzbine.sort((a, b) => (a.ocena > b.ocena) ? 1 : -1)
+                }
+                else{
+                    return this.porudzbine.sort((a, b) => (a.ocena < b.ocena) ? 1 : -1)
+                }
+            }
+            if(this.currentSort == 'datumPorudzbine'){
+                if(this.currentSortDir == 'asc'){
+                    return this.porudzbine.sort((a, b) => (a.lokacija > b.lokacija) ? 1 : -1)
+                }
+                else{
+                    return this.porudzbine.sort((a, b) => (a.lokacija < b.lokacija) ? 1 : -1)
+                }
+            }
+        },
+    
+        searchPorudzbine() {     
+>>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
                     
             // if (this.searchedPorudzbine.datumOd == null) {
             //     this.messages.errorDates = `<h4>Morate odabrati početni termin porudzbine!</h4>`;
@@ -212,6 +294,7 @@ export default{
                 if (!!this.searchedPorudzbine.datumOd) {
                     let od_datuma = this.searchedPorudzbine.datumOd;
                     searchedQuery += od_datuma;
+<<<<<<< HEAD
                 }
                 else{
                     searchedQuery += "_";
@@ -227,6 +310,31 @@ export default{
                 searchedQuery += "&cenaOd:";
                 if (!!this.searchedPorudzbine.cenaOd) {
                     searchedQuery += this.searchedPorudzbine.cenaOd;
+=======
+>>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
+                }
+                else{
+                    searchedQuery += "_";
+                }
+<<<<<<< HEAD
+                searchedQuery += "&cenaDo:";
+                if (!!this.searchedPorudzbine.cenaDo) {
+                    searchedQuery += this.searchedPorudzbine.cenaDo;
+=======
+                searchedQuery += "&datumDo:";
+                if (!!this.searchedPorudzbine.datumDo) {
+                    let do_datuma = this.searchedPorudzbine.datumDo;
+                    searchedQuery += do_datuma;
+>>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
+                }
+                else{
+                    searchedQuery += "_";
+                }
+<<<<<<< HEAD
+=======
+                searchedQuery += "&cenaOd:";
+                if (!!this.searchedPorudzbine.cenaOd) {
+                    searchedQuery += this.searchedPorudzbine.cenaOd;
                 }
                 else{
                     searchedQuery += "_";
@@ -238,6 +346,7 @@ export default{
                 else{
                     searchedQuery += "_";
                 }
+>>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
                 searchedQuery += "&nazivRestorana:";
                 if (!this.searchedPorudzbine.nazivRestorana == '') {
                     searchedQuery += this.searchedPorudzbine.nazivRestorana;
@@ -248,14 +357,47 @@ export default{
                 console.log('Zahtev nakon formiranja: ' + searchedQuery);
                 dataService.searchPorudzbine(searchedQuery).then(response => {
                    console.log('stigao filtrirane narudzbine');
+<<<<<<< HEAD
+=======
+                   this.porudzbine = response.data;
+>>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
 
                 }).catch(error =>{
                     console.log(error.response);
                 });
             
+<<<<<<< HEAD
+=======
             
         },
-        
+        filterByType:function(rst){
+            if(this.filterInput.length != 0){
+                return  (rst.name.toLowerCase().indexOf(this.filterInput.toLowerCase()) > -1);
+            }
+            return true;
+        },
+         filterByStatus:function(rst){
+            if(this.filterStatus.length != 0){
+                return (rst.name.toLowerCase().indexOf(this.filterInput.toLowerCase()) > -1);
+            }
+            return true;
+>>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
+            
+        },
+    },
+    
+   
+    watch:{
+        'selectedDate1':function(){
+            console.log('Datum pre obrade: ' + this.selectedDate1);
+            this.searchedPorudzbine.datumOd = this.selectedDate1.toString().substring(4, 15);
+            console.log("Datum posle obrade: " + this.searchedPorudzbine.datumOd)
+        },
+        'selectedDate2':function(){
+            console.log('Datum pre obrade: ' + this.selectedDate2);
+            this.searchedPorudzbine.datumDo = this.selectedDate2.toString().substring(4, 15);
+            console.log("Datum posle obrade: " + this.searchedPorudzbine.datumDo)
+        }
     },
     watch:{
         'selectedDate1':function(){
@@ -301,6 +443,19 @@ export default{
                         Status: 'Ceka dostavljaca3',
                     },
             ],
+
+            currentSort: 'cenaPorudzbine',
+            currentSortDir: 'asc',
+            filterInput:'',
+            // displayedPorudzbine:[],
+            filterStatus:'',
+
+            sort(s){
+                if(s == this.currentSort){
+                    this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc';
+                }
+                this.currentSort = s;
+            },
 
             testNedostavljenihPorudzbina: [
                     {
