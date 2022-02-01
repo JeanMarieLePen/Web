@@ -52,6 +52,7 @@ public class KomentarDAO {
 	
 	//metoda koja vraca listu svih NEODOBRENIH komentara o jednom restoranu[STRIKTNO ZA MENADZERA]
 	public Collection<Komentar> findAllUnmoderatedComments(String nazivManagera){
+		loadComments(contextPath);
 		Restoran r = this.getRestoranByNazivManagera(nazivManagera);
 		ArrayList<Komentar> listaKomentara = new ArrayList<Komentar>();
 		for(Komentar k : r.getComments()) {

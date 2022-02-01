@@ -27,11 +27,11 @@
                             </span>
                             <span class="col-xl-3 col-md-6 mb-3"> 
                                 <span class="span_search">Lokacija restorana</span>
-                                <input class="form-control mr-sm-2" type="text" placeholder="Country/City" aria-label="Search" v-model="searchedRestoran.lokacija.drzava">
+                                <input class="form-control mr-sm-2" type="text" placeholder="Drzava..." aria-label="Search" v-model="searchedRestoran.lokacija.drzava">
                             </span>
                             <span class="col-xl-3 col-md-6 mb-3"> 
                                 <span class="span_search">Ocena restorana</span>
-                                <input class="form-control mr-sm-2" type="text" placeholder="Country/City" aria-label="Search" v-model="searchedRestoran.ocena">
+                                <input class="form-control mr-sm-2" type="text" placeholder="Ocena restorana..." aria-label="Search" v-model="searchedRestoran.ocena">
                             </span>
                             </div>
                             
@@ -339,7 +339,16 @@ export default {
         },
         comment:function(id){
             this.$router.push(`/commentNew/${id}`)
-        }
+        },
+        resetFilter:function(){
+            this.searchedPorudzbine.datumOd =  null;
+            this.searchedPorudzbine.datumDo =  null;
+            this.searchedPorudzbine.cenaOd =  null;
+            this.searchedPorudzbine.cenaDo =  null;
+            this.searchedPorudzbine.nazivRestorana = null;
+
+            this.getAllRestaurants();
+        },
     },
     created(){
         // if(JSON.parse(localStorage.getItem('token')) == null){
@@ -347,7 +356,7 @@ export default {
         // }else{
         //     this.getAllRestaurants();
         // }
-        
+        this.getAllRestaurants();
     }
 }
 </script>

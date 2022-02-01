@@ -1,6 +1,10 @@
 package model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class Order {
 
@@ -33,7 +37,18 @@ public class Order {
 		this.idDeliveryMana = idDeliveryMana;
 	}
 
-	
+	public Date datumToDate() {
+		SimpleDateFormat formatter = new SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH);
+
+		Date date = new Date();
+		try {
+			date = formatter.parse(this.datumIVremePorudzbine);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return date;
+	}
 
 	public String getIdDeliveryMana() {
 		return idDeliveryMana;

@@ -1,7 +1,7 @@
 <template>
     <div style="margin-top:50px;width:50%" id="car-new-comment">
-        <div v-if="showEntity">
-            <div v-if="!komentarisaoRestoran" class="comment-form">    
+        <div>
+            <div v-if="showEntity" class="comment-form">    
                 <textarea type="text" v-model="noviKomentar.tekstKomentara" placeholder="Tekst komentara..."></textarea>
                 <label style="display:inline-block">
                     <input readonly type="text" v-model="noviKomentar.kupacKomentator">

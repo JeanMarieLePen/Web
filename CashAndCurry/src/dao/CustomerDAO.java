@@ -159,5 +159,19 @@ public class CustomerDAO {
 		}
 		return false;
 	}
+
+	public Collection<Customer> findQuitters() {
+		// TODO Auto-generated method stub
+		if(this.customers.values().size() > 0) {
+			Collection<Customer> result = new ArrayList<Customer>();
+			for(Customer c : this.customers.values()) {
+				if(c.getNumberOfCanceledOrders() >= 5) {
+					result.add(c);
+				}
+			}
+			return result;
+		}
+		return null;
+	}
 	
 }

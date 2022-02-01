@@ -3,10 +3,10 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8080/WebProjekat2021/rest";
 
-if (JSON.parse(localStorage.getItem('token')) != null){
-    const token = JSON.parse(localStorage.getItem('token'));
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token.accesToken;
-}
+// if (JSON.parse(localStorage.getItem('token')) != null){
+//     const token = JSON.parse(localStorage.getItem('token'));
+//     axios.defaults.headers.common['Authorization'] = 'Bearer ' + token.accesToken;
+// }
 
 class DataService{
 
@@ -23,6 +23,9 @@ class DataService{
     }
     updateCustomer(customer){
         return axios.put(`${API_URL}/customers/`, customer);
+    }
+    getQuitters(){
+        return axios.get(`${API_URL}/customers/quitters/`);
     }
 
     //Manager
@@ -117,11 +120,19 @@ class DataService{
     updateAdmin(admin){
         return axios.put(`${API_URL}/administrators`, admin);
     }
-
+    suspendUser(username){
+        return axios.get(`${API_URL}/bannedUsers/ban/${username}`)
+    }
+    unsuspendUser(username){
+        return axios.get(`${API_URL}/bannedUsers/unban/${username}`)
+    }
 
     //Order
     addOrder(order){
         return axios.post(`${API_URL}/orders/`, order);
+    }
+    getOrderById(id){
+        return axios.get(`${API_URL}/orders/byOrderId/${id}`);
     }
 
     //porudzbine kupac
@@ -142,19 +153,26 @@ class DataService{
         return axios.get(`${API_URL}/orders/noDeliveryMan`);
     }
     getSvojeNedostavljenePorudzbine(id){
-        return axios.get(`${API_URL}/orders/${id}`);
+        return axios.get(`${API_URL}/orders/notYetDelivered/${id}`);
     }
     getZaduzenePorudzbine(id){
         return axios.get(`${API_URL}/orders/deliveryMan/${id}`);
     }
 
     searchPorudzbine(searchedQuery){
-        console.log(`${API_URL}/ads/search${searchedQuery}`);
-        return axios.get(`${API_URL}/ads/search${searchedQuery}`);
+        return axios.get(`${API_URL}/orders/filtered/${searchedQuery}`);
     }
 
     getAllPorudzbine(){
         return axios.get(`${API_URL}/ads/img`);
+    }
+
+    cancelOrder(orderId){
+        return axios.put(`${API_URL}/orders/cancel/${orderId}`);
+    }
+
+    takeOrder(order){
+        return axios.put(`${API_URL}/orders/`, order);
     }
 }
 

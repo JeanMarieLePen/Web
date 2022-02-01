@@ -113,10 +113,7 @@ export default {
                         nazivArtikla : tempSadrzajKorpe[i].listOfProducts[j].nazivArtikla
                     }
                     this.order.listaNarucenihArtikala.push(tempArtikal);
-<<<<<<< HEAD
                     this.order.cena = this.order.cena + (tempSadrzajKorpe[i].listOfProducts[j].brKomada * tempSadrzajKorpe[i].listOfProducts[j].cenaJedinice);
-=======
->>>>>>> 779b5b05d9977dda24e5afb04ff206d4f4af7a0b
                 }
 
                 dataService.addOrder(this.order).then(response => {

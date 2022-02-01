@@ -78,6 +78,17 @@ public class CustomerService {
 		CustomerDAO dao = (CustomerDAO)ctx.getAttribute("customerDAO");
 		return dao.findAllCustomers();
 	}
+	
+	
+	//dobavlja korisnike koji su odustali od vise od 5 narudzbina
+	@GET
+	@Path("/quitters/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Customer> getQuitters() {
+		CustomerDAO dao = (CustomerDAO)ctx.getAttribute("customerDAO");
+		return dao.findQuitters();
+	}
+	
 	@GET
 	@Path("/{username}")
 	@Produces(MediaType.APPLICATION_JSON)

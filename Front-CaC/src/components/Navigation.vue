@@ -30,7 +30,7 @@
           
 
           <router-link to='/shoppingCart' class="nav-link" exact v-if='loggedIn==true' > 
-            <span>{{numberOfItems}}</span>
+            <!-- <span>{{numberOfItems}}</span> -->
             <button style="background" class="btn btn-primary">
                <!-- <img src="/src/assets/shopping-cart.png" style="float:left;margin-right:0.5em; height:20px;width:40px;"> -->
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
@@ -71,11 +71,11 @@ export default {
   name: 'Navigation',
   components: {
   },
-  mounted() {
-    window.addEventListener('shoppingList-changed', (event) => {
-      this.lista = event.detail.storage;
-    });
-  },
+  // mounted() {
+  //   window.addEventListener('shoppingList-changed', (event) => {
+  //     this.lista = event.detail.storage;
+  //   });
+  // },
 
   data:function(){
     return{

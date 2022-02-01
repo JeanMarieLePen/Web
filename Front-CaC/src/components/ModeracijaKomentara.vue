@@ -82,6 +82,7 @@ export default {
             dataService.getAllUnmoderatedComments(this.idManager).then(response => {
             console.log('stigli svi nemoderirani komentari');
             this.neodobreniKomentari = response.data;
+            console.log(response.data)
             }).catch(error => {
                 console.log(error.response);
             });

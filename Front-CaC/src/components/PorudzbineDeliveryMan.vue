@@ -11,13 +11,14 @@
                     <div>
                     <!-- if we are 3 cards wide start a new row -->
                         <div class="row">
-                            <div class="col-md-2" v-bind:key="tempPorudzbina.id" v-for="tempPorudzbina in porudzbine">
-                                <div style="margin-bottom:30px;" class="card h-100">
+                            <div class="col-md-2" v-bind:key="tempPorudzbina.idPorudzbine" v-for="tempPorudzbina in porudzbine">
+                                <div style="margin-bottom:30px; width:200px;" class="card h-100">
                                     <!-- <img class="card-img-top" :src="product.thumbnailUrl" alt="card image collar"> -->
                                     <div style="" class="card-body">
-                                        <h5 class="card-title">Porudzbina ID: {{tempPorudzbina.id}}</h5>
+                                        <h5 class="card-title">Porudzbina ID: {{tempPorudzbina.idPorudzbine}}</h5>
                                         <p class="card-text">cena: {{tempPorudzbina.cena}}</p>
-                                        <button v-on:click="orderDetails(tempPorudzbina.id)" class="btn btn-primary">Detalji</button>
+                                        <p class="card-text">Kupac: {{tempPorudzbina.idKupca}}</p>
+                                        <!-- <button v-on:click="orderDetails(tempPorudzbina.id)" class="btn btn-primary">Detalji</button> -->
                                         <!-- <button v-show="isOwner" v-on:click="removeEntity(tempVikendica.id)" class="btn btn-danger">Ukloni</button> -->
                                     </div>
                                 </div>
@@ -33,13 +34,13 @@
                     <div>
                     <!-- if we are 3 cards wide start a new row -->
                         <div class="row">
-                            <div class="col-md-2" v-bind:key="tempPorudzbina.id" v-for="tempPorudzbina in nedostavljenePorudzbine">
+                            <div class="col-md-2" v-bind:key="tempPorudzbina.idPorudzbine" v-for="tempPorudzbina in nedostavljenePorudzbine">
                                 <div style="margin-bottom:30px;" class="card h-100">
                                     <!-- <img class="card-img-top" :src="product.thumbnailUrl" alt="card image collar"> -->
                                     <div style="" class="card-body">
-                                        <h5 class="card-title">Porudzbina ID: {{tempPorudzbina.id}}</h5>
+                                        <h5 class="card-title">Porudzbina ID: {{tempPorudzbina.idPorudzbine}}</h5>
                                         <p class="card-text">cena: {{tempPorudzbina.cena}}</p>
-                                        <button v-on:click="orderDetails(tempPorudzbina.id)" class="btn btn-primary">Detalji</button>
+                                        <!-- <button v-on:click="orderDetails(tempPorudzbina.idPorudzbine)" class="btn btn-primary">Detalji</button> -->
                                         <!-- <button v-show="isOwner" v-on:click="removeEntity(tempVikendica.id)" class="btn btn-danger">Ukloni</button> -->
                                     </div>
                                 </div>
@@ -55,13 +56,14 @@
                     <div>
                     <!-- if we are 3 cards wide start a new row -->
                         <div class="row">
-                            <div class="col-md-4" v-bind:key="tempPorudzbina.id" v-for="tempPorudzbina in porudzbineCekanju">
+                            <div class="col-md-4" v-bind:key="index" v-for="(tempPorudzbina, index) in porudzbineCekanju">
                                 <div style="margin-bottom:30px;" class="card h-100">
                                     <!-- <img class="card-img-top" :src="product.thumbnailUrl" alt="card image collar"> -->
                                     <div class="card-body">
-                                        <h5 class="card-title">Porudzbina ID: {{tempPorudzbina.id}}</h5>
+                                        <h5 class="card-title">Porudzbina ID: {{tempPorudzbina.idPorudzbine}}</h5>
                                         <p class="card-text">cena: {{tempPorudzbina.cena}}</p>
-                                        <button v-on:click="orderDetails(tempPorudzbina.id)" class="btn btn-primary">Detalji</button>
+                                        <p class="card-text">cena: {{tempPorudzbina.datumIVremePorudzbine}}</p>
+                                        <button v-on:click="takeOrder(tempPorudzbina, index)" class="btn btn-primary">Preuzmi</button>
                                         <!-- <button v-show="isOwner" v-on:click="removeEntity(tempVikendica.id)" class="btn btn-danger">Ukloni</button> -->
                                     </div>
                                 </div>
@@ -79,26 +81,15 @@ import dataService from '../services/DataService'
 
 export default{
      created(){
+        let tempUsername = JSON.parse(localStorage.getItem('token')).username;
+        this.username = tempUsername;
+        console.log('Username: ' + tempUsername)
         try{
-             this.dataService.getZaduzenePorudzbine(this.$route.params.id).then(response => {
-            console.log("stigli podaci o svojim porudzbinama");
-            this.porudzbine = response.data;
-            });
-            this.dataService.getSvojeNedostavljenePorudzbine(this.$route.params.id).then(response => {
-            console.log("stigli podaci o svojim porudzbinama koje su nedostavljene");
-            this.nedostavljenePorudzbine = response.data;
-            });
-            this.dataService.getSveCekanje().then(response => {
-            console.log("stigli podaci o porudzbinama koje cekaju dostavljaca");
-            this.porudzbineCekaju = response.data;
-            });
+            
+            this.getSvojeNedostavljenePorudzbine(tempUsername);
+            this.getZaduzenePorudzbine(tempUsername)
+            this.getSveCekanje();
         }catch(error){
-            // this.profile = this.profileTemp;
-            
-            this.porudzbine=this.testPorudzbina;
-            
-            this.nedostavljenePorudzbine = this.testNedostavljenihPorudzbina;
-            this.porudzbineCekanju = this.testPorudzbinaCekanje;
         }
         
     },
@@ -106,6 +97,44 @@ export default{
         
     },
     methods:{
+        takeOrder(order, index){
+            order.idDeliveryMana = this.username;
+            order.statusPorudzbine = 'uTransportu';
+            dataService.takeOrder(order).then(response => {
+                console.log('preuzeli ste narudzbinu');
+                this.porudzbineCekanju.splice(index, 1);
+            });
+        },
+        getSvojeNedostavljenePorudzbine(username){
+            dataService.getSvojeNedostavljenePorudzbine(username).then(response => {
+            console.log("stigli podaci o svojim porudzbinama koje su nedostavljene");
+            for(let i = 0; i < response.data.length; i++){
+                this.nedostavljenePorudzbine.push(response.data[i])
+            }
+            console.log(response.data);
+            });
+        },
+        getZaduzenePorudzbine(username){
+            dataService.getZaduzenePorudzbine(username).then(response => {
+            console.log("stigli podaci o svojim porudzbinama");
+            console.log(response.data);
+            for(let i = 0; i < response.data.length; i++){
+                this.porudzbine.push(response.data[i])
+            }
+            });
+        },
+        getSveCekanje(){
+            dataService.getSveCekanje().then(response => {
+            console.log("stigli podaci o porudzbinama koje cekaju dostavljaca");
+            console.log(response.data);
+            
+            for(let i = 0; i < response.data.length; i++){
+                this.porudzbineCekanju.push(response.data[i])
+            }
+            console.log('duzina odgovora: ' + response.data.length)
+            console.log('duzina odgovora: ' + this.porudzbineCekanju.length)
+            });
+        },
         entityDetails(tempId){
             this.$router.push(`/order/${tempId}`);
         },
@@ -113,96 +142,10 @@ export default{
     },
     data() {
         return{
-            testPorudzbina: [
-                    {
-                        id:'223232',
-                        poruceniArtikli: [
-                            {naziv: 'artikal1'},
-                            {naziv: 'artikal2'}, 
-                            {naziv: 'artikal3'}
-                            ],
-                        restoranIzKogJePoruceno:'restoran1',
-                        datumivreme: 'datumivreme1',
-                        cena: '200',
-                        kupac: 'Marko Markovic',
-                        Status: 'Ceka dostavljaca',
-                    },
-                     {
-                         id:'2233232',
-                        poruceniArtikli: [
-                            {naziv: 'artikal13'},
-                            {naziv: 'artikal23'}, 
-                            {naziv: 'artikal33'}
-                            ],
-                        restoranIzKogJePoruceno:'restoran1',
-                        datumivreme: 'datumivreme13',
-                        cena: '2030',
-                        kupac: 'Marko Markovic3',
-                        Status: 'Ceka dostavljaca3',
-                    },
-            ],
-
-            testNedostavljenihPorudzbina: [
-                    {
-                        id:'223232xddddddd',
-                        poruceniArtikli: [
-                            {naziv: 'artikal1xdd'},
-                            {naziv: 'artikal2xd'}, 
-                            {naziv: 'artikal3xd'}
-                            ],
-                        restoranIzKogJePoruceno:'restoran1xddd',
-                        datumivreme: 'datumivreme1xdd',
-                        cena: '200xdd',
-                        kupac: 'Marko Markovicxdd',
-                        Status: 'Ceka dostavljacaxxddd',
-                    },
-                     {
-                         id:'2233232xdd',
-                        poruceniArtikli: [
-                            {naziv: 'artikal13xdd'},
-                            {naziv: 'artikal23xdd'}, 
-                            {naziv: 'artikal33xdd'}
-                            ],
-                        restoranIzKogJePoruceno:'restoranxdd1',
-                        datumivreme: 'datumivreme13xdd',
-                        cena: '2030xdd',
-                        kupac: 'Marko Markovic3xddd',
-                        Status: 'Ceka dostavljaca3xdd',
-                    },
-            ],
-
-            testPorudzbinaCekanje: [
-                    {
-                        id:'223232',
-                        poruceniArtikli: [
-                            {naziv: 'artikal1cekanje'},
-                            {naziv: 'artikal2cekanje'}, 
-                            {naziv: 'artikal3cekanje'}
-                            ],
-                        restoranIzKogJePoruceno:'restoran1cekanje',
-                        datumivreme: 'datumivreme1cekanje',
-                        cena: '200',
-                        kupac: 'Marko Markovic',
-                        Status: 'Ceka dostavljaca',
-                    },
-                     {
-                         id:'2233232cekanje',
-                        poruceniArtikli: [
-                            {naziv: 'artikal13cekanje'},
-                            {naziv: 'artikal23'}, 
-                            {naziv: 'artikal33'}
-                            ],
-                        restoranIzKogJePoruceno:'restoran1cekanje',
-                        datumivreme: 'datumivreme13',
-                        cena: '2030',
-                        kupac: 'Marko Markovic3cekanje',
-                        Status: 'Ceka dostavljaca3cekanje',
-                    },
-            ],
-            
-        porudzbine:[],
-        nedostavljenePorudzbine:[],
-        porudzbineCekanju:[],
+            username: '',
+            porudzbine:[],
+            nedostavljenePorudzbine:[],
+            porudzbineCekanju:[],
         }
     },
 }

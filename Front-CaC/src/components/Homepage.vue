@@ -118,6 +118,7 @@
                 </div>
             </div>
 
+
             <div v-show="isManager" class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/ordersManager" class="nav-link"
@@ -205,7 +206,7 @@ export default {
             this.isCustomer=true;
             this.role='customer';
         }
-        if(temp.role==='deliveryman')
+        if(temp.role==='delivery_man')
         {
             this.isDeliveryMan=true;
             this.role='deliveryman';
