@@ -123,6 +123,9 @@ class DataService{
     addOrder(order){
         return axios.post(`${API_URL}/orders/`, order);
     }
+    getOrderById(id){
+        return axios.get(`${API_URL}/orders/byOrderId/${id}`);
+    }
 
     //porudzbine kupac
     getSvojePorudzbine(username){
@@ -142,19 +145,26 @@ class DataService{
         return axios.get(`${API_URL}/orders/noDeliveryMan`);
     }
     getSvojeNedostavljenePorudzbine(id){
-        return axios.get(`${API_URL}/orders/${id}`);
+        return axios.get(`${API_URL}/orders/notYetDelivered/${id}`);
     }
     getZaduzenePorudzbine(id){
         return axios.get(`${API_URL}/orders/deliveryMan/${id}`);
     }
 
     searchPorudzbine(searchedQuery){
-        console.log(`${API_URL}/ads/search${searchedQuery}`);
-        return axios.get(`${API_URL}/ads/search${searchedQuery}`);
+        return axios.get(`${API_URL}/orders/filtered/${searchedQuery}`);
     }
 
     getAllPorudzbine(){
         return axios.get(`${API_URL}/ads/img`);
+    }
+
+    cancelOrder(orderId){
+        return axios.put(`${API_URL}/orders/cancel/${orderId}`);
+    }
+
+    takeOrder(order){
+        return axios.put(`${API_URL}/orders/`, order);
     }
 }
 

@@ -4,52 +4,89 @@
             <div class="container" id='page-title'>
                 <h1 style="margin-top:10px;"><span id='titleEffect'>Pregled porudzbina</span></h1>
                 <hr style='background:#35424a;height:1px;'>
-
                 <div class='container ' id='search'>
                 <nav class="navbar navbar-light bg-light justify-content-between">
-                    <a style='font-weight:bold;margin-top:10px;color:#35424a;' class="navbar-brand">Search</a>
-                    <form class="form-inline">
-                        <div style='display:inline;'>
-                            <div style="margin-top:20px" v-if='messages.errorDates' class="alert alert-danger" v-html="messages.errorDates"></div> 
-                            <div id='first-row'  class="row">
-                                <!-- <span class="col-xl-2 col-md-6 mb-3 marg-top"> -->
-                                    <button style='margin-left:10px;margin-right:500px;' class='btn btn-outline-primary btn-clear' v-on:click="resetFilter()">Reset all</button>
-                                <!-- </span> -->
-
+                    <a class="navbar-brand">Pretraga porudzbina</a>
+                    <form class="form-inline">     
+                        <div style='display:inline;' id="advanced_search">
+                            <div id='second-row' class="row"  style="margin-top:5px;">
                                 
-                                <!-- <span class="col-xl-2 col-md-6 marg-right"> -->
-                                <span class="span_search">Od</span>
-                                <vuejsDatepicker  placeholder="Select Start Date"
-                                    v-model=" searchedPorudzbine.od" :highlighted=" searchedPorudzbine" :disabled-dates="disabledDates">
-                                </vuejsDatepicker>
-                                <!-- </span> -->
-                                <!-- <span class="col-xl-2 col-md-6 marg-right" > -->
+                                <div class="input-group">
+                                    <input class="form-control mr-sm-2" type="text" placeholder="Naziv restorana" aria-label="Search" v-model="searchedPorudzbine.nazivRestorana">
+                                    
+                                    <input class="form-control mr-sm-2" type="number" min="0" placeholder="min cena" aria-label="Search" v-model="searchedPorudzbine.cenaOd">
+                                    <span style="padding-right:6px;" class="span_search"> - </span>
+                                    <input class="form-control mr-sm-2" type="number" min="0" placeholder="max cena" aria-label="Search" v-model="searchedPorudzbine.cenaDo">
+                                
+                                    <span class="span_search">Od</span>
+                                    <vuejsDatepicker style="font-size:20px;"  placeholder="Pocetni datum..."
+                                        v-model="selectedDate1" :highlighted=" searchedPorudzbine" :disabled-dates="disabledDates">
+                                    </vuejsDatepicker>
+                                    <span class="span_search">Do</span>
+                                    <vuejsDatepicker style="font-size:20px;"  placeholder="Krajnji datum..."
+                                        v-model="selectedDate2" :highlighted="searchedPorudzbine" :disabled-dates="disabledDates">
+                                    </vuejsDatepicker>
+                                </div>
                                 
                                 
-                                <span class="span_search">Do</span>
-                                <vuejsDatepicker  placeholder="Select End Date"
-                                    v-model="searchedPorudzbine.do" :highlighted="searchedPorudzbine" :disabled-dates="disabledDates">
-                                </vuejsDatepicker>
-                                <!-- </span> -->
-
-                                <span style='margin-left:50%;margin-bottom:5%;'>
-                                <span class="span_search">Cena</span>
-                                <input class="form-control mr-sm-2" type="text" placeholder="min cena" aria-label="Search" v-model="searchedPorudzbine.cenaMin">
-                                <span style="padding-right:6px;" class="span_search"> - </span>
-                                <input class="form-control mr-sm-2" type="text" placeholder="max cena" aria-label="Search" v-model="searchedPorudzbine.cenaMax">
+                            </div><!--/second_row-->
+                            <br>
+                            <div class="button-group">
+                                <span class="col-xl-2 col-md-6 mb-1">
+                                    <button style='margin-right:5px;' class='btn btn-outline-primary my-2 my-sm-0' v-on:click="resetFilter()">Reset all</button>
+                                </span> 
+                                <span class="col-xl-3 col-md-6 mb-2"> 
+                                    <button style="margin-left: 5px;" class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click.prevent='search()'>Search</button>
                                 </span>
-
-                                <span class="col-xl-2 col-md-6 mb-3 marg-top" >
-                                <button style="margin-left:90px;margin-top:150px" class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click.prevent='searchPorudzbine()'>Search</button>
-                            </span>
-                            <span id='searcIcon' class="col-xl-1 marg-top" style='margin-left:45px;'>
-                                <img v-on:click='isSearch = !isSearch' src='../assets/searchIcon1.png' style="display:inline;">
-                            </span>
-                         </div>
-                        </div>
-                </form>
-            </nav>
+                            </div>
+                            
+                        </div><!--/advanced_search-->
+                        <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
+                        <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>  
+                    </form>
+                </nav>
             </div>
+                <div style="margin-top:30px;" class="container" id='main'>
+            <div style="margin-bottom:30px;">
+                <span class="span_search">Filtriranje po tipu restorana</span>
+                <input v-model="filterInput">
+                <span class="span_search">Filtriranje po statusu porudzbine</span>
+                <input v-model="filterStatus">
+            </div>
+            
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th @click="sort('nazivRestorana')" class="arrow">Naziv
+                            <img v-if='currentSortDir == "asc" && currentSort== "nazivRestorana"' src='../assets/up-arrow1.1.png'>
+                            <img v-if='currentSortDir == "desc" && currentSort== "nazivRestorana" ' src='../assets/down-arrow1.1.png'>
+                        </th>
+                        <th>Tip</th>
+                        <th @click="sort('datumPorudzbine')" class="arrow">Datum 
+                            <img v-if='currentSortDir == "asc" && currentSort== "datumPorudzbine"' src='../assets/up-arrow1.1.png'>
+                            <img v-if='currentSortDir == "desc" && currentSort== "datumPorudzbine" ' src='../assets/down-arrow1.1.png'>
+                        </th>
+                        <th @click="sort('cenaPorudzbine')" class="arrow"> Cena
+                            <img v-if='currentSortDir == "asc" && currentSort== "cenaPorudzbine"' src='../assets/up-arrow1.1.png'>
+                            <img v-if='currentSortDir == "desc" && currentSort== "cenaPorudzbine" ' src='../assets/down-arrow1.1.png'>
+                        </th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- <tr v-bind:key='rst.name' v-for="rst in sortPorudzbine">
+                        <td>{{rst.name}}</td>
+                        <td>{{rst.type}}</td>
+                        <td>{{rst.datum}}</td>
+                        <td>{{rst.cena}}</td>
+                        
+                        
+                    </tr> -->
+                </tbody>
+                
+            </table>
+        </div>
             </div>
             <div class="container" style="margin-bottom:100px;max-height:300px; overflow:auto;">
                 <h2>Pregled svih svojih porudzbina</h2>
@@ -79,13 +116,20 @@
                     <div>
                     <!-- if we are 3 cards wide start a new row -->
                         <div class="row">
-                            <div class="col-md-4" v-bind:key="tempPorudzbina.id" v-for="tempPorudzbina in nedostavljenePorudzbine">
+                            <div class="col-md-4" v-bind:key="tempPorudzbina.idPorudzbine" v-for="tempPorudzbina in nedostavljenePorudzbine">
                                 <div style="margin-bottom:30px;" class="card h-100">
                                     <!-- <img class="card-img-top" :src="product.thumbnailUrl" alt="card image collar"> -->
                                     <div class="card-body">
-                                        <h5 class="card-title">Porudzbina ID: {{tempPorudzbina.id}}</h5>
-                                        <p class="card-text">cena: {{tempPorudzbina.cena}}</p>
-                                        <button v-on:click="orderDetails(tempPorudzbina.id)" class="btn btn-primary">Detalji</button>
+                                        <div style="height:150px;overflow-y: scroll;">
+                                            <h5 class="card-title">Porudzbina ID: {{tempPorudzbina.idPorudzbine}}</h5>
+                                            <p class="card-text">Ukupna cena: {{tempPorudzbina.cena}}</p>
+                                            <!-- <button v-on:click="orderDetails(tempPorudzbina.id)" class="btn btn-primary">Detalji</button> -->
+                                            <ul>
+                                                <li  v-bind:key="index" v-for="(tempArtikal, index) in tempPorudzbina.listaNarucenihArtikala">{{tempArtikal.nazivArtikla}}</li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <button v-show="tempPorudzbina.statusPorudzbine !== 'otkazana'" v-on:click="cancelOrder(tempPorudzbina.idPorudzbine)" class="btn btn-primary">Odustani</button>
                                         <!-- <button v-show="isOwner" v-on:click="removeEntity(tempVikendica.id)" class="btn btn-danger">Ukloni</button> -->
                                     </div>
                                 </div>
@@ -123,20 +167,30 @@ export default{
         }
         
     },
-    computed:{
-        
+     computed:{
+        sortPorudzbine:function(){
+            return this.porudzbine.filter(this.filterByType).filter(this.filterByStatus).sort(this.sortiraj);
+        }
     },
     methods:{
+        cancelOrder(orderId){
+            dataService.cancelOrder(orderId).then(response => {
+                console.log('uspesno otkazan narudzbina id-a: ' + response.data.idNarudzbine);
+
+            }).catch(error => {
+                console.log(error.response);
+            });
+        },
         entityDetails(tempId){
             this.$router.push(`/order/${tempId}`);
         },
         resetFilter:function(){
-            this.searchedPorudzbine.od =  null;
-            this.searchedPorudzbine.do =  null;
-            this.searchedPorudzbine.cenaMin =  null;
-            this.searchedPorudzbine.cenaMax =  null;
-            // this.searchedCar.markaAutId =  null;
-            // this.searchedCar.modelAutId =  null;
+            this.searchedPorudzbine.datumOd =  null;
+            this.searchedPorudzbine.datumDo =  null;
+            this.searchedPorudzbine.cenaOd =  null;
+            this.searchedPorudzbine.cenaDo =  null;
+            this.searchedPorudzbine.nazivRestorana = null;
+            
 
             this.getAllPorudzbine();
         },
@@ -146,66 +200,126 @@ export default{
                 console.log(JSON.stringify(this.porudzbinee));
             });
         
-    },
-    searchPorudzbine() {     
+        },
+        sortiraj(){
+            if(this.currentSort == 'nazivRestorana'){
+                if(this.currentSortDir == 'asc'){
+                    return this.porudzbine.sort((a, b) => (a.name > b.name) ? 1 : -1)
+                }
+                else{
+                    return this.porudzbine.sort((a, b) => (a.name < b.name) ? 1 : -1)
+                }
+            }
+            if(this.currentSort == 'cenaPorudzbine'){
+                if(this.currentSortDir == 'asc'){
+                    return this.porudzbine.sort((a, b) => (a.ocena > b.ocena) ? 1 : -1)
+                }
+                else{
+                    return this.porudzbine.sort((a, b) => (a.ocena < b.ocena) ? 1 : -1)
+                }
+            }
+            if(this.currentSort == 'datumPorudzbine'){
+                if(this.currentSortDir == 'asc'){
+                    return this.porudzbine.sort((a, b) => (a.lokacija > b.lokacija) ? 1 : -1)
+                }
+                else{
+                    return this.porudzbine.sort((a, b) => (a.lokacija < b.lokacija) ? 1 : -1)
+                }
+            }
+        },
+    
+        searchPorudzbine() {     
                     
-            if (this.searchedPorudzbine.od == null) {
-                this.messages.errorDates = `<h4>Morate odabrati početni termin porudzbine!</h4>`;
-                setTimeout(() => this.messages.errorDates = '', 5000);
-            }
-            else if (this.searchedPorudzbine.do == null) {
-                this.messages.errorDates = `<h4>Morate odabrati krajnji termin porudzbine!</h4>`;
-                setTimeout(() => this.messages.errorDates = '', 5000);
-            }
-            else{
-                // U slucaju da korisnik pritisne ResetAll Uklonio bi od i do iz this.searchedCar
-                // Pa ako u tom momentu odluci da doda oglas u korpu prosledio bi prazne datume... 
-                // Zato ih ovde cuvamo u odabraniDatum, da i nakon reseta budu dodati oglasi za zadnje unet interval.
-                this.odabraniDatum.od = this.searchedPorudzbine.od;
-                this.odabraniDatum.do = this.searchedPorudzbine.do;
+            // if (this.searchedPorudzbine.datumOd == null) {
+            //     this.messages.errorDates = `<h4>Morate odabrati početni termin porudzbine!</h4>`;
+            //     setTimeout(() => this.messages.errorDates = '', 5000);
+            // }
+            // else if (this.searchedPorudzbine.datumDo == null) {
+            //     this.messages.errorDates = `<h4>Morate odabrati krajnji termin porudzbine!</h4>`;
+            //     setTimeout(() => this.messages.errorDates = '', 5000);
+            // }
                 //Kada se jednom izvrsi pretraga, bila ona uspesna ili neuspesna uklanja se default prikaz stranice....
                 this.isAlreadySearched = true;
-  
-                if (!!this.searchedPorudzbine.od) {
-                    let od_datuma = this.searchedPorudzbine.od.getTime();
-                    this.searchedQuery += 'od=' + od_datuma;
+                let searchedQuery = 'datumOd:';
+                if (!!this.searchedPorudzbine.datumOd) {
+                    let od_datuma = this.searchedPorudzbine.datumOd;
+                    searchedQuery += od_datuma;
                 }
-                if (!!this.searchedPorudzbine.do) {
-                    let do_datuma = this.searchedPorudzbine.do.getTime();
-                    this.searchedQuery += '&do=' + do_datuma;
+                else{
+                    searchedQuery += "_";
                 }
-                if (!!this.searchedPorudzbine.cenaMin) {
-                    this.searchedQuery += '&cenaMin=' + this.searchedPorudzbine.cenaMin;
+                searchedQuery += "&datumDo:";
+                if (!!this.searchedPorudzbine.datumDo) {
+                    let do_datuma = this.searchedPorudzbine.datumDo;
+                    searchedQuery += do_datuma;
                 }
-                if (!!this.searchedPorudzbine.cenaMax) {
-                    this.searchedQuery += '&cenaMax=' + this.searchedPorudzbine.cenaMax;
+                else{
+                    searchedQuery += "_";
                 }
-                // if (!!this.searchedCar.markaAutId) {
-                //     this.searchedQuery += '&markaAut=' + this.searchedCar.markaAutId;
-                // }
-                // if (!!this.searchedCar.modelAutId) {
-                //     this.searchedQuery += '&modelAut=' + this.searchedCar.modelAutId;
-                // }
-               
-                
-                dataService.searchPorudzbine(this.searchedQuery).then(response => {
-                    // this.porudzbinee = response.data;
-                    // this.searchedQuery = '?';
+                searchedQuery += "&cenaOd:";
+                if (!!this.searchedPorudzbine.cenaOd) {
+                    searchedQuery += this.searchedPorudzbine.cenaOd;
+                }
+                else{
+                    searchedQuery += "_";
+                }
+                searchedQuery += "&cenaDo:";
+                if (!!this.searchedPorudzbine.cenaDo) {
+                    searchedQuery += this.searchedPorudzbine.cenaDo;
+                }
+                else{
+                    searchedQuery += "_";
+                }
+                searchedQuery += "&nazivRestorana:";
+                if (!this.searchedPorudzbine.nazivRestorana == '') {
+                    searchedQuery += this.searchedPorudzbine.nazivRestorana;
+                }
+                else{
+                    searchedQuery += "_";
+                }
+                console.log('Zahtev nakon formiranja: ' + searchedQuery);
+                dataService.searchPorudzbine(searchedQuery).then(response => {
+                   console.log('stigao filtrirane narudzbine');
+                   this.porudzbine = response.data;
+
                 }).catch(error =>{
-                    // if (error.response.status === 500 || error.response.status === 404) {
-                    //     this.messages.errorResponse = `<h4>Imali smo nekih problema na serveru, molimo Vas pokusajte ponovo kasnije!</h4>`;
-                    //     setTimeout(() => this.messages.errorResponse = '', 5000);
-                    // }
-                    console.log("dwad");
-                    this.searchedQuery = '?';
+                    console.log(error.response);
                 });
-            }
+            
             
         },
-        
+        filterByType:function(rst){
+            if(this.filterInput.length != 0){
+                return  (rst.name.toLowerCase().indexOf(this.filterInput.toLowerCase()) > -1);
+            }
+            return true;
+        },
+         filterByStatus:function(rst){
+            if(this.filterStatus.length != 0){
+                return (rst.name.toLowerCase().indexOf(this.filterInput.toLowerCase()) > -1);
+            }
+            return true;
+            
+        },
+    },
+    
+   
+    watch:{
+        'selectedDate1':function(){
+            console.log('Datum pre obrade: ' + this.selectedDate1);
+            this.searchedPorudzbine.datumOd = this.selectedDate1.toString().substring(4, 15);
+            console.log("Datum posle obrade: " + this.searchedPorudzbine.datumOd)
+        },
+        'selectedDate2':function(){
+            console.log('Datum pre obrade: ' + this.selectedDate2);
+            this.searchedPorudzbine.datumDo = this.selectedDate2.toString().substring(4, 15);
+            console.log("Datum posle obrade: " + this.searchedPorudzbine.datumDo)
+        }
     },
     data() {
         return{
+            selectedDate1: '',
+            selectedDate2: '',
             testPorudzbina: [
                     {
                         id:'223232',
@@ -234,6 +348,19 @@ export default{
                         Status: 'Ceka dostavljaca3',
                     },
             ],
+
+            currentSort: 'cenaPorudzbine',
+            currentSortDir: 'asc',
+            filterInput:'',
+            // displayedPorudzbine:[],
+            filterStatus:'',
+
+            sort(s){
+                if(s == this.currentSort){
+                    this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc';
+                }
+                this.currentSort = s;
+            },
 
             testNedostavljenihPorudzbina: [
                     {
@@ -273,11 +400,14 @@ export default{
             },
             searchedPorudzbine: {
                 //Prilikom povezivanja preimenovati da odgovara nazivima atributa sa beka
-                od: null,
-                do: null,
-                cenaMin:null,
-                cenaMax:null,
+                datumOd: null,
+                datumDo: null,
+                cenaOd:null,
+                cenaDo:null,
+                nazivRestorana: '',
             },
+            //pomocna varijabla za prikaz rezultata pretrage
+            searchResults: [],
              dates: {
                 from: null,
                 to: null

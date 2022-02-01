@@ -146,7 +146,7 @@ export default[
         component:PorudzbineManager
     },
     {
-        path:'/order',
+        path:'/order/:id',
         name:'Porudzbina',
         component:Porudzbina
     }

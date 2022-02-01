@@ -5,32 +5,33 @@
                 <h1 style="margin-top:10px;"><span id='titleEffect'>Pregled porudzbine</span></h1>
                 <hr style='background:#35424a;height:1px;'>
             </div>
-            <div class="container">
+            <div class="container" style="margin-bottom:200px;">
                 <form>
                     <ul id="services" class="list-group">
                     <!-- Osoba -->
                         <li class="list-group-item" >
                             <h5 class="header5">ID porudzbine:</h5>
-                            <h4>{{porudzbina.id}}</h4>
+                            <h4>{{porudzbina.idPorudzbine}}</h4>
                         </li>
                         <li class="list-group-item" >
                             <h5 class="header5">Artikli koji su poruceni:</h5>
-                            <div class="col-md-4" v-for="porudzbinaa in testPorudzbina.poruceniArtikli" :key="porudzbinaa.naziv">
+                            <div class="col-md-4" v-for="tempArtikal in porudzbina.listaNarucenihArtikala" :key="tempArtikal.naziv">
                                 <div style="margin-bottom:10px;" class="card h-100">
                                     <!-- <img class="card-img-top" :src="product.thumbnailUrl" alt="card image collar"> -->
                                     <div class="card-body">
-                                        <p class="card-text">{{porudzbinaa.naziv}}</p>
+                                        <p class="card-text">{{tempArtikal.nazivArtikla}}</p>
+                                        <p class="card-text">{{tempArtikal.brojKomada}}</p>
                                     </div>
                                 </div>
                             </div>
                         </li>
                         <li class="list-group-item">
                             <h5 class="header5">Restoran iz kojeg je poruceno:</h5>
-                            <h4>{{porudzbina.restoranIzKogJePoruceno}}</h4>
+                            <h4>{{porudzbina.izKogRestorana}}</h4>
                         </li>
                         <li class="list-group-item" >
                             <h5 class="header5">Datum i vreme porudzbine:</h5>
-                            <h4>{{porudzbina.datumivreme}}</h4>
+                            <h4>{{porudzbina.datumIVremePorudzbine}}</h4>
                         </li>
                          <li class="list-group-item" >
                             <h5 class="header5">Cena:</h5>
@@ -38,11 +39,11 @@
                         </li>
                          <li class="list-group-item" >
                             <h5 class="header5">Kupac:</h5>
-                            <h4>{{porudzbina.kupac}}</h4>
+                            <h4>{{porudzbina.idKupca}}</h4>
                         </li>
                          <li class="list-group-item" >
                             <h5 class="header5">Status porudzbine:</h5>
-                            <h4>{{porudzbina.status}}</h4>
+                            <h4>{{porudzbina.statusPorudzbine}}</h4>
                         </li>
 
                     </ul>
@@ -60,9 +61,9 @@ import dataService from '../services/DataService'
 export default{
     created(){
         try{
-            this.dataService.getUser(this.$route.params.id).then(response => {
-            console.log("stigli podaci o profilu vlasnika vikendice");
-            this.profile = response.data;
+            dataService.getOrderById(this.$route.params.id).then(response => {
+                console.log("stigli podaci o porudzbini");
+                this.porudzbina = response.data;
             });
         }catch(error){
             console.log("test1");
@@ -93,6 +94,7 @@ export default{
     },
     data() {
         return{
+            porudzbina: null,
             testPorudzbina: {
                         id: '2323',
                         poruceniArtikli: [
@@ -106,15 +108,6 @@ export default{
                         kupac: 'Marko Markovic',
                         Status: 'U obradi',
                     },
-            porudzbina:{
-                        id: '',
-                        poruceniArtikli: [],
-                        restoranIzKogJePoruceno:'',
-                        datumivreme: '',
-                        cena: '',
-                        kupac: '',
-                        Status: '',
-            }
         }
     },
 }

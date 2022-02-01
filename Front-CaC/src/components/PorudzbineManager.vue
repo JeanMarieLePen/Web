@@ -11,13 +11,14 @@
                     <div>
                     <!-- if we are 3 cards wide start a new row -->
                         <div class="row">
-                            <div class="col-md-2" v-bind:key="tempPorudzbina.id" v-for="tempPorudzbina in porudzbine">
+                            <div class="col-md-2" v-bind:key="tempPorudzbina.idPorudzbine" v-for="tempPorudzbina in porudzbine">
                                 <div style="margin-bottom:30px;" class="card h-100">
                                     <!-- <img class="card-img-top" :src="product.thumbnailUrl" alt="card image collar"> -->
                                     <div style="" class="card-body">
-                                        <h5 class="card-title">Porudzbina ID: {{tempPorudzbina.id}}</h5>
-                                        <p class="card-text">cena: {{tempPorudzbina.cena}}</p>
-                                        <button v-on:click="orderDetails(tempPorudzbina.id)" class="btn btn-primary">Detalji</button>
+                                        <h5 class="card-title">Porudzbina ID: {{tempPorudzbina.idPorudzbine}}</h5>
+                                        <p class="card-text">Cena: {{tempPorudzbina.cena}}</p>
+                                        <p class="card-text">Kupac: {{tempPorudzbina.idKupca}}</p>
+                                        <button v-on:click="entityDetails(tempPorudzbina.idPorudzbine)" class="btn btn-primary">Detalji</button>
                                         <!-- <button v-show="isOwner" v-on:click="removeEntity(tempVikendica.id)" class="btn btn-danger">Ukloni</button> -->
                                     </div>
                                 </div>
@@ -36,27 +37,42 @@ import dataService from '../services/DataService'
 
 export default{
     created(){
-        try{
-            this.dataService.getSvePorudzbine(this.$route.params.id).then(response => {
-            console.log("stigli podaci o porudzbinama za svoj restoran");
-            this.porudzbine = response.data;
-            });
-        }catch(error){
-            // this.profile = this.profileTemp;
-            this.porudzbine = this.testPorudzbina;
-        }
+        let tempUsername = JSON.parse(localStorage.getItem('token')).username;
+        this.fetchRestaurant(tempUsername);
+        // setTimeout(() => this.fetchAllOrders(), 300)
+        // this.fetchAllOrders();
         
     },
     computed:{
         
     },
     methods:{
+        fetchAllOrders(){
+            dataService.getSvePorudzbine(this.restaurant.name).then(response => {
+                console.log("stigli podaci o porudzbinama za svoj restoran");
+                this.porudzbine = response.data;
+                
+            }).catch(error => {
+                console.log(error.response);
+            });
+        },
+        fetchRestaurant(username){
+            dataService.getRestaurantByManager(username).then(response => {
+                console.log('naziv restorana je: ' + response.data.name);
+                this.restaurant = response.data;
+                this.fetchAllOrders();
+            }).catch(error => {
+                console.log(error.response);
+            });
+        },
         entityDetails(tempId){
             this.$router.push(`/order/${tempId}`);
         },
     },
     data() {
         return{
+            //pomocna varijabla za dobavljanje podataka o restoranu
+            restaurant:null,
             testPorudzbina: [
                     {
                         id:'223232',
