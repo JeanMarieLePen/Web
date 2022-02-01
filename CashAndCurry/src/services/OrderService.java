@@ -37,6 +37,24 @@ public class OrderService {
 		}
 	}
 	
+	//metoda koja odobrava narudzbinu sa ID-om orderId za preuzimanje dostavljacu
+	@GET
+	@Path("/approveById/{orderId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Order approveById(@PathParam("orderId") int orderId) {
+		OrderDAO dao = (OrderDAO)ctx.getAttribute("orderDAO");
+		return dao.approveById(orderId);
+	}
+	
+	//metoda koja odobrava narudzbinu sa ID-om orderId za pripremu u restoranu
+		@GET
+		@Path("/acceptById/{orderId}")
+		@Produces(MediaType.APPLICATION_JSON)
+		public Order acceptById(@PathParam("orderId") int orderId) {
+			OrderDAO dao = (OrderDAO)ctx.getAttribute("orderDAO");
+			return dao.acceptById(orderId);
+		}
+	
 	//metoda koja vraca sve narudzbine koje je dostavljac preuzeo a nije ih dostavio
 	@GET
 	@Path("/notYetDelivered/{username}")

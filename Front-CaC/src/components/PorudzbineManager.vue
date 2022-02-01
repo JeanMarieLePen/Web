@@ -19,6 +19,11 @@
                                         <p class="card-text">Cena: {{tempPorudzbina.cena}}</p>
                                         <p class="card-text">Kupac: {{tempPorudzbina.idKupca}}</p>
                                         <button v-on:click="entityDetails(tempPorudzbina.idPorudzbine)" class="btn btn-primary">Detalji</button>
+                                       
+                                        <button v-show="tempPorudzbina.statusPorudzbine == 'uPripremi'" style="margin-top:10px;" v-on:click="approveOrder(tempPorudzbina)" class="btn btn-warning">Odobri</button>
+                                        <button v-show="tempPorudzbina.statusPorudzbine == 'obrada'" style="margin-top:10px;" v-on:click="acceptOrder(tempPorudzbina)" class="btn btn-success">Prihvati</button>
+                                        <button v-show="tempPorudzbina.statusPorudzbine == 'zahtevZaDostavu'" style="margin-top:10px;" v-on:click="approveDeliveryMan(tempPorudzbina)" class="btn btn-success">Dodeli</button>
+                                        <p class="card-text">Status: {{tempPorudzbina.statusPorudzbine}}</p>
                                         <!-- <button v-show="isOwner" v-on:click="removeEntity(tempVikendica.id)" class="btn btn-danger">Ukloni</button> -->
                                     </div>
                                 </div>
@@ -47,6 +52,31 @@ export default{
         
     },
     methods:{
+        approveDeliveryMan(order){
+            order.statusPorudzbine = 'uTransportu';
+            dataService.approveDeliveryMan(order).then(response => {
+                console.log('prihvacen dostavljac');
+                tempPorudzbina.statusPorudzbine = response.data.statusPorudzbine;
+            }).catch(error => {
+                console.log(error.response);
+            });
+        },
+        acceptOrder(order){
+            dataService.acceptOrder(order.idPorudzbine).then(response => {
+                console.log('prihvacena porudzbina id-a: ' + order.idPorudzbine);
+                tempPorudzbina.statusPorudzbine = response.data.statusPorudzbine;
+            }).catch(error => {
+                console.log(error.response);
+            });
+        },
+        approveOrder(tempPorudzbina){
+            dataService.approveOrder(tempPorudzbina.idPorudzbine).then(response => {
+                console.log('odobrena porudzbina id-a: ' + tempPorudzbina.idPorudzbine);
+                tempPorudzbina.statusPorudzbine = response.data.statusPorudzbine;
+            }).catch(error => {
+                console.log(error.response);
+            });
+        },
         fetchAllOrders(){
             dataService.getSvePorudzbine(this.restaurant.name).then(response => {
                 console.log("stigli podaci o porudzbinama za svoj restoran");

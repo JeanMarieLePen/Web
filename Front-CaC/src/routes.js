@@ -25,6 +25,8 @@ import PorudzbineKupac from './components/PorudzbineKupac'
 import PorudzbineManager from './components/PorudzbineManager'
 import PorudzbineDeliveryMan from './components/PorudzbineDeliveryMan'
 
+import ModeracijaKupaca from './components/ModeracijaKupaca'
+
 
 export default[
     {
@@ -149,6 +151,11 @@ export default[
         path:'/order/:id',
         name:'Porudzbina',
         component:Porudzbina
+    },
+    {
+        path:'/moderateCustomers',
+        name:'ModeracijaKupaca',
+        component:ModeracijaKupaca
     }
 
 ]

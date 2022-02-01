@@ -10,8 +10,8 @@
                 <br/>
                 <button style="border-radius: 20rem;" @click="addComment()">Add Comment</button>
             </div>
-            <div v-if="messages.successMsg" style="margin-left: 200px;" class="alert alert-success" v-html="messages.successMsg"></div>
-            <div v-if="messages.errorMsg" style="margin-left: 200px;" class="alert alert-danger" v-html="messages.errorMsg"></div>
+            <div v-if="messages.successResponse" style="margin-left: 200px;" class="alert alert-success" v-html="messages.successResponse"></div>
+            <div v-if="messages.errorResponse" style="margin-left: 200px;" class="alert alert-danger" v-html="messages.errorResponse"></div>
             <div style="overflow-y: scroll;margin-bottom:100px;">
                 <div  v-for="tempComment in komentari" v-bind:key="tempComment.id" class="comments-box">
                 <div>
@@ -78,19 +78,23 @@ export default {
         },
         addComment: function () {
             if (this.noviKomentar.tekstKomentara == '') {
-                this.messages.errorText = `<h4>Tekst komentara ne moze biti prazan!</h4>`;
-                setTimeout(() => this.messages.errorText = '', 3000);
+                this.messages.errorResponse = `<h4>Tekst komentara ne moze biti prazan!</h4>`;
+                setTimeout(() => this.messages.errorResponse = '', 3000);
+                
             }
             else{
 
                 console.log('na bek ide: ' + JSON.stringify(this.noviKomentar));
                 dataService.addComment(this.noviKomentar).then(response => {
+                    this.messages.successResponse = `<h4>Vas komentar je poslat na moderaciju.</h4>`;
+                    setTimeout(() => this.messages.successResponse = '', 3000);
                     console.log("dodat novi komentar");
+                    this.showEntity = false;
                 }).catch(error => {
                     console.log(error.response);
                 });
             }
-            this.showEntity = false;
+            
             // else{
             //     dataService.addComment()
             // }

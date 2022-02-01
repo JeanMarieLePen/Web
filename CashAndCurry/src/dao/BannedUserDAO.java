@@ -76,6 +76,15 @@ public class BannedUserDAO {
 		}
 		return false;
 	}
+
+	public Collection<BannedUser> getAllBanned() {
+		// TODO Auto-generated method stub
+		loadBannedUsers(contextPath);
+		if(this.bannedUsers.values().size() > 0) {
+			return this.bannedUsers.values();
+		}
+		return null;
+	}
 	
 	
 }

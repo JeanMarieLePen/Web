@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import model.BannedUser;
 import model.Customer;
 import model.Manager;
 
@@ -169,7 +170,27 @@ public class CustomerDAO {
 					result.add(c);
 				}
 			}
-			return result;
+			Map<String, BannedUser> bannedUsers = new HashMap<>();
+			try {
+				JsonReader reader = new JsonReader(new FileReader(contextPath + "/bannedUsers.json"));
+				Gson gson = new Gson();
+				BannedUser[] tempBannedUsers = gson.fromJson(reader, BannedUser[].class);
+				for(BannedUser bu : tempBannedUsers) {
+					bannedUsers.put(bu.getUsername(), bu);
+				}
+			}catch(Exception ex) {
+				ex.printStackTrace();
+			}
+			Collection<Customer> finalResult = new ArrayList<Customer>();
+			for(Customer c: result) {
+				if(!bannedUsers.containsKey(c.getUsername())) {
+					finalResult.add(c);
+				}else {
+					System.out.println("Korisnik: " + c.getUsername() + " je banovan.");
+				}
+			}
+			
+			return finalResult;
 		}
 		return null;
 	}

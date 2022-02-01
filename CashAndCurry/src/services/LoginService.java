@@ -20,6 +20,7 @@ import com.google.gson.stream.JsonReader;
 
 import dao.RestoranDAO;
 import model.Administrator;
+import model.BannedUser;
 import model.Customer;
 import model.DeliveryMan;
 import model.LoginUser;
@@ -57,6 +58,24 @@ public class LoginService {
 		Map<String, Customer> customers = new HashMap<>();
 		Map<String, Manager> managers = new HashMap<>();
 		Map<String, DeliveryMan> deliverymen = new HashMap<>();
+		
+		Map<String, BannedUser> bannedUsers = new HashMap<>();
+		
+		try {	
+			JsonReader reader = new JsonReader(new FileReader(contextPath + "bannedUsers.json"));
+			Gson gson = new Gson();
+			BannedUser[] tempBannedUsers = gson.fromJson(reader, BannedUser[].class);
+			for(BannedUser bu : tempBannedUsers) {
+				bannedUsers.put(bu.getUsername(), bu);
+			}
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		if(bannedUsers.containsKey(username)){
+			
+			return new LoginUser("banovan", "banovan");
+		}
 		
 		//potrazi u administratorima, ako nadjes prekini izvrsavanje metode
 		try {	

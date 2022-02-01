@@ -36,7 +36,7 @@
                                     <button style='margin-right:5px;' class='btn btn-outline-primary my-2 my-sm-0' v-on:click="resetFilter()">Reset all</button>
                                 </span> 
                                 <span class="col-xl-3 col-md-6 mb-2"> 
-                                    <button style="margin-left: 5px;" class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click.prevent='search()'>Search</button>
+                                    <button style="margin-left: 5px;" class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click.prevent='searchPorudzbine()'>Search</button>
                                 </span>
                             </div>
                             
@@ -46,7 +46,6 @@
                     </form>
                 </nav>
             </div>
-<<<<<<< HEAD
                 <!-- <div class='container ' id='search'>
                     <nav class="navbar navbar-light bg-light justify-content-between">
                         <a style='font-weight:bold;margin-top:10px;color:#35424a;' class="navbar-brand">Search</a>
@@ -86,7 +85,6 @@
                         </form>
                     </nav>
                 </div> -->
-=======
                 <div style="margin-top:30px;" class="container" id='main'>
             <div style="margin-bottom:30px;">
                 <span class="span_search">Filtriranje po tipu restorana</span>
@@ -128,7 +126,6 @@
                 
             </table>
         </div>
->>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
             </div>
             <div class="container" style="margin-bottom:100px;max-height:300px; overflow:auto;">
                 <h2>Pregled svih svojih porudzbina</h2>
@@ -171,7 +168,7 @@
                                             </ul>
                                         </div>
                                         
-                                        <button v-show="tempPorudzbina.statusPorudzbine !== 'otkazana'" v-on:click="cancelOrder(tempPorudzbina.idPorudzbine)" class="btn btn-primary">Odustani</button>
+                                        <button v-show="tempPorudzbina.statusPorudzbine =='obrada'" v-on:click="cancelOrder(tempPorudzbina.idPorudzbine)" class="btn btn-primary">Odustani</button>
                                         <!-- <button v-show="isOwner" v-on:click="removeEntity(tempVikendica.id)" class="btn btn-danger">Ukloni</button> -->
                                     </div>
                                 </div>
@@ -193,21 +190,8 @@ export default{
     created(){
         let tempUsername = JSON.parse(localStorage.getItem('token')).username;
         console.log('Username: ' + tempUsername)
-        try{
-            dataService.getSvojePorudzbine(tempUsername).then(response => {
-            console.log("stigli podaci o svojim porudzbinama");
-            this.porudzbine = response.data;
-            });
-            dataService.getNedostavljenePorudzbine(tempUsername).then(response => {
-            console.log("stigli podaci o nedostavljenim porudzbinama");
-            this.nedostavljenePorudzbine = response.data;
-            });
-        }catch(error){
-            // this.profile = this.profileTemp;
-            this.porudzbine = this.testPorudzbina;
-            this.nedostavljenePorudzbine = this.testNedostavljenihPorudzbina;
-        }
-        
+        this.getSveSvojePorudzbine(tempUsername);
+        this.getSveNedostavljenePorudzbine(tempUsername);
     },
      computed:{
         sortPorudzbine:function(){
@@ -215,9 +199,28 @@ export default{
         }
     },
     methods:{
+        getSveSvojePorudzbine(username){
+            dataService.getSvojePorudzbine(username).then(response => {
+            console.log("stigli podaci o svojim porudzbinama");
+            this.porudzbine = response.data;
+            }).catch(error =>{
+                console.log(error.response);
+            });
+        },
+        
+        getSveNedostavljenePorudzbine(username){
+            dataService.getNedostavljenePorudzbine(username).then(response => {
+            console.log("stigli podaci o nedostavljenim porudzbinama");
+            this.nedostavljenePorudzbine = response.data;
+            }).catch(error =>{
+                console.log(error.response);
+            });
+        },
+
         cancelOrder(orderId){
             dataService.cancelOrder(orderId).then(response => {
                 console.log('uspesno otkazan narudzbina id-a: ' + response.data.idNarudzbine);
+                
 
             }).catch(error => {
                 console.log(error.response);
@@ -232,23 +235,9 @@ export default{
             this.searchedPorudzbine.cenaOd =  null;
             this.searchedPorudzbine.cenaDo =  null;
             this.searchedPorudzbine.nazivRestorana = null;
-<<<<<<< HEAD
-=======
-            
->>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
-
-            this.getAllPorudzbine();
-        },
-        getAllPorudzbine:function(){
-            dataService.getAllPorudzbine().then(response => {
-                this.porudzbinee = response.data;
-                console.log(JSON.stringify(this.porudzbinee));
-            });
-        
-<<<<<<< HEAD
-    },
-    searchPorudzbine() {     
-=======
+            let tempUsername = JSON.parse(localStorage.getItem('token')).username;
+            console.log('Username: ' + tempUsername)
+            this.getSveNedostavljenePorudzbine(tempUsername);
         },
         sortiraj(){
             if(this.currentSort == 'nazivRestorana'){
@@ -278,7 +267,6 @@ export default{
         },
     
         searchPorudzbine() {     
->>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
                     
             // if (this.searchedPorudzbine.datumOd == null) {
             //     this.messages.errorDates = `<h4>Morate odabrati početni termin porudzbine!</h4>`;
@@ -294,7 +282,6 @@ export default{
                 if (!!this.searchedPorudzbine.datumOd) {
                     let od_datuma = this.searchedPorudzbine.datumOd;
                     searchedQuery += od_datuma;
-<<<<<<< HEAD
                 }
                 else{
                     searchedQuery += "_";
@@ -310,28 +297,21 @@ export default{
                 searchedQuery += "&cenaOd:";
                 if (!!this.searchedPorudzbine.cenaOd) {
                     searchedQuery += this.searchedPorudzbine.cenaOd;
-=======
->>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
                 }
                 else{
                     searchedQuery += "_";
                 }
-<<<<<<< HEAD
                 searchedQuery += "&cenaDo:";
                 if (!!this.searchedPorudzbine.cenaDo) {
                     searchedQuery += this.searchedPorudzbine.cenaDo;
-=======
                 searchedQuery += "&datumDo:";
                 if (!!this.searchedPorudzbine.datumDo) {
                     let do_datuma = this.searchedPorudzbine.datumDo;
                     searchedQuery += do_datuma;
->>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
                 }
                 else{
                     searchedQuery += "_";
                 }
-<<<<<<< HEAD
-=======
                 searchedQuery += "&cenaOd:";
                 if (!!this.searchedPorudzbine.cenaOd) {
                     searchedQuery += this.searchedPorudzbine.cenaOd;
@@ -346,7 +326,6 @@ export default{
                 else{
                     searchedQuery += "_";
                 }
->>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
                 searchedQuery += "&nazivRestorana:";
                 if (!this.searchedPorudzbine.nazivRestorana == '') {
                     searchedQuery += this.searchedPorudzbine.nazivRestorana;
@@ -357,17 +336,12 @@ export default{
                 console.log('Zahtev nakon formiranja: ' + searchedQuery);
                 dataService.searchPorudzbine(searchedQuery).then(response => {
                    console.log('stigao filtrirane narudzbine');
-<<<<<<< HEAD
-=======
                    this.porudzbine = response.data;
->>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
 
                 }).catch(error =>{
                     console.log(error.response);
                 });
-            
-<<<<<<< HEAD
-=======
+            }
             
         },
         filterByType:function(rst){
@@ -381,7 +355,6 @@ export default{
                 return (rst.name.toLowerCase().indexOf(this.filterInput.toLowerCase()) > -1);
             }
             return true;
->>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
             
         },
     },

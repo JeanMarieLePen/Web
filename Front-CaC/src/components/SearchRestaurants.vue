@@ -316,6 +316,13 @@ export default {
         getAllRestaurants(){
             dataService.getAllRestaurants().then(response => {
                 this.displayedRestaurants = response.data;
+                this.lokacije = [];
+                this.displayedRestaurants = response.data;
+                for(let i = 0; i < this.displayedRestaurants.length; i++){
+                    console.log('dodata lokacija')
+                    this.lokacije.push({position:{lat: this.displayedRestaurants[i].lokacija.xCoord, lng : this.displayedRestaurants[i].lokacija.yCoord}});
+                    
+                }
             })
         },
         filterByName:function(rst){

@@ -1,5 +1,7 @@
 package services;
 
+import java.util.Collection;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
@@ -30,6 +32,14 @@ public class BannedUserService {
 	    	String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("bannedUserDAO", new BannedUserDAO(contextPath));
 		}
+	}
+	
+	@GET
+	@Path("/getBanned/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<BannedUser> getAllBanned() {
+		BannedUserDAO dao = (BannedUserDAO)ctx.getAttribute("bannedUserDAO");
+		return dao.getAllBanned();
 	}
 	
 	@GET

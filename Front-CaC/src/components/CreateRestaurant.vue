@@ -72,7 +72,7 @@
                                                     </div>
                                                 </div>
                                             </div> -->
-                                            <select v-model="selectedManager" >
+                                            <select v-model="selectedManager"  style="padding:5px; width:100%;">
                                                 <option disabled value="">Odaberite slobodnog menadzera...</option>
                                                 <option v-bind:key="tempMenadzer.username" v-for="tempMenadzer in slobodniMenadzeri">{{tempMenadzer.username}}</option>
                                             </select>

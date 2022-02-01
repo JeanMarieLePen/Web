@@ -13,7 +13,7 @@
                 <div class="col-md-9 col-lg-8 mx-auto">
                 <h3 class="login-heading mb-4">Welcome back!</h3>
 
-                <div v-if='errorMessage' class="alert alert-danger" v-html="errorMessage"></div>
+                
                 <form>
                     <div class="form-label-group">
                     <input  v-model="username"  id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
@@ -28,6 +28,7 @@
                     <button type="button" class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" v-on:click='submition()'>
                         Sign in
                     </button>
+                    <div v-if='errorMessage' class="alert alert-danger" v-html="errorMessage"></div>
                 </form>
                 </div>
             </div>
@@ -75,9 +76,15 @@ export default {
                   console.log("Token koji se smesta u localstorage: " + JSON.stringify(this.token))
                   console.log(this.token.role)
                   if(this.token.role !== null){
+                    if(this.token.role == "banovan"){
+                      this.errorMessage = `<h4>Ovaj korisnicki nalog je suspendovan zbog krsenja pravila poslovanja.</h4>`;
+                      setTimeout(()=>this.errorMessage='', 5000);
+                    }else{
                       localStorage.setItem('token', JSON.stringify(this.token))
                       bus.$emit('loggedIn',true);
                       this.$router.push('/home'); 
+                    }
+                      
                   }else{
                     this.errorMessage = `<h4>Username ili password su pogresno uneti!</h4>`;
                     setTimeout(()=>this.errorMessage='',3000);

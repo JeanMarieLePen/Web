@@ -61,7 +61,7 @@ export default {
                 datumIVremePorudzbine : '',
                 cena: '',
                 idKupca : '',
-                statusPorudzbine : 'cekaDostavljaca',
+                statusPorudzbine : 'obrada',
                 idDeliveryMana : '',
             }
         }
@@ -103,7 +103,7 @@ export default {
                 //treba izracunati cenu
                 this.order.cena = 0;
                 this.order.idKupca = tempUsername;
-                this.order.statusPorudzbine = 'cekaDostavljaca';
+                this.order.statusPorudzbine = 'obrada';
                 this.order.idDeliveryMana = "";
                 console.log('Broj artikala: ' + tempSadrzajKorpe[i].listOfProducts.length);
                 

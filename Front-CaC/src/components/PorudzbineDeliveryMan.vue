@@ -190,7 +190,7 @@ export default{
     methods:{
         takeOrder(order, index){
             order.idDeliveryMana = this.username;
-            order.statusPorudzbine = 'uTransportu';
+            order.statusPorudzbine = 'zahtevZaDostavu';
             dataService.takeOrder(order).then(response => {
                 console.log('preuzeli ste narudzbinu');
                 this.porudzbineCekanju.splice(index, 1);
@@ -214,8 +214,6 @@ export default{
             }
             });
         },
-<<<<<<< HEAD
-=======
         resetFilter:function(){
             this.searchedPorudzbine.datumOd =  null;
             this.searchedPorudzbine.datumDo =  null;
@@ -253,7 +251,6 @@ export default{
                 }
             }
         },
->>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
         getSveCekanje(){
             dataService.getSveCekanje().then(response => {
             console.log("stigli podaci o porudzbinama koje cekaju dostavljaca");
@@ -353,8 +350,6 @@ export default{
             porudzbine:[],
             nedostavljenePorudzbine:[],
             porudzbineCekanju:[],
-<<<<<<< HEAD
-=======
 
              currentSort: 'cenaPorudzbine',
             currentSortDir: 'asc',
@@ -383,7 +378,6 @@ export default{
                 errorResponse: '',
                 successResponse: '',
             },
->>>>>>> e1b770437dd17022ac1d3e282a27998ea6a5915d
         }
     },
 }

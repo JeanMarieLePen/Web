@@ -103,7 +103,7 @@ public class OrderDAO {
 			Gson gson = new Gson();
 			Collection<Order> tmp = this.orders.values();
 			String fileInput = gson.toJson(tmp);
-			
+			//upis narudzbine
 			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "orders.json", false))){
 				System.out.println("Upis nove porudzbine u bazu[fajl: orders.json].");
 				bw.append(fileInput);
@@ -112,6 +112,44 @@ public class OrderDAO {
 			}catch(IOException e) {
 				e.printStackTrace();
 			}
+			
+			
+			//upis broja bodova za korisnika u bazu
+			Map<String, Customer> customers = new HashMap<>();
+			try {
+				JsonReader reader = new JsonReader(new FileReader(contextPath + "/customers.json"));
+				Gson gson2 = new Gson();
+				Customer[] tempCustomers = gson2.fromJson(reader, Customer[].class);
+				for(Customer c : tempCustomers) {
+					customers.put(c.getUsername(), c);
+				}
+			}catch(Exception ex) {
+				ex.printStackTrace();
+			}
+			
+			if(customers.containsKey(order.getIdKupca())) {
+				Customer c = customers.get(order.getIdKupca());
+				
+				int brojBodova = c.getNumberOfPoints();
+				brojBodova += (order.getCena()/1000) * 133;
+				c.setNumberOfPoints(brojBodova);
+				
+				Gson gson3 = new Gson();
+//				String temp = gson.toJson(customers);
+				
+				Collection<Customer> tmp2 = customers.values();
+				String fileInput2 = gson3.toJson(tmp2);
+				
+				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "customers.json", false))){
+					System.out.println("Izmena broja otkazanih porudzbina.");
+					bw.append(fileInput2);
+					bw.append("\n");
+					bw.close();
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
 			return order;
 	}
 	//metoda koja menja postojecu narudzbinu
@@ -184,7 +222,7 @@ public class OrderDAO {
 		if(this.orders.values().size() > 0) {
 			ArrayList<Order> result = new ArrayList<Order>();
 			for(Order o : this.orders.values()) {
-				if(o.getIdDeliveryMana().equals(username)) {
+				if(o.getIdDeliveryMana().equals(username) && o.getStatusPorudzbine().equals("uTransportu")) {
 					result.add(o);
 				}
 			}
@@ -220,6 +258,16 @@ public class OrderDAO {
 			Order o = this.orders.get(orderId);
 			o.setStatusPorudzbine("otkazana");
 			
+			Gson gsonOrders = new Gson();
+			String tempOrder = gsonOrders.toJson(this.orders.values());
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "orders.json", false))){
+				bw.append(tempOrder);
+				bw.append("\n");
+				bw.close();
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+			
 			Map<String, Customer> customers = new HashMap<>();
 			try {
 				JsonReader reader = new JsonReader(new FileReader(contextPath + "/customers.json"));
@@ -235,9 +283,12 @@ public class OrderDAO {
 			if(customers.containsKey(o.getIdKupca())) {
 				Customer c = customers.get(o.getIdKupca());
 				int temp = c.getNumberOfCanceledOrders();
+				System.out.println("Broj otkazanih porudzbina pre izmene: " + temp);
 				temp += 1;
 				c.setNumberOfCanceledOrders(temp);
-				
+				int brojBodova = c.getNumberOfPoints();
+				brojBodova -= (o.getCena()/1000) * 133 * 4;
+				c.setNumberOfPoints(brojBodova);
 				
 				Gson gson = new Gson();
 //				String temp = gson.toJson(customers);
@@ -258,6 +309,8 @@ public class OrderDAO {
 		return null;
 	}
 
+	
+	
 	public Collection<Order> findAllNotYetDelivered(String username) {
 		// TODO Auto-generated method stub
 		if(this.orders.values().size() > 0) {
@@ -327,6 +380,46 @@ public class OrderDAO {
 	
 		System.out.println("Pronadjeno je: " + searchResult.size() + " narudzbina koji zadovoljavaju kriterijume.");
 		return searchResult;
+	}
+
+	public Order approveById(int orderId) {
+		// TODO Auto-generated method stub
+		if(this.orders.containsKey(orderId)) {
+			Order o = this.orders.get(orderId);
+			o.setStatusPorudzbine("cekaDostavljaca");
+			
+			Gson gson = new Gson();
+			String temp = gson.toJson(this.orders.values());
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "orders.json", false))){
+				bw.append(temp);
+				bw.append("\n");
+				bw.close();
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+			return o;
+		}
+		return null;
+	}
+	
+	public Order acceptById(int orderId) {
+		loadOrders(contextPath);
+		if(this.orders.containsKey(orderId)) {
+			Order o = this.orders.get(orderId);
+			o.setStatusPorudzbine("uPripremi");
+			
+			Gson gson = new Gson();
+			String temp = gson.toJson(this.orders.values());
+			try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "orders.json", false))){
+				bw.append(temp);
+				bw.append("\n");
+				bw.close();
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+			return o;
+		}
+		return null;
 	}
 
 }

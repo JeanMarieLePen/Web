@@ -27,6 +27,9 @@ class DataService{
     getQuitters(){
         return axios.get(`${API_URL}/customers/quitters/`);
     }
+    getAllBanned(){
+        return axios.get(`${API_URL}/bannedUsers/getBanned/`)
+    }
 
     //Manager
     addManager(manager){
@@ -147,6 +150,12 @@ class DataService{
     getSvePorudzbine(name){
         return axios.get(`${API_URL}/orders/byRestaurantName/${name}`);
     }
+    approveOrder(orderId){
+        return axios.get(`${API_URL}/orders/approveById/${orderId}`);
+    }
+    acceptOrder(orderId){
+        return axios.get(`${API_URL}/orders/acceptById/${orderId}`);
+    }
 
     //porudzbine dostavljac
     getSveCekanje(){
@@ -173,6 +182,11 @@ class DataService{
 
     takeOrder(order){
         return axios.put(`${API_URL}/orders/`, order);
+    }
+    
+    //manager
+    approveDeliveryMan(order){
+        return axios.put(`${API_URL}/orders`, order);
     }
 }
 

@@ -43,6 +43,18 @@
             </div>
             <div v-show='isAdmin' class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
+                    <router-link style='text-decoration: none;color:#35424a;' to="/moderateCustomers" class="nav-link"
+                        exact>
+                        <img src="../assets/manager.jpg" class="card-img-top" alt="...">
+                        <div class="card-body text-center">
+                            <h5 class="card-title mb-0">Moderacija kupaca</h5>
+                            
+                        </div>
+                    </router-link>
+                </div>
+            </div>
+            <div v-show='isAdmin' class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/newRestaurant" class="nav-link"
                         exact>
                         <img src="../assets/restau.jpg" class="card-img-top" alt="...">
