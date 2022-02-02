@@ -222,7 +222,7 @@ public class OrderDAO {
 		if(this.orders.values().size() > 0) {
 			ArrayList<Order> result = new ArrayList<Order>();
 			for(Order o : this.orders.values()) {
-				if(o.getIdDeliveryMana().equals(username) && o.getStatusPorudzbine().equals("uTransportu")) {
+				if(o.getIdDeliveryMana().equals(username)) {
 					result.add(o);
 				}
 			}

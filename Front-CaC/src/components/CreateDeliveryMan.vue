@@ -117,6 +117,8 @@ export default {
             console.log("Kreiranje dostavljaca: " + this.newDeliveryMan.username);
             dataService.addDeliveryMan(this.newDeliveryMan).then(response => {
                 console.log("Stigao odgovor sa beka: " + response);
+                this.messages.successResponse= "<h4>Uspesno ste kreirali dostavljaca.</h4>"
+                setTimeout(() => this.$router.push("/home"),5000);
             }).catch(error => {
                 if(error.response.status === 500 || error.response.status === 404){
                         this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;

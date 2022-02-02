@@ -36,7 +36,7 @@
                                     <button style='margin-right:5px;' class='btn btn-outline-primary my-2 my-sm-0' v-on:click="resetFilter()">Reset all</button>
                                 </span> 
                                 <span class="col-xl-3 col-md-6 mb-2"> 
-                                    <button style="margin-left: 5px;" class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click.prevent='search()'>Search</button>
+                                    <button style="margin-left: 5px;" class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click.prevent='searchPorudzbine()'>Search</button>
                                 </span>
                             </div>
                             
@@ -71,18 +71,27 @@
                             <img v-if='currentSortDir == "asc" && currentSort== "cenaPorudzbine"' src='../assets/up-arrow1.1.png'>
                             <img v-if='currentSortDir == "desc" && currentSort== "cenaPorudzbine" ' src='../assets/down-arrow1.1.png'>
                         </th>
+                        <th @click="sort('datumPorudzbine')" class="arrow">Datum 
+                            <img v-if='currentSortDir == "asc" && currentSort== "datumPorudzbine"' src='../assets/up-arrow1.1.png'>
+                            <img v-if='currentSortDir == "desc" && currentSort== "datumPorudzbine" ' src='../assets/down-arrow1.1.png'>
+                        </th>
+                        <th @click="sort('cenaPorudzbine')" class="arrow"> Cena
+                            <img v-if='currentSortDir == "asc" && currentSort== "cenaPorudzbine"' src='../assets/up-arrow1.1.png'>
+                            <img v-if='currentSortDir == "desc" && currentSort== "cenaPorudzbine" ' src='../assets/down-arrow1.1.png'>
+                        </th>
                         
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- <tr v-bind:key='rst.name' v-for="rst in sortPorudzbine">
-                        <td>{{rst.name}}</td>
-                        <td>{{rst.type}}</td>
-                        <td>{{rst.datum}}</td>
+                    <tr v-bind:key='rst.idPorudzbine' v-for="rst in sortPorudzbine">
+                        <td>{{rst.idPorudzbine}}</td>
+                        <td>{{rst.izKogRestorana}}</td>
+                        <td>{{rst.datumIVremePorudzbine}}</td>
                         <td>{{rst.cena}}</td>
+                        <td>{{rst.statusPorudzbine}}</td>
                         
                         
-                    </tr> -->
+                    </tr>
                 </tbody>
                 
             </table>
@@ -181,7 +190,7 @@ export default{
     
     computed:{
          sortPorudzbine:function(){
-            return this.porudzbine.filter(this.filterByType).filter(this.filterByStatus).sort(this.sortiraj);}
+            return this.porudzbine.filter(this.filterByStatus).sort(this.sortiraj);}
     },
      components: {
         vuejsDatepicker:Datepicker,
@@ -223,6 +232,19 @@ export default{
             
 
             this.getAllPorudzbine();
+        },
+        filterByType:function(rst){
+            if(this.filterInput.length != 0){
+                return  (rst.name.toLowerCase().indexOf(this.filterInput.toLowerCase()) > -1);
+            }
+            return true;
+        },
+         filterByStatus:function(rst){
+            if(this.filterStatus.length != 0){
+                return (rst.statusPorudzbine.toLowerCase().indexOf(this.filterStatus.toLowerCase()) > -1);
+            }
+            return true;
+            
         },
         
         sortiraj(){

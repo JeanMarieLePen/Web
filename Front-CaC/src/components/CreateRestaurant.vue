@@ -536,7 +536,7 @@ export default {
                         console.log(response.data)
                         console.log("Izmenjen postojeci menadzer");
                         // alert("Uspesno ste dodali restoran.");
-                        // this.$router.push("/home");
+                        this.$router.push("/home");
                     }).catch(error => {
                         console.log(error.response);
                     })

@@ -81,6 +81,7 @@ public class RestoranDAO {
 		
 		public Collection<Restoran> findAllRestorani()
 		{
+			loadRestorani(contextPath);
 			return restorani.values();
 		}
 		public Restoran findRestoran(String name)
@@ -183,6 +184,7 @@ public class RestoranDAO {
 		}
 		
 		public Collection<Restoran> findFilteredResults(Restoran restoran){
+			loadRestorani(contextPath);
 			Collection<Restoran> tmp = new ArrayList<Restoran>();
 			Collection<Restoran> test = new ArrayList<Restoran>();
 			Collection<Restoran> tmp2 = new ArrayList<Restoran>();
@@ -219,7 +221,7 @@ public class RestoranDAO {
 			if(restoran.getLokacija() == null) {
 				filter2 = e -> true;
 			}else {
-				filter2 = e -> e.getLokacija().getDrzava().toLowerCase().equals(restoran.getLokacija().getDrzava().toLowerCase());
+				filter2 = e -> e.getLokacija().getMesto().toLowerCase().equals(restoran.getLokacija().getDrzava().toLowerCase());
 			}
 			if(restoran.getType() == null) {
 				filter3 = e -> true;

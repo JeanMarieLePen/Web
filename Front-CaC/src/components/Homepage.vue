@@ -18,7 +18,8 @@
         <div class="row"> 
 
             <!-- Profile-->
-            <div class="col-xl-3 col-md-6 mb-4">
+           
+            <div v-show="!isnCustomer" class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/profile" class="nav-link" exact>
                         <img src="../assets/dadada.png" class="card-img-top" alt="...">
@@ -28,6 +29,7 @@
                     </router-link>
                 </div>
             </div>
+            
 
             <div v-show='isAdmin' class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
@@ -45,7 +47,7 @@
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/moderateCustomers" class="nav-link"
                         exact>
-                        <img src="../assets/manager.jpg" class="card-img-top" alt="...">
+                        <img src="../assets/dollar.png" class="card-img-top" alt="...">
                         <div class="card-body text-center">
                             <h5 class="card-title mb-0">Moderacija kupaca</h5>
                             
@@ -77,11 +79,11 @@
                     </router-link>
                 </div>
             </div>
-            <div v-show="isCustomer" class="col-xl-3 col-md-6 mb-4">
+            <div  class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/searchRestaurants" class="nav-link"
                         exact>
-                        <img src="../assets/search.png" class="card-img-top" alt="...">
+                        <img src="../assets/searchicon.png" class="card-img-top" alt="...">
                         <div class="card-body text-center">
                             <h5 class="card-title mb-0">Pretraga restorana</h5>
                            
@@ -89,13 +91,14 @@
                     </router-link>
                 </div>
             </div>
+             
             
             
             <div v-show="isManager" class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/newProduct" class="nav-link"
                         exact>
-                        <img src="../assets/search.png" class="card-img-top" alt="...">
+                        <img src="../assets/createe.png" class="card-img-top" alt="...">
                         <div class="card-body text-center">
                             <h5 class="card-title mb-0">Kreiraj artikal</h5>
                            
@@ -109,7 +112,7 @@
                 <div class="card border-0 shadow">
                     <router-link style='text-decoration: none;color:#35424a;' to="/moderation" class="nav-link"
                         exact>
-                        <img src="../assets/search.png" class="card-img-top" alt="...">
+                        <img src="../assets/comment1.png" class="card-img-top" alt="...">
                         <div class="card-body text-center">
                             <h5 class="card-title mb-0">Moderacija komentara</h5>
                         </div>
@@ -180,7 +183,8 @@ export default {
             },
             mode: false,
             isAdmin: false,
-            isCustomer: true,
+            isCustomer: false,
+            isnCustomer: false,
             isDeliveryMan: false,
             isManager: false,
             role: ''
@@ -202,7 +206,12 @@ export default {
        // let parsToken = this.parseJwt(localStorage.getItem('token'));
         //console.log("ISPIS TOKENA:" + JSON.stringify(parsToken))
         //localStorage.setItem('parsToken', JSON.stringify(parsToken));
+
         let temp = JSON.parse(localStorage.getItem('token'));
+        if(temp==null)
+        {
+            this.isnCustomer=true;
+        }
         if(temp.role ==='admin')
         {
             this.isAdmin=true;

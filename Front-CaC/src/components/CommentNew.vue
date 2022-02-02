@@ -1,14 +1,16 @@
 <template>
     <div style="margin-top:50px;width:50%" id="car-new-comment">
         <div>
-            <div v-if="showEntity" class="comment-form">    
-                <textarea type="text" v-model="noviKomentar.tekstKomentara" placeholder="Tekst komentara..."></textarea>
-                <label style="display:inline-block">
-                    <input readonly type="text" v-model="noviKomentar.kupacKomentator">
-                </label>
-                <starrating v-model="ocena" @rating-selected="setRating()" style="margin-left:50px;display:inline-block"></starrating>
-                <br/>
-                <button style="border-radius: 20rem;" @click="addComment()">Add Comment</button>
+            <div v-show="!isUnregistered">
+                <div v-if="showEntity" class="comment-form">    
+                    <textarea type="text" v-model="noviKomentar.tekstKomentara" placeholder="Tekst komentara..."></textarea>
+                    <label style="display:inline-block">
+                        <input readonly type="text" v-model="noviKomentar.kupacKomentator">
+                    </label>
+                    <starrating v-model="ocena" @rating-selected="setRating()" style="margin-left:50px;display:inline-block"></starrating>
+                    <br/>
+                    <button style="border-radius: 20rem;" @click="addComment()">Add Comment</button>
+                </div>
             </div>
             <div v-if="messages.successResponse" style="margin-left: 200px;" class="alert alert-success" v-html="messages.successResponse"></div>
             <div v-if="messages.errorResponse" style="margin-left: 200px;" class="alert alert-danger" v-html="messages.errorResponse"></div>
@@ -49,6 +51,7 @@ export default {
             ocena:0,
             //pomocna varijabla u koju ce se ucitavati svi komentari o restoranu 
             komentari:[],
+            isUnregistered:false,
 
             messages: {
                 errorText: '',
@@ -107,6 +110,8 @@ export default {
     },
     created(){
         let temp = JSON.parse(localStorage.getItem('token'));
+        if(temp==null)
+        {this.isUnregistered=true;}
         this.noviKomentar.kupacKomentator = temp.username;
         this.noviKomentar.komentarisaniRestoran = this.$route.params.id;
         console.log('komentarisani restoran je: ' + this.$route.params.id);

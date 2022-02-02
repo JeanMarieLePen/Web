@@ -3,7 +3,7 @@
         <section id="showcase"> 
             <div class="container">
                 <br/>
-               <img src="../assets/dddaaa.jpg" width="700" height="400" > <br/><br/>
+              <router-link to='/home' class="nav-link" exact>  <img src="../assets/home.jpg" width="1000" height="600" ></router-link> <br/><br/>
                 </div>
         </section>
 

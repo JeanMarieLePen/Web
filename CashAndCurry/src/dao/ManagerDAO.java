@@ -84,6 +84,7 @@ public class ManagerDAO {
 	}
 	
 	public Collection<Manager> findFreeManagers() {
+		loadManagers(contextPath);
 		Collection<Manager> tempLista = new ArrayList<Manager>();
 		for(Manager m : managers.values()) {
 			if(m.getRestaurant().equals("")) {
@@ -139,7 +140,7 @@ public class ManagerDAO {
 				c.setName(manager.getName()); c.setLastname(manager.getLastname());
 				c.setDateOfBirth(manager.getDateOfBirth()); c.setPassword(manager.getPassword());
 				c.setGender(manager.getGender());
-				
+				c.setRestaurant(manager.getRestaurant());
 				Gson gson = new Gson();
 				String temp = gson.toJson(managers.values());
 				try(BufferedWriter bw = new BufferedWriter(new FileWriter(contextPath + "managers.json", false))){

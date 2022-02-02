@@ -327,7 +327,7 @@ export default {
         },
         filterByName:function(rst){
             if(this.filterInput.length != 0){
-                return  (rst.name.toLowerCase().indexOf(this.filterInput.toLowerCase()) > -1);
+                return  (rst.type.toLowerCase().indexOf(this.filterInput.toLowerCase()) > -1);
             }
             return true;
         },
